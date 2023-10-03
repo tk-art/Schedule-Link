@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}新規登録{% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+    {% if form.non_field_errors %}
+    　<div class="alert alert-danger">
+    　   {% for error in form.non_field_errors %}
+    　       {{ error }}
+    　   {% endfor %}
+    　</div>
+　　　{% endif %}
+      <div class="signup-card">
+        <div class="card-header">
+          新規登録
+        </div>
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="username">名前</label>
+              <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="email">メールアドレス</label>
+              <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="email_conf">確認用メールアドレス</label>
+              <input type="email" class="form-control" id="email_conf" name="email_conf" required>
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="password">パスワード</label>
+              <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="password_conf">確認用パスワード</label>
+              <input type="password" class="form-control" id="password_conf" name="password_conf" required>
+            </div>
+            <br>
+
+            {% load socialaccount %}
+            <a href="{% provider_login_url "google" %}">Googleでログイン</a>
+
+            <button type="submit" class="btn btn-secondary">登録</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
