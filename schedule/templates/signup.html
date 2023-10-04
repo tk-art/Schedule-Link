@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block title %}新規登録{% endblock %}
 {% block content %}
+{% load socialaccount %}
+
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-md-6">
@@ -43,12 +45,15 @@
               <input type="password" class="form-control" id="password_conf" name="password_conf" required>
             </div>
             <br>
-
-            {% load socialaccount %}
-            <a href="{% provider_login_url "google" %}">Googleでログイン</a>
-
             <button type="submit" class="btn btn-secondary">登録</button>
           </form>
+
+          {% for provider in socialaccount_providers %}
+            <li>
+              <a href="{% provider_login_url provider.id %}">{{ provider.name }}</a>
+            </li>
+          {% endfor %}
+
         </div>
       </div>
     </div>
