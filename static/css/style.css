@@ -67,3 +67,8 @@ footer {
 .form-group label {
   margin-bottom: 5px;
 }
+
+/* ソーシャルログイン */
+.google-login {
+  margin-top: 10px;
+}
