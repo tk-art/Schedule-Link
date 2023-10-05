@@ -26,6 +26,21 @@ def signup(request):
     form = SignupForm()
   return render(request, 'signup.html', {'form': form})
 
+def login_view(request):
+  error_message = ""
+  if request.method == 'POST':
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+
+    user = authenticate(request, username=username, password=password)
+    if user:
+      user.backend = 'django.contrib.auth.backends.ModelBackend'
+      login(request, user)
+      return redirect('top')
+    else:
+      error_message = 'ユーザーネームかパスワードが違います、もう一度お試しください'
+  return render(request, 'login.html', {'error_message': error_message})
+
 def logout_view(request):
   logout(request)
   return redirect('top')

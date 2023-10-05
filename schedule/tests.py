@@ -54,3 +54,43 @@ class SignUpTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'パスワードが一致しません')
         self.assertEqual(CustomUser.objects.count(), 0)
+
+class LoginTest(TestCase):
+  def setUp(self):
+      app = SocialApp.objects.create(
+              provider='google',
+              name='Google',
+              client_id='test_client_id',
+              secret='test_secret'
+          )
+      site = Site.objects.get_current()
+      app.sites.add(site)
+
+      self.user = CustomUser.objects.create_user(username='testuser', password='testpassword')
+
+  def test_login_success(self):
+      logged_in = self.client.login(username='testuser', password='testpassword')
+      self.assertTrue(logged_in)
+
+      response = self.client.get(reverse('top'))
+      self.assertEqual(response.status_code, 200)
+
+  def test_login_fail(self):
+      logged_in = self.client.login(username='testuser', password='tactpassword')
+      response = self.client.post(reverse('login_view'), {
+        'username': 'testuser',
+        'password': 'tactpassword',
+      })
+
+      self.assertFalse(logged_in)
+      self.assertContains(response, 'ユーザーネームかパスワードが違います、もう一度お試しください')
+
+class LogoutTest(TestCase):
+    def setUp(self):
+        self.user = CustomUser.objects.create_user(username='testuser', password='testpass')
+        self.client.login(username='testuser', password='testpass')
+
+    def test_logout(self):
+        response = self.client.get(reverse('logout_view'))
+        self.assertRedirects(response, reverse('top'))
+        self.assertFalse(response.wsgi_request.user.is_authenticated)
