@@ -18,6 +18,7 @@ def signup(request):
 
         user = CustomUser.objects.create(username=username, email=email, password=hash_password)
 
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
         login(request, user)
         return redirect('top')
 
@@ -26,5 +27,8 @@ def signup(request):
   return render(request, 'signup.html', {'form': form})
 
 def logout_view(request):
-    logout(request)
-    return redirect('top')
+  logout(request)
+  return redirect('top')
+
+def profile(request, user_id):
+  return render(request, 'profile.html')
