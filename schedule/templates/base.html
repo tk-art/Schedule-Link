@@ -18,9 +18,9 @@
         <div class="col-md-6">
           <div class="d-flex justify-content-end head">
             {% if request.user.is_authenticated %}
-              {% if request.path == '/' %}
-                <a class="header-right header-link cursor" data-bs-toggle="modal" data-bs-target="#exampleModal">宣言</a>
-              {% endif %}
+              <a class="header-right header-link cursor">チャット</a>
+              <a class="header-right header-link cursor">マッチング</a>
+              <a class="header-right header-link cursor">カレンダー</a>
               <a href="/notification" class="header-right header-link" id="notification-link"><span id="notification-icon"></span>通知</a>
               <a href="/search" class="header-right header-link">検索</a>
               <a href="/profile/{{ request.user.id }}" class="header-right header-link">プロフィール</a>

@@ -47,3 +47,7 @@ def logout_view(request):
 
 def profile(request, user_id):
   return render(request, 'profile.html')
+
+def profile_edit(request):
+  ages = list(range(18, 51))
+  return render(request, 'profile_edit.html', {'ages':ages})

@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% block title %}プロフィール編集{% endblock %}
+{% block content %}
+<div class="container col-md-6">
+  <div class="profile-edit-page">
+    <form action="/profile_edit/" class="edit-form" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="image">トップ画像</label>
+        <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+      </div>
+      <br>
+      <div class="form-group">
+        <label for="username">名前</label>
+        <input type="text" class="form-control" id="username" name="username" required>
+      </div>
+      <br>
+      <div class="form-group">
+        <label for="residence">居住地</label>
+        <input type="text" class="form-control" id="residence" name="residence" placeholder="〇〇県" required>
+      </div>
+      <br>
+      <div class="form-group">
+        <label for="age">年齢</label>
+        <select class="form-control" id="age" name="age">
+            <option value="">選択してください</option>
+            {% for age in ages %}
+              <option value="{{ age }}">{{ age }}歳</option>
+            {% endfor %}
+        </select>
+      </div>
+      <br>
+      <div class="form-group">
+        <label for="gender">性別</label>
+        <select class="form-control" id="gender" name="gender">
+            <option value="">選択してください</option>
+            <option value="male">男性</option>
+            <option value="female">女性</option>
+            <option value="other">その他</option>
+        </select>
+      </div>
+      <br>
+
+      <div class="form-group">
+        <label>趣味(最大3つまで)</label>
+        <div class="row">
+          <div class="col-md-4">
+              <input type="checkbox" id="reading" name="hobby" value="reading">
+              <label for="reading">読書</label>
+          </div>
+          <div class="col-md-4">
+              <input type="checkbox" id="sports" name="hobby" value="sports">
+              <label for="sports">スポーツ</label>
+          </div>
+          <div class="col-md-4">
+              <input type="checkbox" id="traveling" name="hobby" value="traveling">
+              <label for="traveling">旅行</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+              <input type="checkbox" id="photography" name="hobby" value="photography">
+              <label for="photography">写真撮影</label>
+          </div>
+          <div class="col-md-4">
+            <input type="checkbox" id="music" name="hobby" value="music">
+            <label for="music">音楽鑑賞</label>
+          </div>
+          <div class="col-md-4">
+              <input type="checkbox" id="hiking" name="hobby" value="hiking">
+              <label for="hiking">ハイキング</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+              <input type="checkbox" id="fishing" name="hobby" value="fishing">
+              <label for="fishing">釣り</label>
+          </div>
+          <div class="col-md-4">
+              <input type="checkbox" id="painting" name="hobby" value="painting">
+              <label for="painting">絵画</label>
+          </div>
+          <div class="col-md-4">
+              <input type="checkbox" id="dancing" name="hobby" value="dancing">
+              <label for="dancing">ダンス</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+              <input type="checkbox" id="cafe" name="hobby" value="cafe">
+              <label for="cafe">カフェ巡り</label>
+          </div>
+          <div class="col-md-4">
+              <input type="checkbox" id="movies" name="hobby" value="movies">
+              <label for="movies">映画鑑賞</label>
+          </div>
+          <div class="col-md-4">
+              <input type="checkbox" id="gaming" name="hobby" value="gaming">
+              <label for="gaming">ゲーム</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <input type="checkbox" id="gardening" name="hobby" value="gardening">
+            <label for="gardening">ガーデニング</label>
+          </div>
+          <div class="col-md-4">
+            <input type="checkbox" id="crafting" name="hobby" value="crafting">
+            <label for="crafting">手芸</label>
+          </div>
+          <div class="col-md-4">
+            <input type="checkbox" id="training" name="hobby" value="training">
+            <label for="training">トレーニング</label>
+          </div>
+        </div>
+      </div>
+      <br>
+
+      <div class="form-group">
+        <label>興味(最大5つまで)</label>
+        <div class="row">
+            <div class="col-md-4">
+                <input type="checkbox" id="travel" name="interest" value="travel">
+                <label for="travel">旅行</label>
+            </div>
+            <div class="col-md-4">
+                <input type="checkbox" id="sports" name="interest" value="sports">
+                <label for="sports">スポーツ観戦</label>
+            </div>
+            <div class="col-md-4">
+                <input type="checkbox" id="movies" name="interest" value="movies">
+                <label for="movies">映画鑑賞</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <input type="checkbox" id="music" name="interest" value="music">
+                <label for="music">音楽鑑賞</label>
+            </div>
+            <div class="col-md-4">
+                <input type="checkbox" id="outdoor" name="interest" value="outdoor">
+                <label for="outdoor">アウトドア</label>
+            </div>
+            <div class="col-md-4">
+                <input type="checkbox" id="pets" name="interest" value="pets">
+                <label for="pets">ペット</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <input type="checkbox" id="shopping" name="interest" value="shopping">
+                <label for="shopping">ショッピング</label>
+            </div>
+            <div class="col-md-4">
+                <input type="checkbox" id="games" name="interest" value="games">
+                <label for="games">ゲーム</label>
+            </div>
+            <div class="col-md-4">
+                <input type="checkbox" id="cooking" name="interest" value="cooking">
+                <label for="cooking">料理</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <input type="checkbox" id="gardening" name="interest" value="gardening">
+                <label for="gardening">ガーデニング</label>
+            </div>
+            <div class="col-md-4">
+                <input type="checkbox" id="crafts" name="interest" value="crafts">
+                <label for="crafts">手芸・DIY</label>
+            </div>
+            <div class="col-md-4">
+                <input type="checkbox" id="dancing" name="interest" value="dancing">
+                <label for="dancing">ダンス</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <input type="checkbox" id="photography" name="interest" value="photography">
+                <label for="photography">写真撮影</label>
+            </div>
+            <div class="col-md-4">
+                <input type="checkbox" id="biking" name="interest" value="biking">
+                <label for="biking">サイクリング</label>
+            </div>
+            <div class="col-md-4">
+                <input type="checkbox" id="cafe" name="interest" value="cafe">
+                <label for="cafe">カフェ巡り</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <input type="checkbox" id="fishing" name="interest" value="fishing">
+                <label for="fishing">釣り</label>
+            </div>
+            <div class="col-md-4">
+                <input type="checkbox" id="karaoke" name="interest" value="karaoke">
+                <label for="karaoke">カラオケ</label>
+            </div>
+            <div class="col-md-4">
+                <input type="checkbox" id="driving" name="interest" value="driving">
+                <label for="driving">ドライブ</label>
+            </div>
+        </div>
+    </div>
+
+
+      <div class="form-group">
+        <label for="content">自己紹介</label>
+        <textarea class="form-control" id="content" name="content" required></textarea>
+      </div>
+      <br>
+      <button type="submit" class="confirm-btn">登録</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
