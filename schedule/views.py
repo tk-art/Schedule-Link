@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login, logout
-from .forms import SignupForm
-from .models import CustomUser
+from .forms import SignupForm, ProfileForm
+from .models import CustomUser, Profile
 from django.shortcuts import redirect
 
 def top(request):
@@ -46,8 +46,27 @@ def logout_view(request):
   return redirect('top')
 
 def profile(request, user_id):
-  return render(request, 'profile.html')
+  profile = Profile.objects.get(user_id=user_id)
+  hobbies = profile.hobby.all()
+  interests = profile.interest.all()
+  context = {
+    'profile': profile,
+    'hobbies': hobbies,
+    'interests': interests,
+  }
+  return render(request, 'profile.html', context)
 
 def profile_edit(request):
   ages = list(range(18, 51))
-  return render(request, 'profile_edit.html', {'ages':ages})
+  if request.method == 'POST':
+      form = ProfileForm(request.POST, request.FILES)
+      if form.is_valid():
+          profile = form.save(commit=False)
+          profile.user = request.user
+          profile.save()
+          form.save_m2m()
+          return redirect('profile', user_id=request.user.id)
+
+  else:
+      form = ProfileForm()
+  return render(request, 'profile_edit.html', {'ages':ages, 'form':form})
