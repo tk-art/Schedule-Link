@@ -111,11 +111,6 @@ footer {
   background-color: rgb(154, 154, 162);
 }
 
-.profile-info {
-  display: flex;
-  justify-content: space-between;
-}
-
 .profile-button {
   margin-top: 20px;
 }
@@ -140,7 +135,7 @@ footer {
 }
 
 .profile-top {
-  margin-top: 15px;
+  margin-top: -20px;
   margin-left: 160px;
 }
 
@@ -150,6 +145,10 @@ footer {
   margin-left: 20px;
   margin-right: auto;
   margin-top: 20px;
+}
+
+.profile-info {
+  display: flex;
 }
 
 .profile-content {
@@ -163,20 +162,25 @@ footer {
 .hobby-interest ul {
   list-style-type: none;
   display: flex;
+  flex-wrap: wrap;
 }
 
 .hobby-list {
   margin-right: 20px;
-  border: 1.5px solid rgb(62, 105, 213);
+  border: 1.5px solid rgb(156, 158, 161);
+  color: rgb(156, 158, 161) !important;
   border-radius: 20px;
   padding: 6px 12px;
 }
 
+
 .interest-list {
   margin-right: 20px;
-  border: 1.5px solid rgb(62, 105, 213);
+  border: 1.5px solid rgb(156, 158, 161);
   border-radius: 20px;
+  color: rgb(156, 158, 161) !important;
   padding: 6px 12px;
+  margin-bottom: 10px;
 }
 
 /* フォロー */

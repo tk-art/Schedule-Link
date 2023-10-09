@@ -8,26 +8,26 @@
 
       <div class="form-group">
         <label for="image">トップ画像</label>
-        <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+        <input type="file" class="form-control" id="image" name="image" accept="image/*">
       </div>
       <br>
       <div class="form-group">
         <label for="username">名前</label>
-        <input type="text" class="form-control" id="username" name="username" required>
+        <input type="text" class="form-control" id="username" name="username">
       </div>
       <br>
       <div class="form-group">
         <label for="residence">居住地</label>
-        <input type="text" class="form-control" id="residence" name="residence" placeholder="〇〇県" required>
+        <input type="text" class="form-control" id="residence" name="residence" placeholder="〇〇県">
       </div>
       <br>
       <div class="form-group">
         <label for="age">年齢</label>
         <select class="form-control" id="age" name="age">
-            <option value="">選択してください</option>
-            {% for age in ages %}
-              <option value="{{ age }}">{{ age }}歳</option>
-            {% endfor %}
+          <option value="">選択してください</option>
+          {% for age in ages %}
+            <option>{{ age }}</option>
+          {% endfor %}
         </select>
       </div>
       <br>
@@ -35,9 +35,9 @@
         <label for="gender">性別</label>
         <select class="form-control" id="gender" name="gender">
             <option value="">選択してください</option>
-            <option value="男性">男性</option>
-            <option value="女性">女性</option>
-            <option value="その他">その他</option>
+            <option>男性</option>
+            <option>女性</option>
+            <option>その他</option>
         </select>
       </div>
       <br>
@@ -208,7 +208,7 @@
 
       <div class="form-group">
         <label for="content">自己紹介</label>
-        <textarea class="form-control" id="content" name="content" required></textarea>
+        <textarea class="form-control" id="content" name="content"></textarea>
       </div>
       <br>
       <button type="submit" class="confirm-btn">登録</button>

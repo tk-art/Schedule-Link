@@ -59,14 +59,43 @@ def profile(request, user_id):
 def profile_edit(request):
   ages = list(range(18, 51))
   if request.method == 'POST':
-      form = ProfileForm(request.POST, request.FILES)
-      if form.is_valid():
-          profile = form.save(commit=False)
-          profile.user = request.user
-          profile.save()
-          form.save_m2m()
-          return redirect('profile', user_id=request.user.id)
+    profile = Profile.objects.filter(user=request.user).first()
+    form = ProfileForm(request.POST, request.FILES)
+    if form.is_valid():
+      profile_data = form.cleaned_data
+      if profile:
 
+        fields = ['username', 'image', 'residence', 'age', 'gender', 'content']
+        for field in fields:
+          if profile_data.get(field):
+            setattr(profile, field, profile_data[field])
+
+        hobbies = profile_data.get('hobby', [])
+        interests = profile_data.get('interest', [])
+        if hobbies:
+            profile.hobby.set(hobbies)
+        if interests:
+            profile.interest.set(interests)
+
+        profile.save()
+
+      else:
+        profile = form.save(commit=False)
+        profile.user = request.user
+        profile.save()
+        form.save_m2m()
+
+      return redirect('profile', user_id=request.user.id)
   else:
-      form = ProfileForm()
-  return render(request, 'profile_edit.html', {'ages':ages, 'form':form})
+    form = ProfileForm()
+  context = {
+        'form': form,
+        'ages': ages,
+      }
+  return render(request, 'profile_edit.html', context)
+
+
+"""
+居住地部分の選択肢
+デフォルトのプロフィール
+"""

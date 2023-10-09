@@ -22,7 +22,7 @@ class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     username = models.CharField(max_length=100)
     image = models.ImageField(upload_to='item_images/', null=True, blank=True)
-    age = models.IntegerField()
+    age = models.IntegerField(null=True, blank=True)
     gender = models.CharField(max_length=50)
     residence = models.CharField(max_length=255)
     content = models.TextField(max_length=255)

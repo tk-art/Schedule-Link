@@ -30,13 +30,22 @@ class SignupForm(forms.ModelForm):
 
 
 class ProfileForm(forms.ModelForm):
+    username = forms.CharField(required=False)
+    residence = forms.CharField(required=False)
+    age = forms.IntegerField(required=False)
+    gender = forms.CharField(required=False)
+    content = forms.CharField(required=False)
+    image = forms.ImageField(required=False)
+
     hobby = forms.ModelMultipleChoiceField(
         queryset=Hobby.objects.all(),
         widget=forms.CheckboxSelectMultiple,
+        required=False
     )
     interest = forms.ModelMultipleChoiceField(
         queryset=Interest.objects.all(),
         widget=forms.CheckboxSelectMultiple,
+        required=False
     )
 
     class Meta:

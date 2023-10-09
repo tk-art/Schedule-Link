@@ -13,9 +13,9 @@
       <p class="profile-username">{{ profile.username }}</p>
 
       <div class="profile-button">
-
-
-        <a href="/profile_edit" class="profile-edit">プロフィール編集</a>
+        {% if request.user == profile.user %}
+          <a href="/profile_edit" class="profile-edit">プロフィール編集</a>
+        {% endif %}
 
         {% if request.user != profile.user %}
           <a class="follow" id="follow-button" data-following="{{ is_following }}" onclick="followButtonClicked()">フォロー</a>
@@ -28,18 +28,21 @@
         <p class="profile-follow">フォロー</p>
         <p>フォロワー</p>
       </div>
-      <p>{{ profile.age }}</p>
-      <p>{{ profile.residence }}</p>
-      <p>{{ profile.gender }}</p>
-      <p class="profile-content">{{ profile.content }}</p>
+
+      <p>地域：{{ profile.residence }}</p>
+      <p>年齢：{{ profile.age }}</p>
+      <p>性別：{{ profile.gender }}</p>
+      <p class="profile-content">メッセージ：{{ profile.content }}</p>
     </div>
 
     <div class="hobby-interest">
+      <p>趣味</p>
       <ul>
         {% for hobby in hobbies %}
           <li class="hobby-list">{{ hobby.name }}</li>
         {% endfor %}
       </ul>
+      <p>興味</p>
       <ul>
         {% for interest in interests %}
           <li class="interest-list">{{ interest.name }}</li>
