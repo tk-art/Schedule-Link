@@ -18,6 +18,9 @@ def signup(request):
 
         user = CustomUser.objects.create(username=username, email=email, password=hash_password)
 
+        Profile.objects.create(user=user, username=username,
+                                       content='これはデフォルトのプロフィールです。好みに応じて編集してください')
+
         user.backend = 'django.contrib.auth.backends.ModelBackend'
         login(request, user)
         return redirect('top')
@@ -93,9 +96,3 @@ def profile_edit(request):
         'ages': ages,
       }
   return render(request, 'profile_edit.html', context)
-
-
-"""
-居住地部分の選択肢
-デフォルトのプロフィール
-"""
