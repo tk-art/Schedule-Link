@@ -12,21 +12,19 @@
 
       <p class="profile-username">{{ profile.username }}</p>
 
-      <div class="profile-button">
-        {% if request.user == profile.user %}
-          <a href="/profile_edit" class="profile-edit">プロフィール編集</a>
-        {% endif %}
+      {% if request.user == profile.user %}
+        <a href="/profile_edit" class="profile-edit">プロフィール編集</a>
+      {% endif %}
 
-        {% if request.user != profile.user %}
-          <a class="follow" id="follow-button" data-following="{{ is_following }}" onclick="followButtonClicked()">フォロー</a>
-        {% endif %}
-      </div>
+      {% if request.user != profile.user %}
+        <a class="follow" id="follow-button" data-following="{{ is_following }}" onclick="followButtonClicked()">フォロー</a>
+      {% endif %}
     </div>
 
     <div class="profile-top">
       <div class="follow-count">
-        <p class="profile-follow">フォロー</p>
-        <p>フォロワー</p>
+        <a class="profile-follow" data-bs-toggle="modal" data-bs-target="#followmodal">フォロー中：{{ follows.count }}</a>
+        <a class="profile-follower" data-bs-toggle="modal" data-bs-target="#followermodal">フォロワー：{{ followers.count }}</a>
       </div>
 
       <p>地域：{{ profile.residence }}</p>
@@ -50,5 +48,49 @@
       </ul>
     </div>
   </div>
+
+  <!--フォローモーダル-->
+  <div class="modal fade folow-modal" id="followmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <p class="modal-title">フォロー中</p>
+        </div>
+        <div class="modal-body">
+          <div class="follow-modal-content">
+            {% for follow in follows %}
+              <img src="{{ follow.image.url }}" alt="{{ follow.username }}" class="follow-image-size">
+              {{ follow.username }}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--フォロワーモーダル-->
+  <div class="modal fade folow-modal" id="followermodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <p class="modal-title">フォロワー</p>
+        </div>
+        <div class="modal-body">
+          <div class="follow-modal-content">
+            {% for follower in followers %}
+              <img src="{{ follower.image.url }}" alt="{{ follower.username }}" class="follow-image-size">
+              {{ follower.username }}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
+
+<script>
+  var userId = '{{ profile.user.id }}';
+  var csrfToken = '{{ csrf_token }}';
+</script>
 {% endblock %}

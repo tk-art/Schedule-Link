@@ -19,6 +19,7 @@ body {
   color: #fff;
   background: rgb(62, 105, 213);
 }
+
 /* ボタン終了 */
 
 
@@ -111,10 +112,6 @@ footer {
   background-color: rgb(154, 154, 162);
 }
 
-.profile-button {
-  margin-top: 20px;
-}
-
 .profile-edit {
   font-size: 14px;
   border: 2px solid rgb(154, 154, 162);
@@ -149,6 +146,7 @@ footer {
 
 .profile-info {
   display: flex;
+  align-items: flex-start;
 }
 
 .profile-content {
@@ -178,7 +176,7 @@ footer {
   margin-right: 20px;
   border: 1.5px solid rgb(156, 158, 161);
   border-radius: 20px;
-  color: rgb(156, 158, 161) !important;
+  color: rgb(156, 158, 161);
   padding: 6px 12px;
   margin-bottom: 10px;
 }
@@ -205,12 +203,56 @@ footer {
   transition: transform 0.3s ease;
 }
 
+.follow-btn {
+  background-color: rgb(62, 105, 213);
+  color: #fff;
+  border: 2px solid rgb(62, 105, 213);
+}
+
 .follow-count {
   display: flex;
 }
 
 .profile-follow {
   margin-right: 20px;
+  text-decoration: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+.profile-follow:hover {
+  color: #fff;
+}
+
+.profile-follower {
+  margin-right: 20px;
+  text-decoration: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+.profile-follower:hover {
+  color: #fff;
+}
+
+.modal-title {
+  color: black;
+  font-size: 14px;
+  margin: 0 auto;
+}
+
+.follow-modal-content {
+  color: black;
+}
+
+.follow-image-size {
+  width: 45px;
+  height: 45px;
+  border: 1.5px solid rgb(255, 255, 255);
+  border-radius: 50%;
+  object-fit: cover;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 /* プロフィール編集ページ */

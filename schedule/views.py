@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import SignupForm, ProfileForm
 from .models import CustomUser, Profile
 from django.shortcuts import redirect
+from django.http import JsonResponse
+
 
 def top(request):
   return render(request, 'top.html')
@@ -52,10 +54,14 @@ def profile(request, user_id):
   profile = Profile.objects.get(user_id=user_id)
   hobbies = profile.hobby.all()
   interests = profile.interest.all()
+  follows = profile.follows.all()
+  followers = profile.followed_by.all()
   context = {
     'profile': profile,
     'hobbies': hobbies,
     'interests': interests,
+    'follows': follows,
+    'followers': followers,
   }
   return render(request, 'profile.html', context)
 
@@ -96,3 +102,27 @@ def profile_edit(request):
         'ages': ages,
       }
   return render(request, 'profile_edit.html', context)
+
+def follow(request, user_id):
+    try:
+        user_to_toggle = CustomUser.objects.get(id=user_id)
+        is_following = False
+        if request.user.profile.follows.filter(id=user_to_toggle.profile.id).exists():
+            request.user.profile.follows.remove(user_to_toggle.profile)
+        else:
+            request.user.profile.follows.add(user_to_toggle.profile)
+            is_following = True
+
+        response_data = {
+            'success': True,
+            'is_following': is_following
+        }
+    except CustomUser.DoesNotExist:
+        pass
+
+    return JsonResponse(response_data)
+
+def get_follow_status(request, user_id):
+    user_to_toggle = CustomUser.objects.get(id=user_id)
+    follow_status = request.user.profile.follows.filter(id=user_to_toggle.profile.id).exists()
+    return JsonResponse({'success': follow_status})

@@ -15,3 +15,48 @@ $(document).ready(function() {
       }
   });
 });
+
+
+function followButtonClicked() {
+  $.ajax({
+    type: "POST",
+    url: "/follow/" + userId + "/",
+    data: {
+      user_id: userId,
+      csrfmiddlewaretoken: csrfToken,
+    },
+    success: function(response) {
+      if (response.success) {
+        isFollowing = response.is_following;
+        console.log("isFollowing value is: ", isFollowing);
+
+        if (isFollowing === true) {
+          $("#follow-button").addClass("follow-btn");
+        } else {
+          $("#follow-button").removeClass("follow-btn");
+        }
+        $("#follow-button").text(isFollowing ? "フォロー中" : "フォロー");
+        $("#follow-button").attr("data-following", isFollowing);
+      }
+    }
+  });
+}
+
+$(document).ready(function() {
+  $.ajax({
+    type: "GET",
+    url: "/get_follow_status/" + userId + "/",
+    data: {
+      user_id: userId,
+    },
+    success: function(response) {
+      if (response.success) {
+        $("#follow-button").addClass("follow-btn");
+        $("#follow-button").text("フォロー中");
+      }
+    },
+    error: function(xhr, status, error) {
+      console.log(error);
+    }
+  });
+});
