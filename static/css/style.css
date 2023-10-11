@@ -290,3 +290,29 @@ footer {
 .edit-form {
   margin: 40px;
 }
+
+/* 区切り線 */
+.separator {
+  border: 1px solid rgb(226, 220, 220);
+  margin-bottom: 20px;
+}
+
+/* カレンダー */
+#calendar {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 18px;
+}
+
+.fc .fc-daygrid-day, .fc .fc-daygrid-day-number, .fc .fc-col-header-cell-cushion {
+  text-decoration: none;
+  color: inherit;
+}
+
+.fc .fc-daygrid-day:hover, .fc .fc-daygrid-day-number:hover, .fc .fc-col-header-cell-cushion:hover {
+  text-decoration: none;
+  color: inherit;
+}

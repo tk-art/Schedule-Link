@@ -60,3 +60,40 @@ $(document).ready(function() {
     }
   });
 });
+
+$(document).ready(function() {
+  var calendarEl = $('#calendar')[0];
+
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      locale: 'ja',
+      buttonText: {
+        today: '今日'
+    },
+    fixedWeekCount: false,
+    selectable: true,
+
+    select: function(info) {
+      var title = prompt('イベント名を入力してください:');
+      if (title) {
+          calendar.addEvent({
+              title: title,
+              start: info.startStr,
+              end: info.endStr
+          });
+      }
+      calendar.unselect();
+    },
+
+    eventClick: function(info) {
+      var newTitle = prompt('新しいイベント名を入力してください:', info.event.title);
+      if (newTitle) {
+          info.event.setProp('title', newTitle);
+      }
+    },
+
+
+  });
+
+  calendar.render();
+});
