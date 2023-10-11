@@ -211,6 +211,7 @@ footer {
 
 .follow-count {
   display: flex;
+  margin-bottom: 10px;
 }
 
 .profile-follow {
@@ -225,7 +226,6 @@ footer {
 }
 
 .profile-follower {
-  margin-right: 20px;
   text-decoration: none;
   color: #fff;
   cursor: pointer;
@@ -253,6 +253,32 @@ footer {
   object-fit: cover;
   margin-left: 10px;
   margin-right: 10px;
+}
+
+.follow-link {
+  text-decoration: none;
+  color: black;
+  display: block;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgb(200, 196, 196);
+}
+
+.follow-link:hover {
+  color: black;
+}
+
+.follower-link {
+  text-decoration: none;
+  color: black;
+  display: block;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgb(200, 196, 196);
+}
+
+.follower-link:hover {
+  color: black;
 }
 
 /* プロフィール編集ページ */

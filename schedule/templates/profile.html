@@ -59,8 +59,10 @@
         <div class="modal-body">
           <div class="follow-modal-content">
             {% for follow in follows %}
-              <img src="{{ follow.image.url }}" alt="{{ follow.username }}" class="follow-image-size">
-              {{ follow.username }}
+              <a href="/profile/{{ follow.user.id }}" class="follow-link">
+                <img src="{{ follow.image.url }}" alt="{{ follow.username }}" class="follow-image-size">
+                {{ follow.username }}
+              </a>
             {% endfor %}
           </div>
         </div>
@@ -78,8 +80,10 @@
         <div class="modal-body">
           <div class="follow-modal-content">
             {% for follower in followers %}
-              <img src="{{ follower.image.url }}" alt="{{ follower.username }}" class="follow-image-size">
-              {{ follower.username }}
+              <a href="/profile/{{ follower.user.id }}" class="follower-link">
+                <img src="{{ follower.image.url }}" alt="{{ follower.username }}" class="follow-image-size">
+                {{ follower.username }}
+              </a>
             {% endfor %}
           </div>
         </div>
