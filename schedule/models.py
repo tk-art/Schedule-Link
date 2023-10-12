@@ -29,3 +29,10 @@ class Profile(models.Model):
     hobby = models.ManyToManyField(Hobby)
     interest = models.ManyToManyField(Interest)
     follows = models.ManyToManyField('self', related_name='followed_by', symmetrical=False)
+
+class Calendar(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    selectedDate = models.DateField(default='2023-01-14')
+    free = models.CharField(max_length=20)
+    time = models.CharField(max_length=100, null=True, blank=True)
+    message = models.TextField(max_length=255, null=True, blank=True)

@@ -316,3 +316,8 @@ footer {
   text-decoration: none;
   color: inherit;
 }
+
+.calendar-label {
+  color:black;
+  margin-top: 15px;
+}

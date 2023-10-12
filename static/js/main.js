@@ -74,26 +74,47 @@ $(document).ready(function() {
     selectable: true,
 
     select: function(info) {
-      var title = prompt('イベント名を入力してください:');
-      if (title) {
-          calendar.addEvent({
-              title: title,
-              start: info.startStr,
-              end: info.endStr
-          });
-      }
-      calendar.unselect();
+      $('#selectedDate').val(info.startStr);
+      $('#eventModal').modal('show');
+
+      $('#saveEvent').off('click').on('click', function() {
+          var title = $('#eventTitle').val();
+          if (title) {
+              calendar.addEvent({
+                  title: title,
+                  start: info.startStr,
+                  end: info.endStr
+              });
+          }
+          $('#eventModal').modal('hide');
+          calendar.unselect();
+      });
     },
 
     eventClick: function(info) {
-      var newTitle = prompt('新しいイベント名を入力してください:', info.event.title);
-      if (newTitle) {
-          info.event.setProp('title', newTitle);
-      }
-    },
+      $('#eventTitle').val(info.event.title);
+      $('#eventModal').modal('show');
 
+      $('#saveEvent').off('click').on('click', function() {
+          var newTitle = $('#eventTitle').val();
+          if (newTitle) {
+              info.event.setProp('title', newTitle);
+          }
+          $('#eventModal').modal('hide');
+      });
+    }
 
   });
 
   calendar.render();
+});
+
+$(document).ready(function() {
+  $('.free').on('change', function() {
+      if ($(this).val() === '部分') {
+          $('#timeSelectGroup').show();
+      } else {
+          $('#timeSelectGroup').hide();
+      }
+  });
 });

@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login, logout
-from .forms import SignupForm, ProfileForm
-from .models import CustomUser, Profile
+from .forms import SignupForm, ProfileForm, CalendarForm
+from .models import CustomUser, Profile, Calendar
 from django.shortcuts import redirect
 from django.http import JsonResponse
 
@@ -56,12 +56,14 @@ def profile(request, user_id):
   interests = profile.interest.all()
   follows = profile.follows.all()
   followers = profile.followed_by.all()
+  calendars = Calendar.objects.filter(user=profile.user)
   context = {
     'profile': profile,
     'hobbies': hobbies,
     'interests': interests,
     'follows': follows,
     'followers': followers,
+    'calendars': calendars
   }
   return render(request, 'profile.html', context)
 
@@ -126,3 +128,14 @@ def get_follow_status(request, user_id):
     user_to_toggle = CustomUser.objects.get(id=user_id)
     follow_status = request.user.profile.follows.filter(id=user_to_toggle.profile.id).exists()
     return JsonResponse({'success': follow_status})
+
+def calendar(request):
+  if request.method == 'POST':
+    form = CalendarForm(request.POST)
+    if form.is_valid():
+        form.instance.user = request.user
+        form.save()
+        return redirect('profile', user_id=request.user.id)
+  else:
+      form = CalendarForm()
+  return render(request, 'profile.html', {'form': form})
