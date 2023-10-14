@@ -72,38 +72,45 @@ $(document).ready(function() {
     },
     fixedWeekCount: false,
     selectable: true,
+    events: '/api/calendar_events/' + userId + '/',
 
     select: function(info) {
-      $('#selectedDate').val(info.startStr);
-      $('#eventModal').modal('show');
+      if (currentUser) {
+        $('#selectedDate').val(info.startStr);
+        $('#eventModal').modal('show');
 
-      $('#saveEvent').off('click').on('click', function() {
-          var title = $('#eventTitle').val();
-          if (title) {
-              calendar.addEvent({
-                  title: title,
-                  start: info.startStr,
-                  end: info.endStr
-              });
-          }
-          $('#eventModal').modal('hide');
-          calendar.unselect();
-      });
+        $('#saveEvent').off('click').on('click', function() {
+            var title = $('#eventTitle').val();
+            if (title) {
+                calendar.addEvent({
+                    title: title,
+                    start: info.startStr,
+                    end: info.endStr
+                });
+            }
+            $('#eventModal').modal('hide');
+            calendar.unselect();
+        });
+      }
     },
 
     eventClick: function(info) {
-      $('#eventTitle').val(info.event.title);
-      $('#eventModal').modal('show');
+      if (currentUser) {
+        $('#selectedDate').val(info.startStr);
+        var localDate = new Date(info.event.start - info.event.start.getTimezoneOffset() * 60000);
+        $('#selectedDate').val(localDate.toISOString().split('T')[0]);
+        $('#eventTitle').val(info.event.title);
+        $('#eventModal').modal('show');
 
-      $('#saveEvent').off('click').on('click', function() {
-          var newTitle = $('#eventTitle').val();
-          if (newTitle) {
-              info.event.setProp('title', newTitle);
-          }
-          $('#eventModal').modal('hide');
-      });
+        $('#saveEvent').off('click').on('click', function() {
+            var newTitle = $('#eventTitle').val();
+            if (newTitle) {
+                info.event.setProp('title', newTitle);
+            }
+            $('#eventModal').modal('hide');
+        });
+      }
     }
-
   });
 
   calendar.render();

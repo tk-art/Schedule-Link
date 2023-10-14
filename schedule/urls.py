@@ -13,6 +13,7 @@ urlpatterns = [
     path('follow/<int:user_id>/', views.follow, name='follow'),
     path('get_follow_status/<int:user_id>/', views.get_follow_status, name='get_follow_status'),
     path('calendar/', views.calendar, name='calendar'),
+    path('api/calendar_events/<int:user_id>/', views.get_calendar_events, name='get_calendar_events'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

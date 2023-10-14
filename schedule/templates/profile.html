@@ -136,16 +136,11 @@
       </div>
     </div>
   </div>
-
-  {% for calendar in calendars %}
-    {{ calendar.free }}
-  {% endfor %}
-
-
 </div>
 
 <script>
   var userId = '{{ profile.user.id }}';
   var csrfToken = '{{ csrf_token }}';
+  var currentUser = '{{ current_user }}'
 </script>
 {% endblock %}

@@ -5,7 +5,7 @@ from .forms import SignupForm, ProfileForm, CalendarForm
 from .models import CustomUser, Profile, Calendar
 from django.shortcuts import redirect
 from django.http import JsonResponse
-
+from django.core.serializers import serialize
 
 def top(request):
   return render(request, 'top.html')
@@ -52,18 +52,23 @@ def logout_view(request):
 
 def profile(request, user_id):
   profile = Profile.objects.get(user_id=user_id)
+
   hobbies = profile.hobby.all()
   interests = profile.interest.all()
   follows = profile.follows.all()
   followers = profile.followed_by.all()
   calendars = Calendar.objects.filter(user=profile.user)
+
+  current_user = request.user == profile.user
+
   context = {
     'profile': profile,
     'hobbies': hobbies,
     'interests': interests,
     'follows': follows,
     'followers': followers,
-    'calendars': calendars
+    'calendars': calendars,
+    'current_user': current_user
   }
   return render(request, 'profile.html', context)
 
@@ -133,9 +138,27 @@ def calendar(request):
   if request.method == 'POST':
     form = CalendarForm(request.POST)
     if form.is_valid():
+      selected_date = form.cleaned_data.get('selectedDate')
+      calendar_entry = Calendar.objects.filter(user=request.user, selectedDate=selected_date).first()
+
+      if calendar_entry:
+        for field in form.changed_data:
+          setattr(calendar_entry, field, form.cleaned_data[field])
+        calendar_entry.save()
+
+      else:
         form.instance.user = request.user
         form.save()
-        return redirect('profile', user_id=request.user.id)
+      return redirect('profile', user_id=request.user.id)
   else:
       form = CalendarForm()
   return render(request, 'profile.html', {'form': form})
+
+
+def get_calendar_events(request, user_id):
+    events = Calendar.objects.filter(user=user_id)
+    json_data = [{
+      'title': event.free,
+      'start': event.selectedDate,
+    } for event in events]
+    return JsonResponse(json_data, safe=False)

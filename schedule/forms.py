@@ -58,4 +58,4 @@ class CalendarForm(forms.ModelForm):
 
     class Meta:
         model = Calendar
-        fields = ['free', 'time', 'message']
+        fields = ['selectedDate', 'free', 'time', 'message']
