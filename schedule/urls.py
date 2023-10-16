@@ -14,6 +14,8 @@ urlpatterns = [
     path('get_follow_status/<int:user_id>/', views.get_follow_status, name='get_follow_status'),
     path('calendar/', views.calendar, name='calendar'),
     path('api/calendar_events/<int:user_id>/', views.get_calendar_events, name='get_calendar_events'),
+    path('get_event_data/<int:user_id>/', views.get_event_data, name='get_event_data'),
+    path('delete_calendar/', views.delete_calendar, name='delete_calendar'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

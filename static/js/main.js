@@ -81,11 +81,12 @@ $(document).ready(function() {
 
         $('#saveEvent').off('click').on('click', function() {
             var title = $('#eventTitle').val();
+
             if (title) {
                 calendar.addEvent({
                     title: title,
                     start: info.startStr,
-                    end: info.endStr
+                    end: info.endStr,
                 });
             }
             $('#eventModal').modal('hide');
@@ -95,12 +96,22 @@ $(document).ready(function() {
     },
 
     eventClick: function(info) {
-      if (currentUser) {
+      var localDate = new Date(info.event.start - info.event.start.getTimezoneOffset() * 60000);
+      var selectedDateStr = localDate.toISOString().split('T')[0];
+
+
+      if (currentUser == "true") {
         $('#selectedDate').val(info.startStr);
-        var localDate = new Date(info.event.start - info.event.start.getTimezoneOffset() * 60000);
-        $('#selectedDate').val(localDate.toISOString().split('T')[0]);
+        $('#selectedDate').val(selectedDateStr);
+
+        $('#deleteDate').val(info.startStr);
+        $('#deleteDate').val(selectedDateStr);
+
         $('#eventTitle').val(info.event.title);
+        $('#deleteEvent').show();
+
         $('#eventModal').modal('show');
+
 
         $('#saveEvent').off('click').on('click', function() {
             var newTitle = $('#eventTitle').val();
@@ -109,8 +120,32 @@ $(document).ready(function() {
             }
             $('#eventModal').modal('hide');
         });
+      } else {
+        getEventData(selectedDateStr, function(data) {
+          $('#selectedData').text(selectedDateStr);
+          $('#otherUserData').text(info.event.title);
+          $('#timeData').text(data.time);
+          $('#messageData').text(data.message);
+
+          $('#otherUserModal').modal('show');
+        });
+
       }
-    }
+    },
+
+    dateClick: function(info) {
+      var events = calendar.getEvents();
+      var eventExists = events.some(event => {
+          return event.startStr === info.dateStr;
+      });
+
+      if (eventExists) {
+          $('#deleteEvent').show();
+      } else {
+          $('#deleteEvent').hide();
+      }
+  　}
+
   });
 
   calendar.render();
@@ -125,3 +160,16 @@ $(document).ready(function() {
       }
   });
 });
+
+function getEventData(selectedDate, callback) {
+  $.ajax({
+      url: "/get_event_data/" + userId + "/",
+      method: "GET",
+      data: {
+          date: selectedDate,
+      },
+      success: function(data) {
+          callback(data);
+      }
+  });
+}

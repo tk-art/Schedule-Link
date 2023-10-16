@@ -321,3 +321,19 @@ footer {
   color:black;
   margin-top: 15px;
 }
+
+.fc .fc-event {
+  cursor: pointer;
+}
+
+.other-modal {
+  color: black;
+}
+
+.modal-selected {
+  margin: 0 auto;
+}
+
+.otheruser-data {
+  margin-left: 40px;
+}

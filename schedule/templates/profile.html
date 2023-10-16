@@ -104,6 +104,12 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="eventModalLabel">暇な時間を入力してください</h5>
+          <form action="/delete_calendar/" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="user_id" value="{{ profile.user.id }}">
+            <input type="hidden" id="deleteDate" name="deleteDate" value="">
+            <button type ="submit" class="btn btn-danger" id="deleteEvent">削除</button>
+          </form>
         </div>
         <div class="modal-body">
           <form action="/calendar/" method="post">
@@ -120,12 +126,12 @@
 
             <div class="form-group" id="timeSelectGroup" style="display: none;">
               <label for="time" class="calendar-label">時間</label>
-              <input type="text" class="form-control" id="time" name="time" placeholder="13:00~15:00, 14:00以降など">
+              <input type="text" class="form-control" id="time" name="time" placeholder="13:00~15:00, 14:00以降など" value="">
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="messageSelectGroup">
               <label for="message" class="calendar-label">メッセージ</label>
-              <input type="text" class="form-control" id="message" name="message" placeholder="任意です">
+              <input type="text" class="form-control" id="message" name="message" placeholder="任意です" value="">
             </div>
             </div>
             <div class="modal-footer">
@@ -136,11 +142,30 @@
       </div>
     </div>
   </div>
+
+  <!--他ユーザーカレンダーモーダル-->
+  <div class="modal fade" id="otherUserModal" tabindex="-1" role="dialog" aria-labelledby="otherUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+      <div class="modal-content other-modal">
+        <div class="modal-header">
+            <div id="selectedData" class="modal-selected"></div>
+        </div>
+
+        <div class="modal-body">
+          <span>予定：</span><p id="otherUserData" class="otheruser-data"></p>
+          <span>時間：</span><p id="timeData" class="otheruser-data"></p>
+          <span>メッセージ：</span><p id="messageData" class="otheruser-data"></p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
   var userId = '{{ profile.user.id }}';
   var csrfToken = '{{ csrf_token }}';
-  var currentUser = '{{ current_user }}'
+  var currentUser = '{{ current_user|yesno:"true,false"  }}';
 </script>
 {% endblock %}

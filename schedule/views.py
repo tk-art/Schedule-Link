@@ -67,7 +67,6 @@ def profile(request, user_id):
     'interests': interests,
     'follows': follows,
     'followers': followers,
-    'calendars': calendars,
     'current_user': current_user
   }
   return render(request, 'profile.html', context)
@@ -162,3 +161,27 @@ def get_calendar_events(request, user_id):
       'start': event.selectedDate,
     } for event in events]
     return JsonResponse(json_data, safe=False)
+
+def get_event_data(request, user_id):
+    selected_date = request.GET.get('date')
+    event = Calendar.objects.filter(user_id=user_id, selectedDate=selected_date).first()
+
+    if not event:
+        return JsonResponse({}, status=404)
+
+    data = {
+        'title': event.free,
+        'time': event.time,
+        'message': event.message,
+    }
+
+    return JsonResponse(data)
+
+def delete_calendar(request):
+  if request.method == 'POST':
+    user_id = request.POST.get('user_id')
+    delete_date = request.POST.get('deleteDate')
+
+    calendar_entry = Calendar.objects.get(user_id=user_id, selectedDate=delete_date)
+    calendar_entry.delete()
+    return redirect('profile', user_id=user_id)
