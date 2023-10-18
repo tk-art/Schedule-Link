@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from .models import CustomUser
+from .models import CustomUser, Calendar
 from allauth.socialaccount.models import SocialApp
 from django.contrib.sites.models import Site
 
@@ -94,3 +94,54 @@ class LogoutTest(TestCase):
         response = self.client.get(reverse('logout_view'))
         self.assertRedirects(response, reverse('top'))
         self.assertFalse(response.wsgi_request.user.is_authenticated)
+
+class CalendarTest(TestCase):
+    def setUp(self):
+        self.user = CustomUser.objects.create_user(username='testuser', password='testpass')
+        self.client.login(username='testuser', password='testpass')
+
+
+    def test_create_event(self):
+        event_count = Calendar.objects.count()
+
+        data = {
+            'user': self.user.id,
+            'free': 'Test Event',
+            'selectedDate': '2023-11-01',
+            'time': '13:00~15:00',
+            'message': 'message'
+        }
+
+        url = reverse('calendar')
+        response = self.client.post(url, data=data)
+
+        self.assertEqual(response.status_code, 302)
+
+        self.assertEqual(Calendar.objects.count(), event_count + 1)
+
+        new_event = Calendar.objects.latest('id')
+        self.assertEqual(new_event.free, data['free'])
+        self.assertEqual(new_event.time, data['time'])
+        self.assertEqual(new_event.message, data['message'])
+
+    def test_delete_event(self):
+        Calendar.objects.create(
+            user=self.user,
+            selectedDate='2023-11-02',
+            free='Test Event'
+        )
+
+        data = {
+            'user_id': self.user.id,
+            'deleteDate': '2023-11-02',
+            'free': 'Test Event'
+        }
+
+        url = reverse('delete_calendar')
+        response = self.client.post(url, data=data)
+
+        self.assertEqual(response.status_code, 302)
+        print(response)
+        print(response.content)
+
+        self.assertEqual(Calendar.objects.count(), 0)

@@ -75,23 +75,34 @@ $(document).ready(function() {
     events: '/api/calendar_events/' + userId + '/',
 
     select: function(info) {
-      if (currentUser) {
-        $('#selectedDate').val(info.startStr);
-        $('#eventModal').modal('show');
-
-        $('#saveEvent').off('click').on('click', function() {
-            var title = $('#eventTitle').val();
-
-            if (title) {
-                calendar.addEvent({
-                    title: title,
-                    start: info.startStr,
-                    end: info.endStr,
-                });
-            }
-            $('#eventModal').modal('hide');
-            calendar.unselect();
+      if (currentUser == 'true') {
+        var events = calendar.getEvents();
+        var eventExists = events.some(event => {
+            return event.startStr === info.startStr;
         });
+
+        if (eventExists) {
+          $('#deleteEvent').show();
+        } else {
+            $('#deleteEvent').hide();
+            $('#selectedDate').val(info.startStr);
+            $('#eventModal').modal('show');
+
+            $('#saveEvent').off('click').on('click', function() {
+                var title = $('#eventTitle').val();
+
+                if (title) {
+                    calendar.addEvent({
+                        title: title,
+                        start: info.startStr,
+                        end: info.endStr,
+                    });
+                }
+                $('#eventModal').modal('hide');
+                calendar.unselect();
+            });
+        }
+
       }
     },
 
@@ -133,6 +144,8 @@ $(document).ready(function() {
       }
     },
 
+
+/*
     dateClick: function(info) {
       var events = calendar.getEvents();
       var eventExists = events.some(event => {
@@ -140,14 +153,13 @@ $(document).ready(function() {
       });
 
       if (eventExists) {
-          $('#deleteEvent').show();
+        $('#deleteEvent').show();
       } else {
           $('#deleteEvent').hide();
+        }
       }
-  　}
-
-  });
-
+    */
+    });
   calendar.render();
 });
 
