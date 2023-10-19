@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}リクエストリスト{% endblock %}
+{% block content %}
+<div class="container col-md-6">
+  {% for user in users %}
+    {{ user.sender.username }}
+  {% endfor %}
+</div>
+{% endblock %}

@@ -61,6 +61,27 @@ $(document).ready(function() {
   });
 });
 
+function requestClicked() {
+  var userData = $("#selectedData").text();
+
+  $.ajax({
+    type: "POST",
+    url: "/intentional_request/" + userId + "/",
+    data: {
+      user_id: userId,
+      csrfmiddlewaretoken: csrfToken,
+      userData: userData
+    },
+    success: function(response) {
+      if(response.status == "success"){
+        alert("正常にリクエストが送信されました");
+      } else {
+          alert("エラーが発生しました");
+      }
+    }
+  });
+}
+
 $(document).ready(function() {
   var calendarEl = $('#calendar')[0];
 
@@ -143,23 +164,7 @@ $(document).ready(function() {
 
       }
     },
-
-
-/*
-    dateClick: function(info) {
-      var events = calendar.getEvents();
-      var eventExists = events.some(event => {
-          return event.startStr === info.dateStr;
-      });
-
-      if (eventExists) {
-        $('#deleteEvent').show();
-      } else {
-          $('#deleteEvent').hide();
-        }
-      }
-    */
-    });
+  });
   calendar.render();
 });
 

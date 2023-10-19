@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login, logout
 from .forms import SignupForm, ProfileForm, CalendarForm
-from .models import CustomUser, Profile, Calendar
+from .models import CustomUser, Profile, Calendar, UserRequest
 from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.core.serializers import serialize
@@ -185,3 +185,19 @@ def delete_calendar(request):
     calendar_entry = Calendar.objects.get(user_id=user_id, selectedDate=delete_date)
     calendar_entry.delete()
     return redirect('profile', user_id=user_id)
+
+def intentional_request(request, user_id):
+    if request.method == "POST":
+        sender = request.user
+        receiver = CustomUser.objects.get(id=user_id)
+        userData = request.POST.get('userData')
+
+        UserRequest.objects.create(sender=sender, receiver=receiver, userData=userData)
+
+        return JsonResponse({"status": "success"})
+    return JsonResponse({"status": "error"})
+
+def request_list(request):
+    users = UserRequest.objects.all()
+    print(users)
+    return render(request, 'request_list.html', {'users': users})

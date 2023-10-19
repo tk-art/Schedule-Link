@@ -16,6 +16,8 @@ urlpatterns = [
     path('api/calendar_events/<int:user_id>/', views.get_calendar_events, name='get_calendar_events'),
     path('get_event_data/<int:user_id>/', views.get_event_data, name='get_event_data'),
     path('delete_calendar/', views.delete_calendar, name='delete_calendar'),
+    path('intentional_request/<int:user_id>/', views.intentional_request, name='intentional_request'),
+    path('request_list/', views.request_list, name='request_list'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -36,3 +36,9 @@ class Calendar(models.Model):
     free = models.CharField(max_length=20)
     time = models.CharField(max_length=100, null=True, blank=True)
     message = models.TextField(max_length=255, null=True, blank=True)
+
+class UserRequest(models.Model):
+    sender = models.ForeignKey(CustomUser, related_name="sent_requests", on_delete=models.CASCADE)
+    receiver = models.ForeignKey(CustomUser, related_name="received_requests", on_delete=models.CASCADE)
+    userData = models.DateField(default='2023-01-14')
+    created_at = models.DateTimeField(auto_now_add=True)
