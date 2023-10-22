@@ -116,6 +116,7 @@ footer {
   object-fit: cover;
   margin-left: 20px;
   margin-right: 20px;
+  cursor: pointer;
 }
 
 .default-image {
@@ -352,4 +353,95 @@ footer {
 
 .otheruser-data {
   margin-left: 40px;
+}
+
+/* 画像用モーダル */
+.modal {
+  background-color: rgba(0,0,0,0.6);
+}
+
+.modal-image {
+  max-width: 80%;
+  max-height: 80%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 20px;
+}
+
+.close-modal {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+}
+
+/* リスト */
+.request-list {
+  margin-top: 40px;
+  display: flex;
+}
+
+.request-list p {
+  margin-left: 20px;
+}
+
+.request-image-size {
+  width: 50px;
+  height: 50px;
+  border: 1.5px solid rgb(74, 74, 79);
+  border-radius: 50%;
+  object-fit: cover;
+  margin-left: 20px;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.request-profile-link {
+  text-decoration: none;
+}
+
+.request-btn {
+  text-align: right;
+  margin-bottom: 15px;
+  margin-right: 10px;
+}
+
+.approval-btn {
+  margin-right: 5px;
+  border-radius: 10px;
+  font-size: 12px;
+  color: #fff;
+  background-color: rgb(48, 73, 196);
+  padding: 6px 12px;
+  border: none;
+  letter-spacing: 1.2px;
+}
+
+.approval-btn:hover {
+  opacity: 0.8;
+}
+
+.rejection-btn {
+  margin-right: 5px;
+  border-radius: 10px;
+  font-size: 12px;
+  color: #fff;
+  background-color: rgb(192, 45, 85);
+  padding: 6px 12px;
+  border: none;
+  letter-spacing: 1.2px;
+}
+
+.rejection-btn:hover {
+  opacity: 0.8;
+}
+
+.request-nav .nav-link {
+  color: #fff;
+}
+
+.request-nav .nav-link:hover {
+  color: #fff;
 }

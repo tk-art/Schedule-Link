@@ -190,3 +190,16 @@ function getEventData(selectedDate, callback) {
       }
   });
 }
+
+/* 画像用モーダル */
+$('.profile-image-modal').click(function() {
+  const modal = $('#modal');
+  const modalImage = $('#modal-image');
+
+  modalImage.attr('src', $(this).attr('src'));
+  modal.show();
+});
+
+$('#close-modal').click(function() {
+  $('#modal').hide();
+});

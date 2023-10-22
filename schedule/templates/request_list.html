@@ -2,8 +2,49 @@
 {% block title %}リクエストリスト{% endblock %}
 {% block content %}
 <div class="container col-md-6">
-  {% for user in users %}
-    {{ user.sender.username }}
-  {% endfor %}
+  <ul class="nav request-nav" id="myTabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link header-right active" id="tab1-tab" data-bs-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">
+        リクエスト
+      </a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link header-right" id="tab2-tab" data-bs-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">
+        自動リクエスト
+      </a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link header-right" id="tab3-tab" data-bs-toggle="tab" href="#tab3" role="tab" aria-controls="tab3" aria-selected="false">
+        レスポンス
+      </a>
+    </li>
+  </ul>
+
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
+      {% for user in users %}
+        <div class="request-list">
+          <a href="/profile/{{ user.sender.id }}" class="request-profile-link">
+            <img src="{{ user.sender.profile.image.url }}" alt="{{ user.sender.profile.username }}" class="request-image-size">
+          </a>
+          <p>「{{ user.sender.profile.username }}」から「{{ user.userData|date:"Y-m-d" }}」に対してヒマリクが送られてきています</p>
+        </div>
+        <div class="request-btn">
+          <button type="submit" class="approval-btn">承認する</button>
+          <button type="submit" class="rejection-btn">拒否する</button>
+        </div>
+
+        <div class="separator"></div>
+
+      {% endfor %}
+    </div>
+    <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+      a
+    </div>
+    <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
+      b
+    </div>
+  </div>
 </div>
+
 {% endblock %}

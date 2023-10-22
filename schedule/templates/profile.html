@@ -6,7 +6,7 @@
   <div class="profile-container">
     <div class="profile-info">
       {% if profile.image %}
-        <img src="{{ profile.image.url }}" alt="{{ profile.username }}" class="profile-image-size">
+        <img src="{{ profile.image.url }}" alt="{{ profile.username }}" class="profile-image-size profile-image-modal">
       {% else %}
         <div class="default-image"></div>
       {% endif %}
@@ -160,6 +160,12 @@
 
       </div>
     </div>
+  </div>
+
+  <!--画像用モーダル-->
+  <div id="modal" class="modal">
+    <img id="modal-image" src="" alt="Full Image" class="modal-image">
+    <span id="close-modal" class="close-modal">Close</span>
   </div>
 
 </div>

@@ -198,6 +198,6 @@ def intentional_request(request, user_id):
     return JsonResponse({"status": "error"})
 
 def request_list(request):
-    users = UserRequest.objects.all()
-    print(users)
+    users = UserRequest.objects.filter(receiver_id=request.user.id)
+
     return render(request, 'request_list.html', {'users': users})
