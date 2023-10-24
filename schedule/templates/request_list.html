@@ -20,6 +20,12 @@
     </li>
   </ul>
 
+  {% if messages %}
+    {% for message in messages %}
+        <p class="response-message">{{ message }}</p>
+    {% endfor %}
+  {% endif %}
+
   <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
       {% for user in users %}
@@ -29,20 +35,42 @@
           </a>
           <p>「{{ user.sender.profile.username }}」から「{{ user.userData|date:"Y-m-d" }}」に対してヒマリクが送られてきています</p>
         </div>
+
         <div class="request-btn">
-          <button type="submit" class="approval-btn">承認する</button>
-          <button type="submit" class="rejection-btn">拒否する</button>
+          <form action="/process_button/{{ user.sender.id }}/" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="userData" value="{{ user.userData|date:'Y-m-d' }}">
+            <button type="submit" name="buttonType" class="approval-btn" value="承認する">承認する</button>
+            <button type="submit" name="buttonType" class="rejection-btn" value="拒否する">拒否する</button>
+          </form>
         </div>
 
         <div class="separator"></div>
-
       {% endfor %}
     </div>
     <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
       a
     </div>
     <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
-      b
+      {% for user in users %}
+        <div class="request-list">
+          <a href="/profile/{{ user.sender.id }}" class="request-profile-link">
+            <img src="{{ user.sender.profile.image.url }}" alt="{{ user.sender.profile.username }}" class="request-image-size">
+          </a>
+          <p>「{{ user.sender.profile.username }}」から「{{ user.userData|date:"Y-m-d" }}」に対してヒマリクが送られてきています</p>
+        </div>
+
+        <div class="request-btn">
+          <form action="/process_button/{{ user.sender.id }}/" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="userData" value="{{ user.userData|date:'Y-m-d' }}">
+            <button type="submit" name="buttonType" class="approval-btn" value="承認する">承認する</button>
+            <button type="submit" name="buttonType" class="rejection-btn" value="拒否する">拒否する</button>
+          </form>
+        </div>
+
+        <div class="separator"></div>
+      {% endfor %}
     </div>
   </div>
 </div>

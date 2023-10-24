@@ -2,10 +2,11 @@ from django.shortcuts import render
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login, logout
 from .forms import SignupForm, ProfileForm, CalendarForm
-from .models import CustomUser, Profile, Calendar, UserRequest
+from .models import CustomUser, Profile, Calendar, UserRequest, UserResponse
 from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.core.serializers import serialize
+from django.contrib import messages
 
 def top(request):
   return render(request, 'top.html')
@@ -201,3 +202,18 @@ def request_list(request):
     users = UserRequest.objects.filter(receiver_id=request.user.id)
 
     return render(request, 'request_list.html', {'users': users})
+
+def process_button(request, user_id):
+    if request.method == 'POST':
+      buttonType = request.POST.get('buttonType')
+      sender = request.user
+      receiver = CustomUser.objects.get(id=user_id)
+      userData = request.POST.get('userData')
+
+      UserResponse.objects.create(sender=sender, receiver=receiver, userData=userData, buttonType=buttonType)
+
+      messages.success(request, '正常にレスポンスが送信されました')
+      return redirect('request_list')
+
+      messages.error(request, 'エラーが発生しました')
+    return render(request, 'request_list.html')

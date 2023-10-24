@@ -38,7 +38,14 @@ class Calendar(models.Model):
     message = models.TextField(max_length=255, null=True, blank=True)
 
 class UserRequest(models.Model):
-    sender = models.ForeignKey(CustomUser, related_name="sent_requests", on_delete=models.CASCADE)
-    receiver = models.ForeignKey(CustomUser, related_name="received_requests", on_delete=models.CASCADE)
+    sender = models.ForeignKey(CustomUser, related_name="sent_request", on_delete=models.CASCADE)
+    receiver = models.ForeignKey(CustomUser, related_name="received_request", on_delete=models.CASCADE)
     userData = models.DateField(default='2023-01-14')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class UserResponse(models.Model):
+    sender = models.ForeignKey(CustomUser, related_name="sent_response", on_delete=models.CASCADE)
+    receiver = models.ForeignKey(CustomUser, related_name="received_response", on_delete=models.CASCADE)
+    userData = models.DateField(default='2023-01-14')
+    buttonType = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)

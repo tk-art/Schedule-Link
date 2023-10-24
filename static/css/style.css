@@ -445,3 +445,14 @@ footer {
 .request-nav .nav-link:hover {
   color: #fff;
 }
+
+/* メッセージ */
+.response-message {
+  background-color: #85B4B2;
+  color: black;
+  padding: 8px 16px;
+  border-radius: 10px;
+  margin-top: 20px;
+  margin-left: 20px;
+  display: inline-block;
+}
