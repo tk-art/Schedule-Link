@@ -41,6 +41,7 @@ class UserRequest(models.Model):
     sender = models.ForeignKey(CustomUser, related_name="sent_request", on_delete=models.CASCADE)
     receiver = models.ForeignKey(CustomUser, related_name="received_request", on_delete=models.CASCADE)
     userData = models.DateField(default='2023-01-14')
+    is_processed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
 class UserResponse(models.Model):

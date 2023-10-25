@@ -379,12 +379,14 @@ footer {
 
 /* リスト */
 .request-list {
-  margin-top: 40px;
   display: flex;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .request-list p {
   margin-left: 20px;
+  margin: auto 0;
 }
 
 .request-image-size {
@@ -404,8 +406,8 @@ footer {
 
 .request-btn {
   text-align: right;
-  margin-bottom: 15px;
   margin-right: 10px;
+  margin-bottom: 10px;
 }
 
 .approval-btn {
@@ -444,6 +446,16 @@ footer {
 
 .request-nav .nav-link:hover {
   color: #fff;
+}
+
+.response-list {
+  display: flex;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.response-list p {
+  margin: auto 0;
 }
 
 /* メッセージ */

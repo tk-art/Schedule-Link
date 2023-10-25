@@ -19,6 +19,7 @@ urlpatterns = [
     path('intentional_request/<int:user_id>/', views.intentional_request, name='intentional_request'),
     path('request_list/', views.request_list, name='request_list'),
     path('process_button/<int:user_id>/', views.process_button, name='process_button'),
+    path('automatic/', views.automatic, name='automatic'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

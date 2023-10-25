@@ -203,3 +203,24 @@ $('.profile-image-modal').click(function() {
 $('#close-modal').click(function() {
   $('#modal').hide();
 });
+
+
+$(".request-btn button").click(function() {
+  $(this).closest('.request-btn').hide();
+});
+
+
+$(document).ready(function() {
+  $("#tab2-tab").on("click", function() {
+      $.ajax({
+          url: "/automatic/",
+          method: "GET",
+          success: function(data) {
+            $('#result').text(JSON.stringify(data));
+          },
+          error: function(error) {
+              console.log(error);
+          }
+      });
+  });
+});

@@ -27,8 +27,9 @@
   {% endif %}
 
   <div class="tab-content" id="myTabContent">
+    <!--リクエスト-->
     <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
-      {% for user in users %}
+      {% for user in request_users %}
         <div class="request-list">
           <a href="/profile/{{ user.sender.id }}" class="request-profile-link">
             <img src="{{ user.sender.profile.image.url }}" alt="{{ user.sender.profile.username }}" class="request-image-size">
@@ -36,39 +37,38 @@
           <p>「{{ user.sender.profile.username }}」から「{{ user.userData|date:"Y-m-d" }}」に対してヒマリクが送られてきています</p>
         </div>
 
-        <div class="request-btn">
-          <form action="/process_button/{{ user.sender.id }}/" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="userData" value="{{ user.userData|date:'Y-m-d' }}">
-            <button type="submit" name="buttonType" class="approval-btn" value="承認する">承認する</button>
-            <button type="submit" name="buttonType" class="rejection-btn" value="拒否する">拒否する</button>
-          </form>
-        </div>
+        {% if not user.is_processed %}
+          <div class="request-btn">
+            <form action="/process_button/{{ user.sender.id }}/" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="userData" value="{{ user.userData|date:'Y-m-d' }}">
+              <button type="submit" name="buttonType" class="approval-btn" value="承認する">承認する</button>
+              <button type="submit" name="buttonType" class="rejection-btn" value="拒否する">拒否する</button>
+            </form>
+          </div>
+        {% endif %}
 
         <div class="separator"></div>
       {% endfor %}
     </div>
+
+    <!--自動リクエスト-->
     <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
-      a
+      <div id="result"></div>
     </div>
+
+    <!--レスポンス-->
     <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
-      {% for user in users %}
-        <div class="request-list">
+      {% for user in response_users %}
+        <div class="response-list">
           <a href="/profile/{{ user.sender.id }}" class="request-profile-link">
             <img src="{{ user.sender.profile.image.url }}" alt="{{ user.sender.profile.username }}" class="request-image-size">
           </a>
-          <p>「{{ user.sender.profile.username }}」から「{{ user.userData|date:"Y-m-d" }}」に対してヒマリクが送られてきています</p>
+          <p>
+            「{{ user.sender.profile.username }}」から「{{ user.userData|date:"Y-m-d" }}」に対するリクエストに関して、<br>
+            「{{ user.buttonType }}」と返答があります
+          </p>
         </div>
-
-        <div class="request-btn">
-          <form action="/process_button/{{ user.sender.id }}/" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="userData" value="{{ user.userData|date:'Y-m-d' }}">
-            <button type="submit" name="buttonType" class="approval-btn" value="承認する">承認する</button>
-            <button type="submit" name="buttonType" class="rejection-btn" value="拒否する">拒否する</button>
-          </form>
-        </div>
-
         <div class="separator"></div>
       {% endfor %}
     </div>

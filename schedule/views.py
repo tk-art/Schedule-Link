@@ -199,9 +199,15 @@ def intentional_request(request, user_id):
     return JsonResponse({"status": "error"})
 
 def request_list(request):
-    users = UserRequest.objects.filter(receiver_id=request.user.id)
+    request_users = UserRequest.objects.filter(receiver_id=request.user.id).order_by('-created_at')
+    response_users = UserResponse.objects.filter(receiver_id=request.user.id).order_by('-created_at')
 
-    return render(request, 'request_list.html', {'users': users})
+    context = {
+      'request_users': request_users,
+      'response_users': response_users
+    }
+
+    return render(request, 'request_list.html', context)
 
 def process_button(request, user_id):
     if request.method == 'POST':
@@ -212,8 +218,28 @@ def process_button(request, user_id):
 
       UserResponse.objects.create(sender=sender, receiver=receiver, userData=userData, buttonType=buttonType)
 
+      user_request = UserRequest.objects.get(receiver=sender)
+      user_request.is_processed = True
+      user_request.save()
+
       messages.success(request, '正常にレスポンスが送信されました')
       return redirect('request_list')
 
       messages.error(request, 'エラーが発生しました')
     return render(request, 'request_list.html')
+
+def automatic(request):
+    current_user = request.user
+    # 現在のユーザーの暇な時間を取得
+    user_free_times = Calendar.objects.filter(user=current_user)
+
+    all_matched_users = []
+
+    # 各暇な時間に対して、一致するユーザーを検索
+    for user_free_time in user_free_times:
+        matched_users = Calendar.objects.filter(
+            selectedDate=user_free_time.selectedDate
+        ).exclude(user=current_user).values_list('user', flat=True)
+        all_matched_users.extend(matched_users)
+
+    return JsonResponse(all_matched_users, safe=False)
