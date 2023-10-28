@@ -208,19 +208,3 @@ $('#close-modal').click(function() {
 $(".request-btn button").click(function() {
   $(this).closest('.request-btn').hide();
 });
-
-
-$(document).ready(function() {
-  $("#tab2-tab").on("click", function() {
-      $.ajax({
-          url: "/automatic/",
-          method: "GET",
-          success: function(data) {
-            $('#result').text(JSON.stringify(data));
-          },
-          error: function(error) {
-              console.log(error);
-          }
-      });
-  });
-});

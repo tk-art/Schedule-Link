@@ -54,7 +54,16 @@
 
     <!--自動リクエスト-->
     <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
-      <div id="result"></div>
+      {% for user in users %}
+        <div class="request-list">
+          <a href="/profile/{{ user.id }}" class="request-profile-link">
+            <img src="{{ user.profile.image.url }}" alt="{{ user.profile.username }}" class="request-image-size">
+          </a>
+          <p>「{{ user.profile.username }}」とは、暇な時間が一致しています</p>
+        </div>
+
+        <div class="separator"></div>
+      {% endfor %}
     </div>
 
     <!--レスポンス-->
