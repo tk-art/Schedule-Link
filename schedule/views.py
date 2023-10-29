@@ -204,6 +204,8 @@ def request_list(request):
     response_users = UserResponse.objects.filter(receiver_id=current_user.id).order_by('-created_at')
 
     user_free_times = Calendar.objects.filter(user=current_user)
+    profile = Profile.objects.get(id=current_user.id)
+    followed_users = current_user.profile.follows.all()
 
     all_matched_users = []
 
@@ -213,12 +215,24 @@ def request_list(request):
         ).exclude(user=current_user).values_list('user', flat=True)
         all_matched_users.extend(matched_users)
 
+    matching_users = Profile.objects.filter(
+        hobby__in=profile.hobby.all(),
+        interest__in=profile.interest.all()
+    ).exclude(
+        id__in=current_user.id
+    )
+
+
     users = CustomUser.objects.filter(id__in=all_matched_users)
+
+    uses = list(set(all_matched_users))
+
 
     context = {
       'request_users': request_users,
       'response_users': response_users,
-      'users': users
+      'users': users,
+      'uses': uses,
     }
 
     return render(request, 'request_list.html', context)
