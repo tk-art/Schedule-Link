@@ -204,7 +204,10 @@ def request_list(request):
     response_users = UserResponse.objects.filter(receiver_id=current_user.id).order_by('-created_at')
 
     user_free_times = Calendar.objects.filter(user=current_user)
-    profile = Profile.objects.get(id=current_user.id)
+
+    user_profile = Profile.objects.get(id=current_user.profile.id)
+    range_profile = Profile.objects.filter(residence="宮崎県")
+
     followed_users = current_user.profile.follows.all()
 
     all_matched_users = []
@@ -215,24 +218,36 @@ def request_list(request):
         ).exclude(user=current_user).values_list('user', flat=True)
         all_matched_users.extend(matched_users)
 
-    matching_users = Profile.objects.filter(
-        hobby__in=profile.hobby.all(),
-        interest__in=profile.interest.all()
-    ).exclude(
-        id__in=current_user.id
-    )
+    followed_user_ids = [profile.user.id for profile in current_user.profile.follows.all()]
 
+    priority_matching = []
+    regular_matching = []
 
-    users = CustomUser.objects.filter(id__in=all_matched_users)
+    for profile in range_profile:
+        if profile.id == user_profile.id:
+           continue
 
-    uses = list(set(all_matched_users))
+        if profile.user_id in followed_user_ids:
+            priority_matching.append(profile.user_id)
+            continue
 
+        if set(profile.hobby.all()).intersection(set(user_profile.hobby.all())):
+            regular_matching.append(profile.user_id)
+            continue
+
+        if set(profile.interest.all()).intersection(set(user_profile.interest.all())):
+            regular_matching.append(profile.user_id)
+
+    matching_users = priority_matching + regular_matching
+
+    final_matched_users = list(set(all_matched_users) & set(matching_users))
+
+    users = sorted(CustomUser.objects.filter(id__in=final_matched_users), key=lambda u: matching_users.index(u.id))
 
     context = {
       'request_users': request_users,
       'response_users': response_users,
-      'users': users,
-      'uses': uses,
+      'users': users
     }
 
     return render(request, 'request_list.html', context)

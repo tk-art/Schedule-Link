@@ -200,12 +200,12 @@ footer {
 
 /* フォロー */
 .follow {
-  font-size: 14px;
-  border: 2px solid rgb(154, 154, 162);
+  font-size: 12px;
+  border: 1px solid rgb(154, 154, 162);
   color: #fff;
   text-decoration: none;
   border-radius: 5px;
-  padding: 8px 16px;
+  padding: 6px 12px;
   background: black;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -221,9 +221,9 @@ footer {
 }
 
 .follow-btn {
-  background-color: rgb(62, 105, 213);
+  background-color: rgb(29, 69, 170);
   color: #fff;
-  border: 2px solid rgb(62, 105, 213);
+  border: 1px solid rgb(29, 69, 170);
 }
 
 .follow-count {
