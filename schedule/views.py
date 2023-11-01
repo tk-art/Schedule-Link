@@ -202,7 +202,19 @@ def request_list(request):
     current_user = request.user
     request_users = UserRequest.objects.filter(receiver_id=current_user.id).order_by('-created_at')
     response_users = UserResponse.objects.filter(receiver_id=current_user.id).order_by('-created_at')
+    users = automatic_request_list(request)
 
+    context = {
+      'request_users': request_users,
+      'response_users': response_users,
+      'users': users
+    }
+    return render(request, 'request_list.html', context)
+
+
+
+def automatic_request_list(request):
+    current_user = request.user
     user_free_times = Calendar.objects.filter(user=current_user)
 
     user_profile = Profile.objects.get(id=current_user.profile.id)
@@ -217,6 +229,8 @@ def request_list(request):
             selectedDate=user_free_time.selectedDate
         ).exclude(user=current_user).values_list('user', flat=True)
         all_matched_users.extend(matched_users)
+
+    print(all_matched_users)
 
     followed_user_ids = [profile.user.id for profile in current_user.profile.follows.all()]
 
@@ -239,18 +253,20 @@ def request_list(request):
             regular_matching.append(profile.user_id)
 
     matching_users = priority_matching + regular_matching
+    print(matching_users)
 
-    final_matched_users = list(set(all_matched_users) & set(matching_users))
+    semifinal_matched_users = list(set(all_matched_users) & set(matching_users))
 
-    users = sorted(CustomUser.objects.filter(id__in=final_matched_users), key=lambda u: matching_users.index(u.id))
+    additional_users = [user for user in all_matched_users if user not in semifinal_matched_users]
 
-    context = {
-      'request_users': request_users,
-      'response_users': response_users,
-      'users': users
-    }
+    final_matched_users = semifinal_matched_users + additional_users
+    print(final_matched_users)
+    users = sorted(CustomUser.objects.filter(id__in=final_matched_users), key=lambda u: final_matched_users.index(u.id))
+    print(users)
+    return users
 
-    return render(request, 'request_list.html', context)
+
+
 
 def process_button(request, user_id):
     if request.method == 'POST':

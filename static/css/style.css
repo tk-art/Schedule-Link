@@ -458,6 +458,11 @@ footer {
   margin: auto 0;
 }
 
+.automatic {
+  margin-bottom: 10px;
+  margin-left: 100px;
+}
+
 /* メッセージ */
 .response-message {
   background-color: #85B4B2;
@@ -467,4 +472,20 @@ footer {
   margin-top: 20px;
   margin-left: 20px;
   display: inline-block;
+}
+
+/*　チャット */
+.chat {
+  display: inline-block;
+  font-weight:bold;
+  transition:.3s;
+  text-decoration: none;
+  color:rgb(62, 105, 213);
+  margin-left: 100px;
+  margin-bottom: 10px;
+}
+
+.chat:hover {
+  transition:.3s;
+  transform: rotate(2deg);
 }

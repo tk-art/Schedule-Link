@@ -61,6 +61,9 @@
           </a>
           <p>「{{ user.profile.username }}」とは、暇な時間が一致しています</p>
         </div>
+        <div class="automatic">
+          <a class="intentional-btn" onclick="requestClicked()">ヒマリク</a>
+        </div>
 
         <div class="separator"></div>
       {% endfor %}
@@ -78,6 +81,9 @@
             「{{ user.buttonType }}」と返答があります
           </p>
         </div>
+        {% if user.buttonType == '承認する' %}
+          <a href="chat" class="chat">個別チャットへ</a>
+        {% endif %}
         <div class="separator"></div>
       {% endfor %}
     </div>
