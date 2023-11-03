@@ -59,10 +59,16 @@
           <a href="/profile/{{ user.id }}" class="request-profile-link">
             <img src="{{ user.profile.image.url }}" alt="{{ user.profile.username }}" class="request-image-size">
           </a>
-          <p>「{{ user.profile.username }}」とは、暇な時間が一致しています</p>
-        </div>
-        <div class="automatic">
-          <a class="intentional-btn" onclick="requestClicked()">ヒマリク</a>
+          <div>
+            <p>「{{ user.profile.username }}」とは、暇な時間が一致しています</p>
+            {% for key, value in user_first_match.items %}
+              {% if user.id == key %}
+                <p class="first-match-p">直近での一致は{{ value|date:"Y-m-d" }}です</p>
+                <div id="selectedData-{{ key }}" style="display: none;">{{ value|date:"Y-m-d" }}</div>
+                <a class="intentional-btn" data-key="{{ key }}" onclick="requestClicked(this)">ヒマリク</a>
+              {% endif %}
+            {% endfor %}
+          </div>
         </div>
 
         <div class="separator"></div>
@@ -91,7 +97,6 @@
 </div>
 
 <script>
-  var userId = '{{ current_user.id }}'
   var csrfToken = '{{ csrf_token }}';
 </script>
 

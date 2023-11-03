@@ -33,6 +33,7 @@ body {
 .intentional-btn:hover {
   color: #fff;
   background: rgb(62, 105, 213);
+  border: 1px solid rgb(62, 105, 213);
   cursor: pointer;
 }
 
@@ -384,9 +385,8 @@ footer {
   margin-bottom: 20px;
 }
 
-.request-list p {
-  margin-left: 20px;
-  margin: auto 0;
+.first-match-p {
+  margin-left: 5px;
 }
 
 .request-image-size {
@@ -456,11 +456,6 @@ footer {
 
 .response-list p {
   margin: auto 0;
-}
-
-.automatic {
-  margin-bottom: 10px;
-  margin-left: 100px;
 }
 
 /* メッセージ */

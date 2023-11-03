@@ -203,13 +203,15 @@ def request_list(request):
     current_user = request.user
     request_users = UserRequest.objects.filter(receiver_id=current_user.id).order_by('-created_at')
     response_users = UserResponse.objects.filter(receiver_id=current_user.id).order_by('-created_at')
-    users = automatic_request_list(request)
+    users, user_first_match = automatic_request_list(request)
+    print(user_first_match)
 
     context = {
       'request_users': request_users,
       'response_users': response_users,
       'users': users,
-      'current_user': current_user
+      'current_user': current_user,
+      'user_first_match': user_first_match
     }
     return render(request, 'request_list.html', context)
 
@@ -225,13 +227,19 @@ def automatic_request_list(request):
 
     followed_users = current_user.profile.follows.all()
 
-    all_matched_users = []
+    user_first_match = {}
 
     for user_free_time in user_free_times:
         matched_users = Calendar.objects.filter(
             selectedDate=user_free_time.selectedDate
-        ).exclude(user=current_user).values_list('user', flat=True)
-        all_matched_users.extend(matched_users)
+        ).exclude(user=current_user)
+
+        for matched_user in matched_users:
+            user_id = matched_user.user.id
+            if user_id not in user_first_match:
+                user_first_match[user_id] = matched_user.selectedDate
+
+    first_matched_users = list(user_first_match.keys())
 
     followed_user_ids = [profile.user.id for profile in current_user.profile.follows.all()]
 
@@ -255,17 +263,14 @@ def automatic_request_list(request):
 
     matching_users = priority_matching + regular_matching
 
-    semifinal_matched_users = list(set(all_matched_users) & set(matching_users))
+    semifinal_matched_users = list(set(first_matched_users) & set(matching_users))
 
-    additional_users = [user for user in all_matched_users if user not in semifinal_matched_users]
+    additional_users = [user for user in first_matched_users if user not in semifinal_matched_users]
 
     final_matched_users = semifinal_matched_users + additional_users
 
     users = sorted(CustomUser.objects.filter(id__in=final_matched_users), key=lambda u: final_matched_users.index(u.id))
-    return users
-
-
-
+    return users, user_first_match
 
 def process_button(request, user_id):
     if request.method == 'POST':

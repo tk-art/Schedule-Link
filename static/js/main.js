@@ -61,8 +61,15 @@ $(document).ready(function() {
   });
 });
 
-function requestClicked() {
-  var userData = $("#selectedData").text();
+function requestClicked(element) {
+  var userData;
+
+  if (element) {
+    var userId = $(element).data('key');
+    userData = $("#selectedData-" + userId).text();
+  } else {
+    userData = $("#selectedData").text();
+  }
 
   $.ajax({
     type: "POST",
@@ -75,6 +82,7 @@ function requestClicked() {
     success: function(response) {
       if(response.status == "success"){
         alert("正常にリクエストが送信されました");
+        $(element).hide();
       } else {
           alert("エラーが発生しました");
       }
