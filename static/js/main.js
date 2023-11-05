@@ -68,6 +68,7 @@ function requestClicked(element) {
     var userId = $(element).data('key');
     userData = $("#selectedData-" + userId).text();
   } else {
+    var userId = $('#intentionalBtn').data('key');
     userData = $("#selectedData").text();
   }
 
@@ -83,12 +84,38 @@ function requestClicked(element) {
       if(response.status == "success"){
         alert("正常にリクエストが送信されました");
         $(element).hide();
+        $("#intentionalBtn").hide();
       } else {
           alert("エラーが発生しました");
       }
     }
   });
 }
+
+$(document).ready(function() {
+  $('.intentional-btn').each(function() {
+    var btn = $(this);
+    var userId = btn.data('key');
+
+    var userData = $("#selectedData-" + userId).text() || $("#selectedData").text();
+    /*$("#selectedData").text()
+    　　　これが機能していない*/
+
+    $.ajax({
+      type: "POST",
+      url: "/check_user_request/" + userId + "/",
+      data: {
+        csrfmiddlewaretoken: csrfToken,
+        userData: userData
+      },
+      success: function(response) {
+        if (response.situation) {
+          btn.hide();
+        }
+      }
+    });
+  });
+});
 
 $(document).ready(function() {
   var calendarEl = $('#calendar')[0];
@@ -151,7 +178,6 @@ $(document).ready(function() {
         $('#deleteEvent').show();
 
         $('#eventModal').modal('show');
-
 
         $('#saveEvent').off('click').on('click', function() {
             var newTitle = $('#eventTitle').val();

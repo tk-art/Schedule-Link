@@ -194,17 +194,31 @@ def intentional_request(request, user_id):
         receiver = CustomUser.objects.get(id=user_id)
         userData = request.POST.get('userData')
 
-        UserRequest.objects.create(sender=sender, receiver=receiver, userData=userData)
+        UserRequest.objects.create(sender=sender, receiver=receiver, userData=userData, situation=True)
 
         return JsonResponse({"status": "success"})
     return JsonResponse({"status": "error"})
+
+def check_user_request(request, user_id):
+    userData = request.POST.get('userData')
+    print(userData)
+    user_request = UserRequest.objects.filter(
+        sender=request.user.id,
+        receiver_id=user_id,
+        userData=userData
+    ).order_by('-created_at').first()
+
+
+    if user_request and user_request.situation:
+        return JsonResponse({'situation': True})
+    else:
+        return JsonResponse({'situation': False})
 
 def request_list(request):
     current_user = request.user
     request_users = UserRequest.objects.filter(receiver_id=current_user.id).order_by('-created_at')
     response_users = UserResponse.objects.filter(receiver_id=current_user.id).order_by('-created_at')
     users, user_first_match = automatic_request_list(request)
-    print(user_first_match)
 
     context = {
       'request_users': request_users,
@@ -281,7 +295,7 @@ def process_button(request, user_id):
 
       UserResponse.objects.create(sender=sender, receiver=receiver, userData=userData, buttonType=buttonType)
 
-      user_request = UserRequest.objects.get(receiver=sender)
+      user_request = UserRequest.objects.get(sender=receiver, receiver=sender, userData=userData)
       user_request.is_processed = True
       user_request.save()
 

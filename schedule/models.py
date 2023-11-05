@@ -1,5 +1,4 @@
 from django.db import models
-
 from django.contrib.auth.models import AbstractUser
 from datetime import datetime
 
@@ -42,6 +41,7 @@ class UserRequest(models.Model):
     receiver = models.ForeignKey(CustomUser, related_name="received_request", on_delete=models.CASCADE)
     userData = models.DateField(default='2023-01-14')
     is_processed = models.BooleanField(default=False)
+    situation = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
 class UserResponse(models.Model):
