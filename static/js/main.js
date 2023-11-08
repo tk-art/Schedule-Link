@@ -92,15 +92,31 @@ function requestClicked(element) {
   });
 }
 
+$('#otherUserModal').on('shown.bs.modal', function () {
+  var btn = $("#intentionalBtn");
+  var userId = btn.data('key');
+  var userData = $("#selectedData").text();
+  $.ajax({
+    type: "POST",
+    url: "/check_user_request/" + userId + "/",
+    data: {
+      csrfmiddlewaretoken: csrfToken,
+      userData: userData
+    },
+    success: function(response) {
+      if (response.situation) {
+        btn.hide();
+      }
+    }
+  });
+});
+
+
 $(document).ready(function() {
   $('.intentional-btn').each(function() {
     var btn = $(this);
     var userId = btn.data('key');
-
-    var userData = $("#selectedData-" + userId).text() || $("#selectedData").text();
-    /*$("#selectedData").text()
-    　　　これが機能していない*/
-
+    var userData = $("#selectedData-" + userId).text();
     $.ajax({
       type: "POST",
       url: "/check_user_request/" + userId + "/",
@@ -112,10 +128,14 @@ $(document).ready(function() {
         if (response.situation) {
           btn.hide();
         }
+      },
+      error: function(error) {
+        console.log(error);
       }
     });
   });
 });
+
 
 $(document).ready(function() {
   var calendarEl = $('#calendar')[0];
@@ -241,4 +261,66 @@ $('#close-modal').click(function() {
 
 $(".request-btn button").click(function() {
   $(this).closest('.request-btn').hide();
+});
+
+
+/*リクエストチェック*/
+$(document).ready(function() {
+  function checkNewRequests() {
+    $.ajax({
+      url: '/check_new_requests/',
+      method: 'GET',
+      success: function(response) {
+        if (response.requests_unread) {
+          showTabIndicator('#tab1-tab');
+        }
+        if (response.responses_unread) {
+          showTabIndicator('#tab3-tab');
+        }
+      },
+      error: function(error) {
+        console.log('リストの問い合わせに失敗しました。', error);
+      }
+    });
+  }
+
+  checkNewRequests();
+
+  $('.nav-link').click(function() {
+    var tabId = $(this).attr('id');
+    var requestType;
+
+    switch (tabId) {
+      case 'tab1-tab':
+        requestType = 'request';
+        break;
+      case 'tab3-tab':
+        requestType = 'response';
+        break;
+      default:
+        requestType = null;
+    }
+
+    if (requestType) {
+      $.ajax({
+        url: '/mark_tab_as_read/',
+        method: 'POST',
+        data: {
+          csrfmiddlewaretoken: csrfToken,
+          type: requestType
+        },
+        success: function(response) {
+
+        },
+        error: function(error) {
+          console.log('リクエストのマークに失敗しました。', error);
+        }
+      });
+    }
+  });
+
+  function showTabIndicator(tabId) {
+    var indicator = $('<span class="indicator">🔴</span>');
+    $(tabId).append(indicator);
+  }
 });

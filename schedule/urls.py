@@ -20,6 +20,8 @@ urlpatterns = [
     path('request_list/', views.request_list, name='request_list'),
     path('process_button/<int:user_id>/', views.process_button, name='process_button'),
     path('check_user_request/<int:user_id>/', views.check_user_request, name='check_user_request'),
+    path('check_new_requests/', views.check_new_requests, name='check_new_requests'),
+    path('mark_tab_as_read/', views.mark_tab_as_read, name='mark_tab_as_read'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

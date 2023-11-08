@@ -42,6 +42,7 @@ class UserRequest(models.Model):
     userData = models.DateField(default='2023-01-14')
     is_processed = models.BooleanField(default=False)
     situation = models.BooleanField(default=False)
+    read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
 class UserResponse(models.Model):
@@ -49,4 +50,5 @@ class UserResponse(models.Model):
     receiver = models.ForeignKey(CustomUser, related_name="received_response", on_delete=models.CASCADE)
     userData = models.DateField(default='2023-01-14')
     buttonType = models.CharField(max_length=100)
+    read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

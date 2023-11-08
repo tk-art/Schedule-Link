@@ -201,13 +201,11 @@ def intentional_request(request, user_id):
 
 def check_user_request(request, user_id):
     userData = request.POST.get('userData')
-    print(userData)
     user_request = UserRequest.objects.filter(
         sender=request.user.id,
         receiver_id=user_id,
         userData=userData
     ).order_by('-created_at').first()
-
 
     if user_request and user_request.situation:
         return JsonResponse({'situation': True})
@@ -228,8 +226,6 @@ def request_list(request):
       'user_first_match': user_first_match
     }
     return render(request, 'request_list.html', context)
-
-
 
 def automatic_request_list(request):
     current_user = request.user
@@ -304,3 +300,38 @@ def process_button(request, user_id):
 
       messages.error(request, 'エラーが発生しました')
     return render(request, 'request_list.html')
+
+def check_new_notifications(request):
+    user = request.user
+    has_new_notifications = Notification.objects.filter(user=user, read=False).exists()
+
+    response_data = {'hasNewNotification': has_new_notifications}
+    return JsonResponse(response_data)
+
+def check_new_requests(request):
+    user = request.user
+    requests_unread = UserRequest.objects.filter(receiver=user, read=False).exists()
+    responses_unread = UserResponse.objects.filter(receiver=user, read=False).exists()
+
+    response = {
+      'requests_unread': requests_unread,
+      'responses_unread': responses_unread
+    }
+    return JsonResponse(response)
+
+def mark_tab_as_read(request):
+    print('mark_tab_')
+    user = request.user
+    request_type = request.POST.get('type')
+    print(request_type)
+
+    if request_type == 'request':
+        queryset = UserRequest.objects.filter(receiver=user, read=False)
+    elif request_type == 'response':
+        queryset = UserResponse.objects.filter(receiver=user, read=False)
+    else:
+        return JsonResponse({'status': 'error', 'message': '無効なリクエストタイプ'})
+
+    queryset.update(read=True)
+
+    return JsonResponse({'status': 'success'})
