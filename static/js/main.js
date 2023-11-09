@@ -277,6 +277,12 @@ $(document).ready(function() {
         if (response.responses_unread) {
           showTabIndicator('#tab3-tab');
         }
+
+        if (response.requests_unread || response.responses_unread) {
+          showTabIndicator('#requests-link');
+        } else {
+          hideTabIndicator('#requests-link');
+        }
       },
       error: function(error) {
         console.log('リストの問い合わせに失敗しました。', error);
@@ -310,7 +316,6 @@ $(document).ready(function() {
           type: requestType
         },
         success: function(response) {
-
         },
         error: function(error) {
           console.log('リクエストのマークに失敗しました。', error);
@@ -322,5 +327,9 @@ $(document).ready(function() {
   function showTabIndicator(tabId) {
     var indicator = $('<span class="indicator">🔴</span>');
     $(tabId).append(indicator);
+  }
+
+  function hideTabIndicator(tabId) {
+    $(selector).find('.indicator').remove();
   }
 });

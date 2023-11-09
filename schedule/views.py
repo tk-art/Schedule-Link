@@ -301,13 +301,6 @@ def process_button(request, user_id):
       messages.error(request, 'エラーが発生しました')
     return render(request, 'request_list.html')
 
-def check_new_notifications(request):
-    user = request.user
-    has_new_notifications = Notification.objects.filter(user=user, read=False).exists()
-
-    response_data = {'hasNewNotification': has_new_notifications}
-    return JsonResponse(response_data)
-
 def check_new_requests(request):
     user = request.user
     requests_unread = UserRequest.objects.filter(receiver=user, read=False).exists()
@@ -320,10 +313,8 @@ def check_new_requests(request):
     return JsonResponse(response)
 
 def mark_tab_as_read(request):
-    print('mark_tab_')
     user = request.user
     request_type = request.POST.get('type')
-    print(request_type)
 
     if request_type == 'request':
         queryset = UserRequest.objects.filter(receiver=user, read=False)
@@ -335,3 +326,6 @@ def mark_tab_as_read(request):
     queryset.update(read=True)
 
     return JsonResponse({'status': 'success'})
+
+def chat(request):
+    return render(request, 'chat.html')
