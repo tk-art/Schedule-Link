@@ -1,4 +1,13 @@
 {% extends "base.html" %}
 {% block title %}チャット{% endblock %}
 {% block content %}
+<div class="container col-md-6">
+  <ul id="chat-log"></ul>
+  <input id="chat-message-input" type="text" size="80">
+  <button id="chat-message-submit">送信</button>
+</div>
+
+<script>
+    var roomName = "{{ room_name }}";
+</script>
 {% endblock %}

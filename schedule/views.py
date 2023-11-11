@@ -327,5 +327,9 @@ def mark_tab_as_read(request):
 
     return JsonResponse({'status': 'success'})
 
-def chat(request):
-    return render(request, 'chat.html')
+def chat_room(request, user_id):
+    other_user = CustomUser.objects.get(id=user_id)
+    current_user = request.user
+    room_name = f'chat_{min(current_user.id, other_user.id)}_{max(current_user.id, other_user.id)}'
+
+    return render(request, 'chat.html', {'room_name': room_name})

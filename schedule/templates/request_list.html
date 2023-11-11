@@ -88,7 +88,7 @@
           </p>
         </div>
         {% if user.buttonType == '承認する' %}
-          <a href="chat" class="chat">個別チャットへ</a>
+          <a href="/chat/{{ user.sender.id }}" class="chat">個別チャットへ</a>
         {% endif %}
         <div class="separator"></div>
       {% endfor %}

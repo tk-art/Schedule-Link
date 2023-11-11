@@ -330,6 +330,38 @@ $(document).ready(function() {
   }
 
   function hideTabIndicator(tabId) {
-    $(selector).find('.indicator').remove();
+    $(tabId).find('.indicator').remove();
   }
+});
+
+/*チャット*/
+$(function() {
+  var chatSocket = new WebSocket(
+      'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
+  );
+  console.log(chatSocket);
+
+  chatSocket.onmessage = function(e) {
+      var data = JSON.parse(e.data);
+      var message = data.message;
+      $('#chat-log').append('<div>' + message + '</div>');
+  };
+
+  chatSocket.onclose = function(e) {
+      console.error('チャットソケットが予期せず閉じられました');
+  };
+
+  $('#chat-message-input').on('keyup', function(e) {
+      if (e.keyCode === 13) {  // Enterキー
+          $('#chat-message-submit').click();
+      }
+  });
+
+  $('#chat-message-submit').on('click', function() {
+      var message = $('#chat-message-input').val();
+      chatSocket.send(JSON.stringify({
+          'message': message
+      }));
+      $('#chat-message-input').val('');
+  });
 });
