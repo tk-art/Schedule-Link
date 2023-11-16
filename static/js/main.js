@@ -339,7 +339,6 @@ $(function() {
   var chatSocket = new WebSocket(
       'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
   );
-  console.log(chatSocket);
 
   chatSocket.onmessage = function(e) {
       var data = JSON.parse(e.data);

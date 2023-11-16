@@ -15,9 +15,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from channels.routing import ProtocolTypeRouter, URLRouter
-from schedule.consumers import ChatConsumer
-from channels.auth import AuthMiddlewareStack
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,15 +22,3 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
 
 ]
-
-websocket_urlpatterns = [
-    path('ws/chat/<str:room_name>', ChatConsumer.as_asgi()),
-]
-
-application = ProtocolTypeRouter({
-    'websocket': AuthMiddlewareStack(
-        URLRouter(
-            websocket_urlpatterns
-        )
-    ),
-})
