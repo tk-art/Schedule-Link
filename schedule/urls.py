@@ -23,6 +23,7 @@ urlpatterns = [
     path('check_user_request/<int:user_id>/', views.check_user_request, name='check_user_request'),
     path('check_new_requests/', views.check_new_requests, name='check_new_requests'),
     path('mark_tab_as_read/', views.mark_tab_as_read, name='mark_tab_as_read'),
+    path('chat_list/', views.chat_list, name='chat_list'),
     path('chat/<int:user_id>/', views.chat_room, name='chat_room'),
 ]
 

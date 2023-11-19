@@ -343,7 +343,7 @@ $(function() {
   chatSocket.onmessage = function(e) {
       var data = JSON.parse(e.data);
       var message = data.message;
-      $('#chat-log').append('<div>' + message + '</div>');
+      $('.chat-log').append('<div>' + message + '</div>');
   };
 
   chatSocket.onclose = function(e) {
@@ -351,7 +351,7 @@ $(function() {
   };
 
   $('#chat-message-input').on('keyup', function(e) {
-      if (e.keyCode === 13) {  // Enterキー
+      if (e.keyCode === 13) {
           $('#chat-message-submit').click();
       }
   });
@@ -359,7 +359,10 @@ $(function() {
   $('#chat-message-submit').on('click', function() {
       var message = $('#chat-message-input').val();
       chatSocket.send(JSON.stringify({
-          'message': message
+          'message': message,
+          'sender_id': sender_id,
+          'receiver_id': receiver_id,
+          'room_name': roomName
       }));
       $('#chat-message-input').val('');
   });

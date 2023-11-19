@@ -52,3 +52,10 @@ class UserResponse(models.Model):
     buttonType = models.CharField(max_length=100)
     read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+
+class ChatMessage(models.Model):
+    sender = models.ForeignKey(CustomUser, related_name='sent_messages', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(CustomUser, related_name='received_messages', on_delete=models.CASCADE)
+    message = models.TextField()
+    room_name = models.CharField(max_length=30)
+    timestamp = models.DateTimeField(auto_now_add=True)

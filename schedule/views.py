@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login, logout
 from .forms import SignupForm, ProfileForm, CalendarForm
-from .models import CustomUser, Profile, Calendar, UserRequest, UserResponse
+from .models import CustomUser, Profile, Calendar, UserRequest, UserResponse, ChatMessage
 from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.core.serializers import serialize
@@ -327,9 +327,20 @@ def mark_tab_as_read(request):
 
     return JsonResponse({'status': 'success'})
 
+def chat_list(request):
+  return render(request, 'chat_list.html')
+
 def chat_room(request, user_id):
     other_user = CustomUser.objects.get(id=user_id)
     current_user = request.user
     room_name = f'{min(current_user.id, other_user.id)}_{max(current_user.id, other_user.id)}'
+    chat_messages = ChatMessage.objects.filter(room_name=room_name)
 
-    return render(request, 'chat.html', {'room_name': room_name})
+    context = {
+      'current_user': current_user,
+      'other_user': other_user,
+      'room_name': room_name,
+      'chat_messages': chat_messages
+    }
+
+    return render(request, 'chat.html', context)

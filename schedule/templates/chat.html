@@ -2,12 +2,27 @@
 {% block title %}チャット{% endblock %}
 {% block content %}
 <div class="container col-md-6">
-  <ul id="chat-log"></ul>
-  <input id="chat-message-input" type="text" size="80">
-  <button id="chat-message-submit">送信</button>
+  {% if chat_messages %}
+    {% for chat in chat_messages %}
+    <div class="chat-content">
+      <a href="/profile/{{ chat.sender.id }}">
+        <img src="{{ chat.sender.profile.image.url }}" alt="{{ chat.sender.profile.username }}" class="request-image-size">
+      </a>
+      <ul class="chat-log">{{ chat.message }}</ul>
+    </div>
+    {% endfor %}
+  {% endif %}
+  <ul class="chat-log"></ul>
+  <div class="chat-input">
+    <input id="chat-message-input" type="text" size="50">
+    <button id="chat-message-submit" class="chat-btn">送信</button>
+  </div>
 </div>
 {{ room_name }}
+{{ current_user }}
 <script>
     var roomName = "{{ room_name }}";
+    var sender_id = "{{ current_user.id }}";
+    var receiver_id = "{{ other_user.id }}";
 </script>
 {% endblock %}

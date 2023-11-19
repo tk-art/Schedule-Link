@@ -484,3 +484,27 @@ footer {
   transition:.3s;
   transform: rotate(2deg);
 }
+
+.chat-btn {
+  font-size: 12px;
+  border: 1px solid rgb(146, 147, 152);
+  color: black;
+  border-radius: 5px;
+  padding: 6px 12px;
+  background: #fff;
+  margin-top: 15px
+}
+.chat-btn:hover {
+  color: #fff;
+  background: rgb(62, 105, 213);
+  border: none;
+}
+
+.chat-content {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.chat-log {
+  margin: auto 0;
+}
