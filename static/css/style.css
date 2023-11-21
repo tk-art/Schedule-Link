@@ -398,6 +398,7 @@ footer {
   margin-left: 20px;
   margin-right: 20px;
   cursor: pointer;
+  border: none;
 }
 
 .request-profile-link {
@@ -487,12 +488,12 @@ footer {
 
 .chat-btn {
   font-size: 12px;
-  border: 1px solid rgb(146, 147, 152);
   color: black;
   border-radius: 5px;
   padding: 6px 12px;
   background: #fff;
-  margin-top: 15px
+  margin-top: 15px;
+  border: none;
 }
 .chat-btn:hover {
   color: #fff;
@@ -505,6 +506,28 @@ footer {
   margin-bottom: 15px;
 }
 
-.chat-log {
+.chat-page {
   margin: auto 0;
+  letter-spacing: 1.2px;
+}
+
+#chat-log {
+  margin: auto 0;
+  letter-spacing: 1.2px;
+}
+
+.chat-list {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgb(185, 185, 177);
+  text-decoration: none;
+}
+
+.chat-list img {
+  margin-bottom: 15px;
+}
+
+.list-message {
+  color:rgb(131, 131, 139);
+  margin-left: 10px;;
 }

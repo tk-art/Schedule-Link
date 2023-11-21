@@ -28,13 +28,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         receiver_id = text_data_json['receiver_id']
         room_name = text_data_json['room_name']
 
+        image_url = await self.image(sender_id)
         await self.save_message(sender_id, receiver_id, message, room_name)
 
         await self.channel_layer.group_send(
             self.room_group_name,
             {
                 'type': 'chat_message',
-                'message': message
+                'message': message,
+                'image': image_url
             }
         )
 
@@ -44,6 +46,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'message': message
         }))
+
+    @database_sync_to_async
+    def image(self, sender_id):
+      user = CustomUser.objects.get(id=sender_id)
+      image_url = user.profile.image.url if user.profile.image else None
+      return image_url
 
     @database_sync_to_async
     def save_message(self, sender_id, receiver_id, message, room_name):

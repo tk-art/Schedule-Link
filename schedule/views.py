@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from django.core.serializers import serialize
 from django.contrib import messages
 from datetime import datetime
+from django.db import models
 
 def top(request):
   return render(request, 'top.html')
@@ -328,7 +329,25 @@ def mark_tab_as_read(request):
     return JsonResponse({'status': 'success'})
 
 def chat_list(request):
-  return render(request, 'chat_list.html')
+    current_user = request.user
+    user_rooms = ChatMessage.objects.filter(
+        models.Q(sender=current_user) | models.Q(receiver=current_user)
+    ).values_list('room_name', flat=True).distinct()
+
+    rooms_receiver= []
+
+    for room_name in user_rooms:
+        room_info = {}
+        last_room = ChatMessage.objects.filter(room_name=room_name).last()
+        room_info['message'] = last_room.message
+        if last_room.sender == current_user:
+            room_info['receiver'] = last_room.receiver
+        else:
+            room_info['receiver'] = last_room.sender
+        rooms_receiver.append(room_info)
+
+    return render(request, 'chat_list.html', {'rooms': rooms_receiver})
+
 
 def chat_room(request, user_id):
     other_user = CustomUser.objects.get(id=user_id)

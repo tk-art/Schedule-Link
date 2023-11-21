@@ -343,7 +343,11 @@ $(function() {
   chatSocket.onmessage = function(e) {
       var data = JSON.parse(e.data);
       var message = data.message;
-      $('.chat-log').append('<div>' + message + '</div>');
+      var image = data.image;
+      console.log(image);
+      var imageElement = $('<img>').attr('src', image).attr('class', 'request-image-size');
+      $('#chat-image').append(imageElement);
+      $('#chat-log').append(message);
   };
 
   chatSocket.onclose = function(e) {
