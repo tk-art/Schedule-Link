@@ -337,37 +337,47 @@ $(document).ready(function() {
 /*チャット*/
 $(function() {
   var chatSocket = new WebSocket(
-      'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
+    'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
   );
 
   chatSocket.onmessage = function(e) {
-      var data = JSON.parse(e.data);
-      var message = data.message;
-      var image = data.image;
-      console.log(image);
+    var data = JSON.parse(e.data);
+    var message = data.message;
+    var image = data.image;
+    var sender_id = data.sender_id;
+    var newChatContent = $('<div>').addClass('chat-content');
+
+    if (image) {
       var imageElement = $('<img>').attr('src', image).attr('class', 'request-image-size');
-      $('#chat-image').append(imageElement);
-      $('#chat-log').append(message);
+      var linkElement = $('<a>').attr('href', '/profile/' + sender_id).append(imageElement);
+      var imageContainer = $('<div>').addClass('chat-image').append(linkElement);
+      newChatContent.append(imageContainer);
+    }
+
+    var messageElement = $('<p>').addClass('chat-log').text(message);
+    newChatContent.append(messageElement);
+
+    $('.chat-container').append(newChatContent);
   };
 
   chatSocket.onclose = function(e) {
-      console.error('チャットソケットが予期せず閉じられました');
+    console.error('チャットソケットが予期せず閉じられました');
   };
 
   $('#chat-message-input').on('keyup', function(e) {
-      if (e.keyCode === 13) {
-          $('#chat-message-submit').click();
-      }
+    if (e.keyCode === 13) {
+      $('#chat-message-submit').click();
+    }
   });
 
   $('#chat-message-submit').on('click', function() {
-      var message = $('#chat-message-input').val();
-      chatSocket.send(JSON.stringify({
-          'message': message,
-          'sender_id': sender_id,
-          'receiver_id': receiver_id,
-          'room_name': roomName
-      }));
-      $('#chat-message-input').val('');
+    var message = $('#chat-message-input').val();
+    chatSocket.send(JSON.stringify({
+      'message': message,
+      'sender_id': sender_id,
+      'receiver_id': receiver_id,
+      'room_name': roomName
+    }));
+    $('#chat-message-input').val('');
   });
 });
