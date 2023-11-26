@@ -2,6 +2,7 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from .models import CustomUser, ChatMessage
+from .views import human_readable_time_from_utc
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -23,6 +24,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
+        print(text_data_json)
         message = text_data_json['message']
         sender_id = text_data_json['sender_id']
         receiver_id = text_data_json['receiver_id']
@@ -30,6 +32,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         image_url = await self.image(sender_id)
         await self.save_message(sender_id, receiver_id, message, room_name)
+        chat = await self.delta(sender_id, message)
 
         await self.channel_layer.group_send(
             self.room_group_name,
@@ -37,7 +40,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'type': 'chat_message',
                 'message': message,
                 'image': image_url,
-                'sender_id': sender_id
+                'sender_id': sender_id,
+                'chat': chat
             }
         )
 
@@ -45,18 +49,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = event['message']
         image = event['image']
         sender_id = event['sender_id']
+        chat = event['chat']
 
         await self.send(text_data=json.dumps({
             'message': message,
             'image': image,
-            'sender_id': sender_id
+            'sender_id': sender_id,
+            'chat': chat
         }))
 
     @database_sync_to_async
     def image(self, sender_id):
         user = CustomUser.objects.get(id=sender_id)
         return user.profile.image.url if user.profile.image else None
-
 
     @database_sync_to_async
     def save_message(self, sender_id, receiver_id, message, room_name):
@@ -68,3 +73,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
             message=message,
             room_name=room_name
         )
+
+    @database_sync_to_async
+    def delta(self, sender_id, message):
+        chat = ChatMessage.objects.filter(sender=sender_id, message=message).first()
+        chat.delta = human_readable_time_from_utc(chat.timestamp)
+        return chat.delta

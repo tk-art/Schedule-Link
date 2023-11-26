@@ -7,8 +7,29 @@ from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.core.serializers import serialize
 from django.contrib import messages
+import pytz
 from datetime import datetime
 from django.db import models
+
+def human_readable_time_from_utc(timestamp, timezone='Asia/Tokyo'):
+    local_tz = pytz.timezone(timezone)
+    local_now = datetime.now(local_tz)
+    local_timestamp = timestamp.astimezone(local_tz)
+    delta = local_now - local_timestamp
+
+    seconds = int(delta.total_seconds())
+    minutes, seconds = divmod(seconds, 60)
+    hours, minutes = divmod(minutes, 60)
+    days, hours = divmod(hours, 24)
+
+    if days > 0:
+        return f"{days}日前"
+    elif hours > 0:
+        return f"{hours}時間前"
+    elif minutes > 0:
+        return f"{minutes}分前"
+    else:
+        return "たった今"
 
 def top(request):
   return render(request, 'top.html')
@@ -313,6 +334,16 @@ def check_new_requests(request):
     }
     return JsonResponse(response)
 
+def check_unread_messages(request, user_id):
+    current_user = request.user
+    other_user = CustomUser.objects.get(id=user_id)
+    chat_unread = ChatMessage.objects.filter(sender=other_user, receiver=current_user, read=False).exists()
+
+    response = {
+      'chat_unread': chat_unread
+    }
+    return JsonResponse(response)
+
 def mark_tab_as_read(request):
     user = request.user
     request_type = request.POST.get('type')
@@ -339,14 +370,18 @@ def chat_list(request):
     for room_name in user_rooms:
         room_info = {}
         last_room = ChatMessage.objects.filter(room_name=room_name).last()
+        last_room.delta = human_readable_time_from_utc(last_room.timestamp)
         room_info['message'] = last_room.message
+        room_info['delta'] = last_room.delta
+        room_info['timestamp'] = last_room.timestamp
         if last_room.sender == current_user:
             room_info['receiver'] = last_room.receiver
         else:
             room_info['receiver'] = last_room.sender
         rooms_receiver.append(room_info)
 
-    return render(request, 'chat_list.html', {'rooms': rooms_receiver})
+    rooms_receiver_sorted = sorted(rooms_receiver, key=lambda x: x['timestamp'], reverse=True)
+    return render(request, 'chat_list.html', {'rooms': rooms_receiver_sorted})
 
 
 def chat_room(request, user_id):
@@ -354,6 +389,9 @@ def chat_room(request, user_id):
     current_user = request.user
     room_name = f'{min(current_user.id, other_user.id)}_{max(current_user.id, other_user.id)}'
     chat_messages = ChatMessage.objects.filter(room_name=room_name)
+
+    for chat in chat_messages:
+      chat.delta = human_readable_time_from_utc(chat.timestamp)
 
     context = {
       'current_user': current_user,

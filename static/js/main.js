@@ -334,6 +334,26 @@ $(document).ready(function() {
   }
 });
 
+
+/*　チャットチェック　*/
+$(document).ready(function() {
+  $('.chat-list').each(function() {
+    var chatLink = $(this);
+    var userId = chatLink.data('user-id');
+
+    $.ajax({
+      url: '/check_unread_messages/' + userId + '/',
+      method: 'GET',
+      success: function(data) {
+        if (data.unread_messages_exists) {
+          chatLink.append('<span class="indicator">🔴</span>');
+        }
+      }
+    });
+  });
+});
+
+
 /*チャット*/
 $(function() {
   var chatSocket = new WebSocket(
@@ -343,6 +363,7 @@ $(function() {
   chatSocket.onmessage = function(e) {
     var data = JSON.parse(e.data);
     var message = data.message;
+    var delta = data.chat;
     var image = data.image;
     var sender_id = data.sender_id;
     var newChatContent = $('<div>').addClass('chat-content');
@@ -355,7 +376,9 @@ $(function() {
     }
 
     var messageElement = $('<p>').addClass('chat-log').text(message);
+    var messsageDelta = $('<p>').addClass('chat-delta').text(delta);
     newChatContent.append(messageElement);
+    newChatContent.append(messsageDelta);
 
     $('.chat-container').append(newChatContent);
   };
@@ -380,4 +403,9 @@ $(function() {
     }));
     $('#chat-message-input').val('');
   });
+});
+
+$(document).ready(function() {
+  var chatContainer = $('.chat-full-container');
+  chatContainer.scrollTop(chatContainer.prop('scrollHeight'));
 });

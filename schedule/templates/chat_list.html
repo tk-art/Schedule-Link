@@ -4,11 +4,16 @@
 <div class="container col-md-6">
   {% if rooms %}
     {% for room in rooms %}
-      <a href="/chat/{{ room.receiver.id }}" class="chat-list">
+      <a href="/chat/{{ room.receiver.id }}" class="chat-list" data-user-id="{{ room.receiver.id }}">
         <img src="{{ room.receiver.profile.image.url }}" alt="{{ room.receiver.profile.username }}" class="request-image-size">
         <p class="list-message">{{ room.message }}</p>
+        <p class="chat-delta">{{ room.delta }}</p>
       </a>
     {% endfor %}
   {% endif %}
 </div>
+
+<script>
+  var csrfToken = '{{ csrf_token }}';
+</script>
 {% endblock %}

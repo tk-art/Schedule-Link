@@ -1,22 +1,27 @@
 {% extends "base.html" %}
 {% block title %}チャット{% endblock %}
 {% block content %}
-<div class="container col-md-6">
-  {% if chat_messages %}
-    {% for chat in chat_messages %}
-    <div class="chat-content">
-      <a href="/profile/{{ chat.sender.id }}">
-        <img src="{{ chat.sender.profile.image.url }}" alt="{{ chat.sender.profile.username }}" class="request-image-size">
-      </a>
-      <p class="chat-page">{{ chat.message }}</p>
-    </div>
-    {% endfor %}
-  {% endif %}
+<div class="container">
+  <div class="chat-wrapper">
+    <div class="chat-full-container">
+      {% if chat_messages %}
+        {% for chat in chat_messages %}
+        <div class="chat-content">
+          <a href="/profile/{{ chat.sender.id }}">
+            <img src="{{ chat.sender.profile.image.url }}" alt="{{ chat.sender.profile.username }}" class="request-image-size">
+          </a>
+          <p class="chat-page">{{ chat.message }}</p>
+          <p class="chat-delta">{{ chat.delta }}</p>
+        </div>
+        {% endfor %}
+      {% endif %}
 
-  <div class="chat-container"></div>
-  <div class="chat-input">
-    <input id="chat-message-input" type="text" size="50">
-    <button id="chat-message-submit" class="chat-btn">送信</button>
+      <div class="chat-container"></div>
+    </div>
+    <div class="chat-input">
+      <input id="chat-message-input" type="text" size="50">
+      <button id="chat-message-submit" class="chat-btn">送信</button>
+    </div>
   </div>
 </div>
 

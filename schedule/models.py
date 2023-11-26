@@ -58,4 +58,5 @@ class ChatMessage(models.Model):
     receiver = models.ForeignKey(CustomUser, related_name='received_messages', on_delete=models.CASCADE)
     message = models.TextField()
     room_name = models.CharField(max_length=30)
+    read = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
