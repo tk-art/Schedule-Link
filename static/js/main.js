@@ -339,13 +339,15 @@ $(document).ready(function() {
 $(document).ready(function() {
   $('.chat-list').each(function() {
     var chatLink = $(this);
+    console.log(chatLink);
     var userId = chatLink.data('user-id');
 
     $.ajax({
       url: '/check_unread_messages/' + userId + '/',
       method: 'GET',
       success: function(data) {
-        if (data.unread_messages_exists) {
+        if (data.chat_unread) {
+          console.log(data.chat_unread);
           chatLink.append('<span class="indicator">🔴</span>');
         }
       }
@@ -388,20 +390,22 @@ $(function() {
   };
 
   $('#chat-message-input').on('keyup', function(e) {
-    if (e.keyCode === 13) {
+    if (e.keyCode === 13　&& this.value.trim() !== '') {
       $('#chat-message-submit').click();
     }
   });
 
   $('#chat-message-submit').on('click', function() {
     var message = $('#chat-message-input').val();
-    chatSocket.send(JSON.stringify({
-      'message': message,
-      'sender_id': sender_id,
-      'receiver_id': receiver_id,
-      'room_name': roomName
-    }));
-    $('#chat-message-input').val('');
+    if (message.value.trim() !== '') {
+      chatSocket.send(JSON.stringify({
+        'message': message,
+        'sender_id': sender_id,
+        'receiver_id': receiver_id,
+        'room_name': roomName
+      }));
+      $('#chat-message-input').val('');
+    }
   });
 });
 

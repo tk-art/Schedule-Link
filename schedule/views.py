@@ -334,16 +334,6 @@ def check_new_requests(request):
     }
     return JsonResponse(response)
 
-def check_unread_messages(request, user_id):
-    current_user = request.user
-    other_user = CustomUser.objects.get(id=user_id)
-    chat_unread = ChatMessage.objects.filter(sender=other_user, receiver=current_user, read=False).exists()
-
-    response = {
-      'chat_unread': chat_unread
-    }
-    return JsonResponse(response)
-
 def mark_tab_as_read(request):
     user = request.user
     request_type = request.POST.get('type')
@@ -401,3 +391,14 @@ def chat_room(request, user_id):
     }
 
     return render(request, 'chat.html', context)
+
+def check_unread_messages(request, user_id):
+    current_user = request.user
+    other_user = CustomUser.objects.get(id=user_id)
+    chat_unread = ChatMessage.objects.filter(sender=other_user, receiver=current_user, read=False).exists()
+
+    print(chat_unread)
+    response = {
+      'chat_unread': chat_unread
+    }
+    return JsonResponse(response)
