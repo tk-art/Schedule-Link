@@ -337,22 +337,61 @@ $(document).ready(function() {
 
 /*　チャットチェック　*/
 $(document).ready(function() {
+  var unread_messages = false;
+  var unread = [];
+
   $('.chat-list').each(function() {
     var chatLink = $(this);
-    console.log(chatLink);
     var userId = chatLink.data('user-id');
 
-    $.ajax({
+    var request = $.ajax({
       url: '/check_unread_messages/' + userId + '/',
       method: 'GET',
       success: function(data) {
         if (data.chat_unread) {
-          console.log(data.chat_unread);
-          chatLink.append('<span class="indicator">🔴</span>');
+          showTabIndicator(chatLink);
+          unread_messages = true;
         }
       }
     });
+
+    unread.push(request);
   });
+
+  $.when.apply($, unread).then(function() {
+    if (unread_messages) {
+      var headerChatLink = $('a[href="/chat_list"]');
+      if (headerChatLink.find('.indicator').length === 0) {
+          showTabIndicator(headerChatLink);
+      }
+    }
+  });
+
+  $('.chat-list').click(function() {
+    var userId = $(this).data('user-id');
+    console.log('userId: ' + userId);
+
+    $.ajax({
+      url: '/mark_chat_as_read/' + userId + '/',
+      method: 'GET',
+      success: function(response) {
+        hideTabIndicator(userId);
+      },
+      error: function(error) {
+        console.log('チャットのマークに失敗しました。', error);
+      }
+    });
+  });
+
+  function showTabIndicator(chatList) {
+    var indicator = $('<span class="indicator">🔴</span>');
+    $(chatList).append(indicator);
+  }
+
+  function hideTabIndicator(chatList) {
+    $(chatList).find('.indicator').remove();
+  }
+
 });
 
 

@@ -10,6 +10,7 @@ from django.contrib import messages
 import pytz
 from datetime import datetime
 from django.db import models
+from django.db.models import Q
 
 def human_readable_time_from_utc(timestamp, timezone='Asia/Tokyo'):
     local_tz = pytz.timezone(timezone)
@@ -397,8 +398,19 @@ def check_unread_messages(request, user_id):
     other_user = CustomUser.objects.get(id=user_id)
     chat_unread = ChatMessage.objects.filter(sender=other_user, receiver=current_user, read=False).exists()
 
-    print(chat_unread)
     response = {
       'chat_unread': chat_unread
     }
     return JsonResponse(response)
+
+def mark_chat_as_read(request, user_id):
+    user = request.user
+    other_user = CustomUser.objects.get(id=user_id)
+
+    chat_room = ChatMessage.objects.filter(
+      Q(sender=user, receiver=other_user) | Q(sender=other_user, receiver=user)
+    ).first()
+    room_name = chat_room.room_name
+    ChatMessage.objects.filter(room_name=room_name, read=False).update(read=True)
+
+    return JsonResponse({'status': 'success'})

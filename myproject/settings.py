@@ -163,4 +163,3 @@ MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
 SITE_ID = 3
-LOGIN_REDIRECT_URL = '/'
