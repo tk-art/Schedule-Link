@@ -27,6 +27,7 @@ urlpatterns = [
     path('chat/<int:user_id>/', views.chat_room, name='chat_room'),
     path('check_unread_messages/<int:user_id>/', views.check_unread_messages, name='check_unread_messages'),
     path('mark_chat_as_read/<int:user_id>/', views.mark_chat_as_read, name='mark_chat_as_read'),
+    path('search/', views.search, name='search'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

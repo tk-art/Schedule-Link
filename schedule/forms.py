@@ -59,3 +59,24 @@ class CalendarForm(forms.ModelForm):
     class Meta:
         model = Calendar
         fields = ['selectedDate', 'free', 'time', 'message']
+
+class SearchForm(forms.ModelForm):
+    min_age = forms.IntegerField(required=False)
+    max_age = forms.IntegerField(required=False)
+    residence = forms.CharField(required=False)
+    gender = forms.CharField(required=False)
+
+    hobbies = forms.ModelMultipleChoiceField(
+        queryset=Hobby.objects.all(),
+        required=False,
+        widget=forms.CheckboxSelectMultiple
+    )
+    interests = forms.ModelMultipleChoiceField(
+        queryset=Interest.objects.all(),
+        required=False,
+        widget=forms.CheckboxSelectMultiple
+    )
+
+    class Meta:
+        model = Profile
+        fields = ['residence', 'gender', 'hobbies', 'interests']

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}検索内容{% endblock %}
+{% block content %}
+<div class="container col-md-6">
+  {% for profile in profiles %}
+    {{ profile.username }}
+  {% endfor %}
+</div>
+{% endblock %}

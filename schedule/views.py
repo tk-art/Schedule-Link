@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login, logout
-from .forms import SignupForm, ProfileForm, CalendarForm
+from .forms import SignupForm, ProfileForm, CalendarForm, SearchForm
 from .models import CustomUser, Profile, Calendar, UserRequest, UserResponse, ChatMessage
 from django.shortcuts import redirect
 from django.http import JsonResponse
@@ -103,8 +103,8 @@ def profile_edit(request):
     form = ProfileForm(request.POST, request.FILES)
     if form.is_valid():
       profile_data = form.cleaned_data
-      if profile:
 
+      if profile:
         fields = ['username', 'image', 'residence', 'age', 'gender', 'content']
         for field in fields:
           if profile_data.get(field):
@@ -414,3 +414,35 @@ def mark_chat_as_read(request, user_id):
     ChatMessage.objects.filter(room_name=room_name, read=False).update(read=True)
 
     return JsonResponse({'status': 'success'})
+
+def search(request):
+  ages = list(range(18, 51))
+  if request.method == 'POST':
+      form = SearchForm(request.POST)
+      if form.is_valid():
+          residence = form.cleaned_data.get('residence')
+          min_age = form.cleaned_data.get('min_age')
+          max_age = form.cleaned_data.get('max_age')
+          gender = form.cleaned_data.get('gender')
+
+          hobbies = form.cleaned_data.get('hobby', [])
+          interests = form.cleaned_data.get('interest', [])
+
+          profiles = Profile.objects.all()
+          if residence:
+              profiles = profiles.filter(residence=residence)
+          if min_age:
+              profiles = profiles.filter(age__gte=min_age)
+          if max_age:
+              profiles = profiles.filter(age__lte=max_age)
+          if gender:
+              profiles = profiles.filter(gender=gender)
+          return render(request, 'search_results.html', {'profiles': profiles})
+  else:
+      form = SearchForm()
+
+  context = {
+    'ages':ages,
+    'form': form
+  }
+  return render(request, 'search.html', context)

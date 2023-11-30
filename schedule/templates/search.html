@@ -1,21 +1,10 @@
 {% extends "base.html" %}
-{% block title %}プロフィール編集{% endblock %}
+{% block title %}検索フィールド{% endblock %}
 {% block content %}
 <div class="container col-md-6">
   <div class="profile-edit-page">
-    <form action="/profile_edit/" class="edit-form" method="post" enctype="multipart/form-data">
+    <form action="/search/" class="edit-form" method="post">
       {% csrf_token %}
-
-      <div class="form-group">
-        <label for="image">トップ画像</label>
-        <input type="file" class="form-control" id="image" name="image" accept="image/*">
-      </div>
-      <br>
-      <div class="form-group">
-        <label for="username">名前</label>
-        <input type="text" class="form-control" id="username" name="username">
-      </div>
-      <br>
       <div class="form-group">
         <label for="residence">居住地</label>
         <select class="form-control" id="residence" name="residence">
@@ -71,7 +60,17 @@
       </div>
       <br>
       <div class="form-group">
-        <label for="age">年齢</label>
+        <label for="age">最小年齢</label>
+        <select class="form-control" id="age" name="age">
+          <option value="">選択してください</option>
+          {% for age in ages %}
+            <option>{{ age }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <br>
+      <div class="form-group">
+        <label for="age">最大年齢</label>
         <select class="form-control" id="age" name="age">
           <option value="">選択してください</option>
           {% for age in ages %}
@@ -254,12 +253,7 @@
         </div>
     </div>
     <br>
-    <div class="form-group">
-      <label for="content">自己紹介</label>
-      <textarea class="form-control" id="content" name="content"></textarea>
-    </div>
-    <br>
-    <button type="submit" class="confirm-btn">登録</button>
+    <button type="submit" class="confirm-btn">検索</button>
     </form>
   </div>
 </div>
