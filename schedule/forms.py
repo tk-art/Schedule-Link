@@ -61,22 +61,34 @@ class CalendarForm(forms.ModelForm):
         fields = ['selectedDate', 'free', 'time', 'message']
 
 class SearchForm(forms.ModelForm):
-    min_age = forms.IntegerField(required=False)
-    max_age = forms.IntegerField(required=False)
     residence = forms.CharField(required=False)
     gender = forms.CharField(required=False)
+    min_age = forms.IntegerField(required=False)
+    max_age = forms.IntegerField(required=False)
 
-    hobbies = forms.ModelMultipleChoiceField(
+    hobby = forms.ModelMultipleChoiceField(
         queryset=Hobby.objects.all(),
         required=False,
         widget=forms.CheckboxSelectMultiple
     )
-    interests = forms.ModelMultipleChoiceField(
+    interest = forms.ModelMultipleChoiceField(
         queryset=Interest.objects.all(),
         required=False,
         widget=forms.CheckboxSelectMultiple
     )
 
+    def clean(self):
+        cleaned_data = super().clean()
+        min_age = cleaned_data.get('min_age')
+        max_age = cleaned_data.get('max_age')
+
+        if min_age is not None and max_age is not None:
+            if min_age > max_age:
+                raise ValidationError("最小年齢は最大年齢よりも小さくなければなりません。")
+
+        return cleaned_data
+
+
     class Meta:
         model = Profile
-        fields = ['residence', 'gender', 'hobbies', 'interests']
+        fields = ['residence', 'gender', 'hobby', 'interest']

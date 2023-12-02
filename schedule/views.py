@@ -110,8 +110,8 @@ def profile_edit(request):
           if profile_data.get(field):
             setattr(profile, field, profile_data[field])
 
-        hobbies = profile_data.get('hobby', [])
-        interests = profile_data.get('interest', [])
+        hobbies = profile_data.get('hobby')
+        interests = profile_data.get('interest')
         if hobbies:
             profile.hobby.set(hobbies)
         if interests:
@@ -416,19 +416,21 @@ def mark_chat_as_read(request, user_id):
     return JsonResponse({'status': 'success'})
 
 def search(request):
-  ages = list(range(18, 51))
-  if request.method == 'POST':
+    ages = list(range(18, 51))
+    if request.method == 'POST':
       form = SearchForm(request.POST)
       if form.is_valid():
           residence = form.cleaned_data.get('residence')
+          gender = form.cleaned_data.get('gender')
           min_age = form.cleaned_data.get('min_age')
           max_age = form.cleaned_data.get('max_age')
-          gender = form.cleaned_data.get('gender')
 
-          hobbies = form.cleaned_data.get('hobby', [])
-          interests = form.cleaned_data.get('interest', [])
+          hobby = form.cleaned_data.get('hobby')
+          interest = form.cleaned_data.get('interest')
 
-          profiles = Profile.objects.all()
+          my_profile = Profile.objects.get(user=request.user)
+
+          profiles = Profile.objects.all().exclude(id=my_profile.id)
           if residence:
               profiles = profiles.filter(residence=residence)
           if min_age:
@@ -437,12 +439,27 @@ def search(request):
               profiles = profiles.filter(age__lte=max_age)
           if gender:
               profiles = profiles.filter(gender=gender)
-          return render(request, 'search_results.html', {'profiles': profiles})
-  else:
+          if hobby:
+              profiles = profiles.filter(hobby__in=hobby).distinct()
+          if interest:
+              profiles = profiles.filter(interest__in=interest).distinct()
+
+
+
+          context = {
+            'profiles': profiles
+          }
+
+          if profiles:
+              return render(request, 'search_results.html', context)
+          else:
+              not_profiles = "現在検索された内容に合致するユーザーが見つかりませんでした。"
+              return render(request, 'search.html', {'not_profiles': not_profiles})
+    else:
       form = SearchForm()
 
-  context = {
-    'ages':ages,
-    'form': form
-  }
-  return render(request, 'search.html', context)
+    context = {
+      'ages':ages,
+      'form': form
+    }
+    return render(request, 'search.html', context)

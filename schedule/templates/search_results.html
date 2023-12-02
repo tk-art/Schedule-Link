@@ -1,9 +1,14 @@
 {% extends "base.html" %}
-{% block title %}検索内容{% endblock %}
+{% block title %}検索結果{% endblock %}
 {% block content %}
 <div class="container col-md-6">
-  {% for profile in profiles %}
-    {{ profile.username }}
-  {% endfor %}
+  {% if profiles %}
+    {% for profile in profiles %}
+      <a href="/profile/{{ profile.user.id }}" class="chat-list">
+        <img src="{{ profile.image.url }}" alt="{{ profile.username }}" class="request-image-size">
+        <p class="list-message">{{ profile.username }}</p>
+      </a>
+    {% endfor %}
+  {% endif %}
 </div>
 {% endblock %}

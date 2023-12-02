@@ -14,6 +14,7 @@ body {
   padding: 6px 12px;
   background: #fff;
   margin-bottom: 18px;
+  border: none;
 }
 .confirm-btn:hover {
   color: #fff;
