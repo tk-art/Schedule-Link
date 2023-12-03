@@ -6,7 +6,8 @@
     {% for profile in profiles %}
       <a href="/profile/{{ profile.user.id }}" class="chat-list">
         <img src="{{ profile.image.url }}" alt="{{ profile.username }}" class="request-image-size">
-        <p class="list-message">{{ profile.username }}</p>
+        <p class="search-list">{{ profile.username }}</p>
+        <p class="last-calendar">直近の暇な時間：{{ profile.calendar|date:"Y-m-d" }}</p>
       </a>
     {% endfor %}
   {% endif %}

@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.core.serializers import serialize
 from django.contrib import messages
 import pytz
-from datetime import datetime
+from datetime import datetime, date, timedelta
 from django.db import models
 from django.db.models import Q
 
@@ -445,13 +445,21 @@ def search(request):
               profiles = profiles.filter(interest__in=interest).distinct()
 
 
+          today = date.today()
+          print(today + timedelta(days=1))
+          for profile in profiles:
+            calendar = Calendar.objects.filter(
+              user_id=profile.user.id,
+              selectedDate__gt=today).order_by('selectedDate').first()
+            if calendar:
+              profile.calendar = calendar.selectedDate
+            else:
+              profile.calendar = None
 
-          context = {
-            'profiles': profiles
-          }
+          sorted_profiles = sorted(profiles, key=lambda p: p.calendar or date.max)
 
           if profiles:
-              return render(request, 'search_results.html', context)
+              return render(request, 'search_results.html', {'profiles' : sorted_profiles})
           else:
               not_profiles = "現在検索された内容に合致するユーザーが見つかりませんでした。"
               return render(request, 'search.html', {'not_profiles': not_profiles})

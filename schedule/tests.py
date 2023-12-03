@@ -1,10 +1,10 @@
 from django.test import TestCase
 from django.urls import reverse
-from .models import CustomUser, Calendar, UserRequest, UserResponse, ChatMessage
+from .models import CustomUser, Calendar, UserRequest, UserResponse, ChatMessage, Profile
 from allauth.socialaccount.models import SocialApp
 from django.contrib.sites.models import Site
-from datetime import datetime
-
+from datetime import datetime, date
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 class SignUpTest(TestCase):
     def setUp(self):
@@ -238,3 +238,72 @@ class ChatTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.chat_message.refresh_from_db()
         self.assertTrue(self.chat_message.read)
+
+class SearchTestCase(TestCase):
+    def setUp(self):
+        self.user1 = CustomUser.objects.create_user('user_a', password='12345')
+        self.user2 = CustomUser.objects.create_user('user_b', password='12345')
+        self.user3 = CustomUser.objects.create_user('user_c', password='12345')
+
+        self.client.login(username='user_a', password='12345')
+        self.search_url = reverse('search')
+
+        image = SimpleUploadedFile(name='test_image.jpeg', content=b'', content_type='image/jpeg')
+
+        self.profile1 = Profile.objects.create(
+            user=self.user1, username='test1', age=20, gender="男性", residence="宮崎県", image=image
+            )
+        self.profile2 = Profile.objects.create(
+            user=self.user2, username='test2', age=20, gender="男性", residence="宮崎県", image=image
+            )
+        self.profile3 = Profile.objects.create(
+            user=self.user3, username='test3', age=25, gender="女性", residence="宮崎県", image=image
+            )
+
+        Calendar.objects.create(user=self.user2, selectedDate=date.today() + 1, free="全日")
+
+
+
+    def test_search_view_GET(self):
+       response = self.client.get(self.search_url)
+       self.assertEquals(response.status_code, 200)
+       self.assertTemplateUsed(response, 'search.html')
+
+    def test_search_Post(self):
+        form_data = {
+            'residence': '宮崎県',
+            'gender': '男性',
+            'min_age': 20,
+            'max_age': 30
+        }
+
+        response = self.client.post(self.search_url, form_data)
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(response, 'search_results.html')
+
+    def test_search_view_POST_invalid(self):
+        form_data = {
+            'residence': '宮崎県',
+            'gender': '男性',
+            'min_age': 30,
+            'max_age': 20
+        }
+        response = self.client.post(self.search_url, form_data)
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(response, 'search.html')
+        self.assertIn('form', response.context)
+        self.assertFalse(response.context['form'].is_valid())
+
+    def test_not_include(self):
+        form_data = {'residence': '宮崎県'}
+        response = self.client.post(self.search_url, form_data)
+        self.assertNotIn(self.user1, response.context['profiles'])
+
+    def test_recent_free_time(self):
+        form_data = {'residence': '宮崎県'}
+        response = self.client.post(self.search_url, form_data)
+
+"""
+暇な時間が取れていること
+プロフィールがソートされていること
+"""
