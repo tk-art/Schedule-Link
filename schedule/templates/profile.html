@@ -6,13 +6,6 @@
   <div class="profile-container">
     <div class="profile-info">
       <img src="{{ profile.image.url }}" alt="{{ profile.username }}" class="profile-image-size profile-image-modal">
-      <!--
-      {% if profile.image %}
-        <img src="{{ profile.image.url }}" alt="{{ profile.username }}" class="profile-image-size profile-image-modal">
-      {% else %}
-        <img src="/media/item_images/フリー女.jpeg" class="profile-image-size profile-image-modal">
-      {% endif %}
-      -->
       <p class="profile-username">{{ profile.username }}</p>
 
       {% if request.user == profile.user %}

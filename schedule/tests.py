@@ -3,7 +3,7 @@ from django.urls import reverse
 from .models import CustomUser, Calendar, UserRequest, UserResponse, ChatMessage, Profile
 from allauth.socialaccount.models import SocialApp
 from django.contrib.sites.models import Site
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 class SignUpTest(TestCase):
@@ -260,7 +260,7 @@ class SearchTestCase(TestCase):
             user=self.user3, username='test3', age=25, gender="女性", residence="宮崎県", image=image
             )
 
-        Calendar.objects.create(user=self.user2, selectedDate=date.today() + 1, free="全日")
+        Calendar.objects.create(user=self.user2, selectedDate=date.today() + timedelta(days=1), free="全日")
 
 
 
@@ -301,9 +301,10 @@ class SearchTestCase(TestCase):
 
     def test_recent_free_time(self):
         form_data = {'residence': '宮崎県'}
+        tomorrow = date.today() + timedelta(days=1)
         response = self.client.post(self.search_url, form_data)
+        profiles = response.context['profiles']
 
-"""
-暇な時間が取れていること
-プロフィールがソートされていること
-"""
+        for profile in profiles:
+            if profile.user == self.user2:
+                self.assertEqual(profile.calendar, tomorrow)

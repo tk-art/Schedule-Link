@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.core.serializers import serialize
 from django.contrib import messages
 import pytz
-from datetime import datetime, date, timedelta
+from datetime import datetime, date
 from django.db import models
 from django.db.models import Q
 
@@ -446,7 +446,6 @@ def search(request):
 
 
           today = date.today()
-          print(today + timedelta(days=1))
           for profile in profiles:
             calendar = Calendar.objects.filter(
               user_id=profile.user.id,
