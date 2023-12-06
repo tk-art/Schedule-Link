@@ -54,11 +54,19 @@ $(document).ready(function() {
         $("#follow-button").addClass("follow-btn");
         $("#follow-button").text("フォロー中");
       }
+      if (response.new_follower) {
+        showTabIndicator("#followed_by");
+      }
     },
     error: function(xhr, status, error) {
       console.log(error);
     }
   });
+
+  function showTabIndicator(tabId) {
+    var indicator = $('<span class="follower-indicator">🔴</span>');
+    $(tabId).append(indicator);
+  }
 });
 
 function requestClicked(element) {
@@ -262,7 +270,6 @@ $('#close-modal').click(function() {
 $(".request-btn button").click(function() {
   $(this).closest('.request-btn').hide();
 });
-
 
 /*リクエストチェック*/
 $(document).ready(function() {

@@ -20,7 +20,7 @@
     <div class="profile-top">
       <div class="follow-count">
         <a class="profile-follow" data-bs-toggle="modal" data-bs-target="#followmodal">フォロー中：{{ follows.count }}</a>
-        <a class="profile-follower" data-bs-toggle="modal" data-bs-target="#followermodal">フォロワー：{{ followers.count }}</a>
+        <a class="profile-follower" id="followed_by" data-bs-toggle="modal" data-bs-target="#followermodal">フォロワー：{{ followers.count }}</a>
       </div>
 
       <p>地域：{{ profile.residence }}</p>
@@ -52,7 +52,7 @@
   </div>
 
   <!--フォローモーダル-->
-  <div class="modal fade folow-modal" id="followmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade follow-modal" id="followmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
       <div class="modal-content">
         <div class="modal-header">
@@ -73,7 +73,7 @@
   </div>
 
   <!--フォロワーモーダル-->
-  <div class="modal fade folow-modal" id="followermodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade follow-modal" id="followermodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
       <div class="modal-content">
         <div class="modal-header">

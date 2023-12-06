@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login, logout
 from .forms import SignupForm, ProfileForm, CalendarForm, SearchForm
-from .models import CustomUser, Profile, Calendar, UserRequest, UserResponse, ChatMessage
+from .models import CustomUser, Profile, Calendar, UserRequest, UserResponse, ChatMessage, Notification
 from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.core.serializers import serialize
@@ -11,6 +11,8 @@ import pytz
 from datetime import datetime, date
 from django.db import models
 from django.db.models import Q
+from django.core.paginator import Paginator
+from django.utils import timezone
 
 def human_readable_time_from_utc(timestamp, timezone='Asia/Tokyo'):
     local_tz = pytz.timezone(timezone)
@@ -154,9 +156,21 @@ def follow(request, user_id):
     return JsonResponse(response_data)
 
 def get_follow_status(request, user_id):
+    user = request.user
     user_to_toggle = CustomUser.objects.get(id=user_id)
     follow_status = request.user.profile.follows.filter(id=user_to_toggle.profile.id).exists()
-    return JsonResponse({'success': follow_status})
+
+    last_follow_count = request.session.get('last_follow_count', 0)
+    current_follow_count = user.profile.followed_by.count()
+    new_follower = current_follow_count > last_follow_count
+
+    request.session['last_follow_count'] = current_follow_count
+
+    response_data = {
+      'success': follow_status,
+      'new_follower': new_follower
+    }
+    return JsonResponse(response_data)
 
 def calendar(request):
   if request.method == 'POST':

@@ -60,3 +60,9 @@ class ChatMessage(models.Model):
     room_name = models.CharField(max_length=30)
     read = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
+
+class Notification(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    content = models.TextField()
+    read = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now_add=True)

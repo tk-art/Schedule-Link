@@ -254,6 +254,12 @@ footer {
   color: #fff;
 }
 
+/* 赤丸 */
+.follower-indicator {
+  font-size: 12px;
+  margin-left: 10px;
+}
+
 .modal-title {
   color: black;
   font-size: 14px;
