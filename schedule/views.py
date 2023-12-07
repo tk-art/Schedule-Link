@@ -68,7 +68,7 @@ def login_view(request):
     if user:
       user.backend = 'django.contrib.auth.backends.ModelBackend'
       login(request, user)
-
+      request.session['last_follow_count'] = user.profile.followed_by.count()
       return redirect('profile', user_id=request.user.id)
     else:
       error_message = 'ユーザーネームかパスワードが違います、もう一度お試しください'

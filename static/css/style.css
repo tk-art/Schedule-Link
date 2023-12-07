@@ -5,6 +5,15 @@ body {
   padding: 0;
 }
 
+.explanation {
+  border: 3px solid rgb(146, 147, 152);
+  text-align: center;
+  margin-top: 120px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  border-radius: 10px;
+}
+
 /* ボタン */
 .confirm-btn {
   font-size: 12px;
