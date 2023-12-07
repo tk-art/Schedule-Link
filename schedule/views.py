@@ -52,7 +52,7 @@ def signup(request):
 
         user.backend = 'django.contrib.auth.backends.ModelBackend'
         login(request, user)
-        return redirect('top')
+        return redirect('profile', user_id=request.user.id)
 
   else:
     form = SignupForm()
@@ -68,7 +68,8 @@ def login_view(request):
     if user:
       user.backend = 'django.contrib.auth.backends.ModelBackend'
       login(request, user)
-      return redirect('top')
+
+      return redirect('profile', user_id=request.user.id)
     else:
       error_message = 'ユーザーネームかパスワードが違います、もう一度お試しください'
   return render(request, 'login.html', {'error_message': error_message})
