@@ -28,6 +28,8 @@ urlpatterns = [
     path('check_unread_messages/<int:user_id>/', views.check_unread_messages, name='check_unread_messages'),
     path('mark_chat_as_read/<int:user_id>/', views.mark_chat_as_read, name='mark_chat_as_read'),
     path('search/', views.search, name='search'),
+    path('get_follower_count/', views.get_follower_count, name='get_follower_count'),
+    path('confirm_followers_viewed/', views.confirm_followers_viewed, name='confirm_followers_viewed'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

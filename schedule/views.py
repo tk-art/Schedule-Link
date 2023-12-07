@@ -159,18 +159,27 @@ def get_follow_status(request, user_id):
     user = request.user
     user_to_toggle = CustomUser.objects.get(id=user_id)
     follow_status = request.user.profile.follows.filter(id=user_to_toggle.profile.id).exists()
+    return JsonResponse({'success': follow_status})
 
+def get_follower_count(request):
     last_follow_count = request.session.get('last_follow_count', 0)
-    current_follow_count = user.profile.followed_by.count()
-    new_follower = current_follow_count > last_follow_count
+    current_follow_count = request.user.profile.followed_by.count()
 
+    if current_follow_count > last_follow_count:
+      new_follower = True
+    elif current_follow_count < last_follow_count:
+      new_follower = False
+      request.session['last_follow_count'] = current_follow_count
+    else:
+      new_follower = False
+
+    return JsonResponse({'new_follower': new_follower})
+
+def confirm_followers_viewed(request):
+    current_follow_count = request.user.profile.followed_by.count()
     request.session['last_follow_count'] = current_follow_count
+    return JsonResponse({'success': 'true'})
 
-    response_data = {
-      'success': follow_status,
-      'new_follower': new_follower
-    }
-    return JsonResponse(response_data)
 
 def calendar(request):
   if request.method == 'POST':

@@ -250,13 +250,13 @@ class SearchTestCase(TestCase):
 
         image = SimpleUploadedFile(name='test_image.jpeg', content=b'', content_type='image/jpeg')
 
-        self.profile1 = Profile.objects.create(
+        Profile.objects.create(
             user=self.user1, username='test1', age=20, gender="男性", residence="宮崎県", image=image
             )
-        self.profile2 = Profile.objects.create(
+        Profile.objects.create(
             user=self.user2, username='test2', age=20, gender="男性", residence="宮崎県", image=image
             )
-        self.profile3 = Profile.objects.create(
+        Profile.objects.create(
             user=self.user3, username='test3', age=25, gender="女性", residence="宮崎県", image=image
             )
 
@@ -308,3 +308,36 @@ class SearchTestCase(TestCase):
         for profile in profiles:
             if profile.user == self.user2:
                 self.assertEqual(profile.calendar, tomorrow)
+
+class FollowerCountTest(TestCase):
+    def setUp(self):
+        self.user1 = CustomUser.objects.create_user('user_a', password='12345')
+        self.user2 = CustomUser.objects.create_user('user_b', password='12345')
+
+        self.client.login(username='user_a', password='12345')
+
+        image = SimpleUploadedFile(name='test_image.jpeg', content=b'', content_type='image/jpeg')
+
+        Profile.objects.create(
+            user=self.user1, username='test1', age=20, gender="男性", residence="宮崎県", image=image
+            )
+        Profile.objects.create(
+            user=self.user2, username='test2', age=20, gender="男性", residence="宮崎県", image=image
+            )
+
+    def test_new_follower(self):
+        self.user2.profile.follows.add(self.user1.profile)
+        self.assertEqual(self.user1.profile.followed_by.count(), 1)
+        response = self.client.get(reverse('get_follower_count'))
+        self.assertJSONEqual(str(response.content, encoding='utf8'), {'new_follower': True})
+
+    def test_unfollowed(self):
+        self.user2.profile.follows.add(self.user1.profile)
+
+        response_confirm = self.client.get(reverse('confirm_followers_viewed'))
+        self.assertEqual(self.client.session['last_follow_count'], 1)
+
+        self.user2.profile.follows.remove(self.user1.profile)
+        response_count = self.client.get(reverse('get_follower_count'))
+        self.assertJSONEqual(str(response_count.content, encoding='utf8'), {'new_follower': False})
+        self.assertEqual(self.client.session['last_follow_count'], 0)

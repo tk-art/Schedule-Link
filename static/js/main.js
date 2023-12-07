@@ -50,12 +50,29 @@ $(document).ready(function() {
       user_id: userId,
     },
     success: function(response) {
+      if (response.new_follower) {
+        showTabIndicator("#profile-link");
+        showTabIndicator("#followed_by");
+      }
       if (response.success) {
         $("#follow-button").addClass("follow-btn");
         $("#follow-button").text("フォロー中");
       }
+    },
+    error: function(xhr, status, error) {
+      console.log(error);
+    }
+  });
+});
+
+$(document).ready(function() {
+  $.ajax({
+    type: "GET",
+    url: "/get_follower_count/",
+    success: function(response) {
       if (response.new_follower) {
-        showTabIndicator("#followed_by");
+        showTabIndicator("#profile-link");
+        showTabIndicator("#followed-by");
       }
     },
     error: function(xhr, status, error) {
@@ -66,6 +83,21 @@ $(document).ready(function() {
   function showTabIndicator(tabId) {
     var indicator = $('<span class="follower-indicator">🔴</span>');
     $(tabId).append(indicator);
+  }
+});
+
+$('#followed-by').on('click', function() {
+  $.ajax({
+    type: "GET",
+    url: "/confirm_followers_viewed/",
+    success: function(response) {
+      hideTabIndicator('#profile-link');
+      hideTabIndicator('#followed-by');
+    }
+  });
+
+  function hideTabIndicator(tabId) {
+    $(tabId).find('.follower-indicator').remove();
   }
 });
 
@@ -332,12 +364,12 @@ $(document).ready(function() {
   });
 
   function showTabIndicator(tabId) {
-    var indicator = $('<span class="indicator">🔴</span>');
+    var indicator = $('<span class="follower-indicator">🔴</span>');
     $(tabId).append(indicator);
   }
 
   function hideTabIndicator(tabId) {
-    $(tabId).find('.indicator').remove();
+    $(tabId).find('.follower-indicator').remove();
   }
 });
 
@@ -368,7 +400,7 @@ $(document).ready(function() {
   $.when.apply($, unread).then(function() {
     if (unread_messages) {
       var headerChatLink = $('a[href="/chat_list"]');
-      if (headerChatLink.find('.indicator').length === 0) {
+      if (headerChatLink.find('.follower-indicator').length === 0) {
           showTabIndicator(headerChatLink);
       }
     }
@@ -391,12 +423,12 @@ $(document).ready(function() {
   });
 
   function showTabIndicator(chatList) {
-    var indicator = $('<span class="indicator">🔴</span>');
+    var indicator = $('<span class="follower-indicator">🔴</span>');
     $(chatList).append(indicator);
   }
 
   function hideTabIndicator(chatList) {
-    $(chatList).find('.indicator').remove();
+    $(chatList).find('.follower-indicator').remove();
   }
 
 });
