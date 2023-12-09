@@ -176,7 +176,6 @@ $(document).ready(function() {
   });
 });
 
-
 $(document).ready(function() {
   var calendarEl = $('#calendar')[0];
 

@@ -510,6 +510,7 @@ footer {
   background: #fff;
   margin-top: 15px;
   border: none;
+  margin-left: 20px;
 }
 .chat-btn:hover {
   color: #fff;
@@ -534,6 +535,7 @@ footer {
 
 #chat-message-input {
   margin-left: 20px;
+  margin-top: 20px;
 }
 
 .chat-list {
@@ -554,7 +556,7 @@ footer {
 }
 
 .chat-wrapper {
-  width: 50%;
+  width: 100%;
   margin: auto;
 }
 

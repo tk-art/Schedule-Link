@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}チャット{% endblock %}
 {% block content %}
-<div class="container">
+<div class="container col-md-6">
   <div class="chat-wrapper">
     <div class="chat-full-container">
       {% if chat_messages %}
@@ -15,11 +15,10 @@
         </div>
         {% endfor %}
       {% endif %}
-
       <div class="chat-container"></div>
     </div>
     <div class="chat-input">
-      <input id="chat-message-input" type="text" size="50">
+      <input id="chat-message-input" type="text" size="50"><br>
       <button id="chat-message-submit" class="chat-btn">送信</button>
     </div>
   </div>
