@@ -28,7 +28,7 @@ class SignUpTest(TestCase):
 
         user = CustomUser.objects.get(username='testuser')
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('top'))
+        self.assertRedirects(response, reverse('profile', args=[user.id]))
         self.assertEqual(CustomUser.objects.count(), 1)
 
     def test_invalid_registration_email(self):
@@ -69,12 +69,19 @@ class LoginTest(TestCase):
 
       self.user = CustomUser.objects.create_user(username='testuser', password='testpassword')
 
-  def test_login_success(self):
-      logged_in = self.client.login(username='testuser', password='testpassword')
-      self.assertTrue(logged_in)
+      image = SimpleUploadedFile(name='test_image.jpeg', content=b'', content_type='image/jpeg')
 
-      response = self.client.get(reverse('top'))
-      self.assertEqual(response.status_code, 200)
+      Profile.objects.create(
+          user=self.user, username='test1', age=20, gender="男性", residence="宮崎県", image=image
+          )
+
+  def test_login_success(self):
+      response = self.client.post(reverse('login_view'), {
+        'username': 'testuser',
+        'password': 'testpassword'
+      })
+      user = CustomUser.objects.get(username='testuser')
+      self.assertRedirects(response, reverse('profile', args=[user.id]))
 
   def test_login_fail(self):
       logged_in = self.client.login(username='testuser', password='tactpassword')

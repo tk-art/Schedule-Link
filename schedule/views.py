@@ -13,6 +13,7 @@ from django.db import models
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 
 def human_readable_time_from_utc(timestamp, timezone='Asia/Tokyo'):
     local_tz = pytz.timezone(timezone)
@@ -78,6 +79,7 @@ def logout_view(request):
   logout(request)
   return redirect('top')
 
+@login_required
 def profile(request, user_id):
   profile = Profile.objects.get(user_id=user_id)
 
@@ -439,6 +441,7 @@ def mark_chat_as_read(request, user_id):
 
     return JsonResponse({'status': 'success'})
 
+@login_required
 def search(request):
     ages = list(range(18, 51))
     if request.method == 'POST':
