@@ -14,6 +14,122 @@ body {
   border-radius: 10px;
 }
 
+@media only screen and (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+  .navigation-menu {
+    display: none;
+  }
+}
+/*
+hamburger(ハンバーガーアイコン)
+=================================== */
+.hamburger {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  width: 50px;
+  height: 40px;
+  cursor: pointer;
+  z-index: 300;
+}
+
+.hamburger__line {
+  position: absolute;
+  width: 50px;
+  height: 3px;
+  right: 0;
+  background-color: #000;
+  transition: all 0.5s;
+}
+
+.hamburger__line--1 {
+  top: 1px;
+  background-color: #fff;
+}
+
+.hamburger__line--2 {
+  top: 18px;
+  background-color: #fff;
+}
+
+.hamburger__line--3 {
+  top: 36px;
+  background-color: #fff;
+}
+
+/*ハンバーガーがクリックされたら*/
+.open .hamburger__line--1 {
+  transform: rotate(-45deg);
+  top: 11px;
+  background-color: black;
+}
+
+.open .hamburger__line--2 {
+  opacity: 0;
+}
+
+.open .hamburger__line--3 {
+  transform: rotate(45deg);
+  top: 11px;
+  background-color: black;
+}
+
+/*
+sp-nav(ナビ)
+=================================== */
+.sp-nav {
+  position: fixed;
+  right: -100%;
+  /*ハンバーガーがクリックされる前はWindow右側に隠す*/
+  top: 0;
+  width: 70%;
+  /* 出てくるスライドメニューの幅 */
+  height: 100vh;
+  background-color: #fff;
+  transition: all 0.5s;
+  z-index: 200;
+  overflow-y: auto;
+  /* メニューが多くなったらスクロールできるように */
+}
+
+.sp-nav ul li {
+  color: black;
+}
+
+/*ハンバーガーがクリックされたら右からスライド*/
+.open .sp-nav {
+  right: 0;
+}
+
+
+/*
+black-bg(ハンバーガーメニュー解除用bg)
+=================================== */
+.black-bg {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 5;
+  background-color: #000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.5s;
+  cursor: pointer;
+  z-index: 100;
+}
+
+/*ハンバーガーメニューが開いたら表示*/
+.open .black-bg {
+  opacity: 0.3;
+  visibility: visible;
+}
+
+
+
 /* ボタン */
 .confirm-btn {
   font-size: 12px;

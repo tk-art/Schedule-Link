@@ -16,6 +16,19 @@ $(document).ready(function() {
   });
 });
 
+$(document).ready(function() {
+  var nav = $('#nav-wrapper');
+  var hamburger = $('#js-hamburger');
+  var blackBg = $('#js-black-bg');
+
+  hamburger.click(function() {
+      nav.toggleClass('open');
+  });
+  blackBg.click(function() {
+      nav.removeClass('open');
+  });
+});
+
 
 function followButtonClicked() {
   $.ajax({
