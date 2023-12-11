@@ -5,12 +5,13 @@
 <div class="container col-md-6">
   <div class="profile-container">
     <div class="profile-info">
-      <img src="{{ profile.image.url }}" alt="{{ profile.username }}" class="profile-image-size profile-image-modal">
+      <div class="profile-image-link">
+        <img src="{{ profile.image.url }}" alt="{{ profile.username }}" class="profile-image-size profile-image-modal">
+        {% if request.user == profile.user %}
+          <a href="/profile_edit" class="profile-edit">プロフィール編集</a>
+        {% endif %}
+      </div>
       <p class="profile-username">{{ profile.username }}</p>
-
-      {% if request.user == profile.user %}
-        <a href="/profile_edit" class="profile-edit">プロフィール編集</a>
-      {% endif %}
 
       {% if request.user != profile.user %}
         <a class="follow" id="follow-button" data-following="{{ is_following }}" onclick="followButtonClicked()">フォロー</a>

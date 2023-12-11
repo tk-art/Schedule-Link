@@ -14,17 +14,16 @@ body {
   border-radius: 10px;
 }
 
-@media only screen and (max-width: 768px) {
-  .hamburger {
-    display: block;
-  }
-  .navigation-menu {
-    display: none;
-  }
+.navigation-menu {
+  display: flex;
 }
 /*
 hamburger(ハンバーガーアイコン)
 =================================== */
+.nav-wrapper {
+  display: none;
+}
+
 .hamburger {
   position: absolute;
   right: 20px;
@@ -33,12 +32,13 @@ hamburger(ハンバーガーアイコン)
   height: 40px;
   cursor: pointer;
   z-index: 300;
+  margin-top: 30px;
 }
 
 .hamburger__line {
   position: absolute;
-  width: 50px;
-  height: 3px;
+  width: 40px;
+  height: 2px;
   right: 0;
   background-color: #000;
   transition: all 0.5s;
@@ -50,12 +50,12 @@ hamburger(ハンバーガーアイコン)
 }
 
 .hamburger__line--2 {
-  top: 18px;
+  top: 14px;
   background-color: #fff;
 }
 
 .hamburger__line--3 {
-  top: 36px;
+  top: 28px;
   background-color: #fff;
 }
 
@@ -84,25 +84,41 @@ sp-nav(ナビ)
   right: -100%;
   /*ハンバーガーがクリックされる前はWindow右側に隠す*/
   top: 0;
-  width: 70%;
+  width: 50%;
   /* 出てくるスライドメニューの幅 */
   height: 100vh;
-  background-color: #fff;
+  background-color: #ffffff;
   transition: all 0.5s;
   z-index: 200;
   overflow-y: auto;
-  /* メニューが多くなったらスクロールできるように */
+}
+
+.sp-nav ul li a {
+  color: black;
+}
+
+.sp-nav ul li a:hover {
+  color: black;
+}
+
+.sp-nav ul {
+  margin-top: 40px;
 }
 
 .sp-nav ul li {
-  color: black;
+  margin-bottom: 20px;
+  letter-spacing: 1.2px;
+}
+
+.sp-nav ul li:hover {
+  transition:.3s;
+  transform: rotate(2deg);
 }
 
 /*ハンバーガーがクリックされたら右からスライド*/
 .open .sp-nav {
   right: 0;
 }
-
 
 /*
 black-bg(ハンバーガーメニュー解除用bg)
@@ -124,11 +140,18 @@ black-bg(ハンバーガーメニュー解除用bg)
 
 /*ハンバーガーメニューが開いたら表示*/
 .open .black-bg {
-  opacity: 0.3;
+  opacity: 0.5;
   visibility: visible;
 }
 
-
+@media only screen and (max-width: 768px) {
+  .nav-wrapper {
+    display: block;
+  }
+  .navigation-menu {
+    display: none;
+  }
+}
 
 /* ボタン */
 .confirm-btn {
@@ -242,30 +265,21 @@ footer {
   object-fit: cover;
   margin-left: 20px;
   margin-right: 20px;
+  margin-bottom: 15px;
   cursor: pointer;
   border: none;
 }
 
-.default-image {
-  width: 100px;
-  height: 100px;
-  border: 1.5px solid rgb(74, 74, 79);
-  border-radius: 50%;
-  margin-right: 20px;
-  margin-left: 40px;
-  background-color: rgb(154, 154, 162);
-}
-
 .profile-edit {
-  font-size: 14px;
+  font-size: 12px;
   border: 2px solid rgb(154, 154, 162);
   color: #fff;
   text-decoration: none;
   border-radius: 5px;
-  padding: 8px 16px;
+  padding: 6px 12px;
   background: black;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  text-align: center;
+  margin: 0 auto;
 }
 
 .profile-edit:hover {
@@ -276,7 +290,7 @@ footer {
 }
 
 .profile-top {
-  margin-top: -20px;
+  margin-top: -70px;
   margin-left: 160px;
 }
 
@@ -290,7 +304,11 @@ footer {
 
 .profile-info {
   display: flex;
-  align-items: flex-start;
+}
+
+.profile-image-link {
+  display: flex;
+  flex-direction: column;
 }
 
 .profile-content {
@@ -313,6 +331,7 @@ footer {
   color: rgb(156, 158, 161) !important;
   border-radius: 20px;
   padding: 6px 12px;
+  margin-bottom: 10px;
 }
 
 
@@ -605,7 +624,7 @@ footer {
 /*　チャット */
 .chat {
   display: inline-block;
-  font-weight:bold;
+  font-weight: bold;
   transition:.3s;
   text-decoration: none;
   color:rgb(62, 105, 213);
@@ -662,13 +681,14 @@ footer {
   margin-top: 20px;
 }
 
-.chat-list img {
+.chat-list-image {
   margin-bottom: 15px;
+  flex-shrink: 0;
 }
 
 .list-message {
-  color:rgb(131, 131, 139);
-  margin-left: 10px;;
+  color: rgb(115, 117, 123) !important;
+  margin-left: 10px;
 }
 
 .chat-wrapper {
@@ -681,7 +701,6 @@ footer {
   max-height: 400px;
 }
 
-
 .chat-delta {
   font-size: 12px;
   letter-spacing: 1.2px;
@@ -689,6 +708,7 @@ footer {
   margin: auto 0;
   margin-left: auto;
   margin-right: 20px;
+  flex-shrink: 0;
 }
 
 /* 検索 */

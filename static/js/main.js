@@ -487,7 +487,8 @@ $(function() {
 
   $('#chat-message-submit').on('click', function() {
     var message = $('#chat-message-input').val();
-    if (message.value.trim() !== '') {
+    console.log(message);
+    if (message.trim() !== '') {
       chatSocket.send(JSON.stringify({
         'message': message,
         'sender_id': sender_id,

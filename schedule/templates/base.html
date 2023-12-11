@@ -21,30 +21,35 @@
           {% if request.user.is_authenticated %}
           <div id="nav-wrapper" class="nav-wrapper">
             <div class="hamburger" id="js-hamburger">
-                <span class="hamburger__line hamburger__line--1"></span>
-                <span class="hamburger__line hamburger__line--2"></span>
-                <span class="hamburger__line hamburger__line--3"></span>
+              <span class="hamburger__line hamburger__line--1"></span>
+              <span class="hamburger__line hamburger__line--2"></span>
+              <span class="hamburger__line hamburger__line--3"></span>
             </div>
             <nav class="sp-nav">
-                <ul>
-                    <li>メニュー1</li>
-                    <li>メニュー1</li>
-                    <li>メニュー1</li>
-                </ul>
+              <ul>
+              <li><a href="/chat_list" class="header-right header-link cursor">チャット</a></li>
+              <li><a href="/request_list" class="header-right header-link cursor" id="requests-link">リスト</a></li>
+              <li><a href="/search" class="header-right header-link">検索</a></li>
+              <li><a href="/profile/{{ request.user.id }}" id="profile-link" class="header-right header-link">プロフィール</a></li>
+              <li><form method="post" action="/logout_view/">
+                {% csrf_token %}
+                <button type="submit" class="btn">ログアウト</button>
+              </form></li>
+              <ul></ul>
             </nav>
             <div class="black-bg" id="js-black-bg"></div>
-        </div>
-            <nav class="navigation-menu">
-              <a href="/chat_list" class="header-right header-link cursor">チャット</a>
-              <a href="/request_list" class="header-right header-link cursor" id="requests-link">リスト</a>
-              <a href="/search" class="header-right header-link">検索</a>
-              <a href="/profile/{{ request.user.id }}" id="profile-link" class="header-right header-link">プロフィール</a>
-              <form method="post" action="/logout_view/">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-light">ログアウト</button>
-              </form>
-            </nav>
-            <div class="openbtn2"><span></span><span></span></div>
+          </div>
+
+          <nav class="navigation-menu">
+            <a href="/chat_list" class="header-right header-link cursor">チャット</a>
+            <a href="/request_list" class="header-right header-link cursor" id="requests-link">リスト</a>
+            <a href="/search" class="header-right header-link">検索</a>
+            <a href="/profile/{{ request.user.id }}" id="profile-link" class="header-right header-link">プロフィール</a>
+            <form method="post" action="/logout_view/">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-light">ログアウト</button>
+            </form>
+          </nav>
           {% else %}
             <a href="/signup" class="header-right header-link">新規登録</a>
             <a href="/login_view" class="header-right header-link">ログイン</a>
