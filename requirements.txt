@@ -2,3 +2,5 @@ Django>=3.2
 mysqlclient==2.1
 channels
 django-allauth
+pytz
+whitenoise

@@ -10,7 +10,6 @@ RUN /venv/bin/pip install -r requirements.txt
 RUN pip install pillow
 RUN pip install channels
 RUN pip install 'uvicorn[standard]'
-RUN pip install whitenoise
 RUN pip install channels-redis
 
 COPY . /code/
