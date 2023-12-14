@@ -4,7 +4,6 @@ channels
 django-allauth
 pytz
 whitenoise
-gunicorn
 dj-database-url
 pillow
 channels

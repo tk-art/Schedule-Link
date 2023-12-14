@@ -9,4 +9,3 @@ RUN /venv/bin/pip install --upgrade pip
 RUN /venv/bin/pip install -r requirements.txt
 
 COPY . /code/
-CMD gunicorn myproject.wsgi:application --bind 0.0.0.0:$PORT
