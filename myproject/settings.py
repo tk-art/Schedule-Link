@@ -78,12 +78,18 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'myproject.wsgi.application'
+
+if DJANGO_ENV == 'production':
+    redis_host = os.environ.get('REDIS_URL')
+else:
+    redis_host = ("schedule_redis_1", 6379)
+
 ASGI_APPLICATION = 'myproject.asgi.application'
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("schedule_redis_1", 6379)],
+            "hosts": [redis_host],
         },
     },
 }
