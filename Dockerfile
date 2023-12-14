@@ -13,3 +13,4 @@ RUN pip install 'uvicorn[standard]'
 RUN pip install channels-redis
 
 COPY . /code/
+CMD gunicorn myproject.wsgi:application --bind 0.0.0.0:$PORT

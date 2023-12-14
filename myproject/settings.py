@@ -93,16 +93,22 @@ CACHES = {
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'django_db',
-        'USER': 'django',
-        'PASSWORD': 'password',
-        'HOST': 'db',
-        'PORT': '3306',
+if os.environ.get('USE_HEROKU_DB') == 'true':
+    db_config = dj_database_url.config(default=os.environ.get('JAWSDB_URL'))
+    DATABASES = {
+        'default': db_config
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'django_db',
+            'USER': 'django',
+            'PASSWORD': 'password',
+            'HOST': 'db',
+            'PORT': '3306',
+        }
+    }
 
 AUTH_USER_MODEL = 'schedule.CustomUser'
 
