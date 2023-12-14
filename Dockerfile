@@ -7,10 +7,6 @@ RUN python -m venv /venv
 ENV PATH="/venv/bin:$PATH"
 RUN /venv/bin/pip install --upgrade pip
 RUN /venv/bin/pip install -r requirements.txt
-RUN pip install pillow
-RUN pip install channels
-RUN pip install 'uvicorn[standard]'
-RUN pip install channels-redis
 
 COPY . /code/
 CMD gunicorn myproject.wsgi:application --bind 0.0.0.0:$PORT

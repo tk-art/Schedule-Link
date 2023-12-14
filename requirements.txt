@@ -6,3 +6,7 @@ pytz
 whitenoise
 gunicorn
 dj-database-url
+pillow
+channels
+channels-redis
+uvicorn[standard]
