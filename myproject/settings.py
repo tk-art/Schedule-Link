@@ -15,7 +15,12 @@ SECRET_KEY = 'django-insecure-frm2#x_bnb!#93yw4=0_imf%c7kbkkrink09w33#)ieht#u-x$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+DJANGO_ENV = os.getenv('DJANGO_ENV', 'development')
+
+if DJANGO_ENV == 'production':
+    ALLOWED_HOSTS = ['schedule1213-7d61e308285e.herokuapp.com']
+else:
+    ALLOWED_HOSTS = ['*']
 
 
 # Application definition
