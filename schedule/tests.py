@@ -7,6 +7,7 @@ from datetime import datetime, date, timedelta
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 class SignUpTest(TestCase):
+
     def setUp(self):
         app = SocialApp.objects.create(
             provider='google',

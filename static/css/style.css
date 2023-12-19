@@ -193,7 +193,18 @@ black-bg(ハンバーガーメニュー解除用bg)
 }
 
 header {
-  border-bottom: 1px solid rgb(121, 116, 116);
+  padding-top: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgb(178, 173, 173);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.content {
+  padding-top: 100px;
 }
 
 footer {
@@ -215,7 +226,7 @@ footer {
 .header-right {
   padding: 10px;
   margin-right: 10px;
-  position: relative
+  position: relative;
 }
 
 .header-right::after {
@@ -470,6 +481,7 @@ footer {
 #calendar {
   max-width: 600px;
   margin: 0 auto;
+  cursor: pointer;
 }
 
 .fc .fc-toolbar-title {
