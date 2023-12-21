@@ -109,7 +109,6 @@ class CalendarTest(TestCase):
         self.user = CustomUser.objects.create_user(username='testuser', password='testpass')
         self.client.login(username='testuser', password='testpass')
 
-
     def test_create_event(self):
         event_count = Calendar.objects.count()
 

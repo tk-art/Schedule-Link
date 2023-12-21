@@ -191,16 +191,17 @@ $(document).ready(function() {
 
 $(document).ready(function() {
   var calendarEl = $('#calendar')[0];
+  var modalCalendar;
 
   var calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridMonth',
       locale: 'ja',
       buttonText: {
         today: '今日'
-    },
-    fixedWeekCount: false,
-    selectable: true,
-    events: '/api/calendar_events/' + userId + '/',
+      },
+      fixedWeekCount: false,
+      selectable: true,
+      events: '/api/calendar_events/' + userId + '/',
 
     select: function(info) {
       if (currentUser == 'true') {
@@ -215,6 +216,41 @@ $(document).ready(function() {
             $('#deleteEvent').hide();
             $('#selectedDate').val(info.startStr);
             $('#eventModal').modal('show');
+
+            $('.free').on('change', function() {
+              if ($(this).val() === '部分') {
+                $('#timeSelectGroup').show();
+                $('#time').on('click', function(){
+                  if (!modalCalendar) {
+                    modalCalendar = new FullCalendar.Calendar($('#partial-modal-content')[0], {
+                        initialView: 'timeGridDay',
+                        headerToolbar: {
+                          left: '',
+                          center: '',
+                          right: ''
+                        },
+                        allDaySlot: false,
+                        locale: 'ja',
+                        selectable: true,
+                        select: function(info) {
+                          var start = formatTime(info.start);
+                          var end = formatTime(info.end);
+                          $('#time').val(start + '~' + end);
+                          $('#partialmodal').modal('hide');
+                        }
+                    });
+                  }
+                  $('#partialmodal').modal('show');
+                });
+
+                $('#partialmodal').on('shown.bs.modal', function () {
+                  modalCalendar.render();
+                });
+
+              } else {
+                  $('#timeSelectGroup').hide();
+              }
+            });
 
             $('#saveEvent').off('click').on('click', function() {
                 var title = $('#eventTitle').val();
@@ -237,7 +273,6 @@ $(document).ready(function() {
     eventClick: function(info) {
       var localDate = new Date(info.event.start - info.event.start.getTimezoneOffset() * 60000);
       var selectedDateStr = localDate.toISOString().split('T')[0];
-
 
       if (currentUser == "true") {
         $('#selectedDate').val(info.startStr);
@@ -274,15 +309,15 @@ $(document).ready(function() {
   calendar.render();
 });
 
-$(document).ready(function() {
-  $('.free').on('change', function() {
-      if ($(this).val() === '部分') {
-          $('#timeSelectGroup').show();
-      } else {
-          $('#timeSelectGroup').hide();
-      }
-  });
-});
+function formatTime(data) {
+  var hours = data.getHours();
+  var minutes = data.getMinutes();
+
+  if (hours < 10) hours = '0' + hours;
+  if (minutes < 10) minutes = '0' + minutes;
+
+  return hours + ':' + minutes;
+}
 
 function getEventData(selectedDate, callback) {
   $.ajax({

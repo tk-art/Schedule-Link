@@ -519,6 +519,29 @@ footer {
   margin-left: 40px;
 }
 
+/* 部分的な時間 */
+#partial-modal-content {
+  cursor: pointer;
+  color: black;
+}
+
+.fc .fc-day-today {
+  background: none !important;
+}
+
+.fc .fc-col-header-cell {
+  display: none;
+}
+
+.fc thead {
+  display: none;
+}
+
+.fc .fc-highlight {
+  background-color: black;
+  opacity: 0.3;
+}
+
 /* 画像用モーダル */
 .modal {
   background-color: rgba(0,0,0,0.6);
