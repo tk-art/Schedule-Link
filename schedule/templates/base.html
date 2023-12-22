@@ -26,14 +26,14 @@
             </div>
             <nav class="sp-nav">
               <ul>
-              <li><a href="/chat_list" class="header-right header-link cursor">チャット</a></li>
-              <li><a href="/request_list" class="header-right header-link cursor" id="requests-link">リスト</a></li>
-              <li><a href="/search" class="header-right header-link">検索</a></li>
-              <li><a href="/profile/{{ request.user.id }}" id="profile-link" class="header-right header-link">プロフィール</a></li>
-              <li><form method="post" action="/logout_view/">
-                {% csrf_token %}
-                <button type="submit" class="btn">ログアウト</button>
-              </form></li>
+                <li><a href="/chat_list" class="header-right header-link cursor">チャット</a></li>
+                <li><a href="/request_list" class="header-right header-link cursor" id="requests-link">リスト</a></li>
+                <li><a href="/search" class="header-right header-link">検索</a></li>
+                <li><a href="/profile/{{ request.user.id }}" id="profile-link" class="header-right header-link">プロフィール</a></li>
+                <li><form method="post" action="/logout_view/">
+                  {% csrf_token %}
+                  <button type="submit" class="btn">ログアウト</button>
+                </form></li>
               <ul></ul>
             </nav>
             <div class="black-bg" id="js-black-bg"></div>

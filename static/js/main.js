@@ -196,9 +196,6 @@ $(document).ready(function() {
   var calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridMonth',
       locale: 'ja',
-      buttonText: {
-        today: '今日'
-      },
       fixedWeekCount: false,
       selectable: true,
       events: '/api/calendar_events/' + userId + '/',

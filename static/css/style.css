@@ -32,7 +32,7 @@ hamburger(ハンバーガーアイコン)
   height: 40px;
   cursor: pointer;
   z-index: 300;
-  margin-top: 30px;
+  margin-top: 10px;
 }
 
 .hamburger__line {
@@ -357,6 +357,7 @@ footer {
 
 /* フォロー */
 .follow {
+  text-align: center;
   font-size: 12px;
   border: 1px solid rgb(154, 154, 162);
   color: #fff;
@@ -517,6 +518,10 @@ footer {
 
 .otheruser-data {
   margin-left: 40px;
+}
+
+.fc .fc-today-button {
+  display: none;
 }
 
 /* 部分的な時間 */
@@ -756,4 +761,11 @@ footer {
 .search-list {
   margin-left: 10px;
   color: #fff;
+}
+
+.search-results-list {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  margin-top: 20px;
 }

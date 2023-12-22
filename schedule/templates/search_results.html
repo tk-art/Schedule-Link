@@ -4,7 +4,7 @@
 <div class="container col-md-6">
   {% if profiles %}
     {% for profile in profiles %}
-      <a href="/profile/{{ profile.user.id }}" class="chat-list">
+      <a href="/profile/{{ profile.user.id }}" class="search-results-list">
         <img src="{{ profile.image.url }}" alt="{{ profile.username }}" class="request-image-size">
         <p class="search-list">{{ profile.username }}</p>
         <p class="last-calendar">直近の暇な時間：{{ profile.calendar|date:"Y-m-d" }}</p>
