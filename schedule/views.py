@@ -497,3 +497,6 @@ def search(request):
       'form': form
     }
     return render(request, 'search.html', context)
+
+def event(request):
+    return render(request, 'event.html')

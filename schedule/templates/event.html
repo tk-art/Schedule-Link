@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}イベント作成{% endblock %}
+{% block content %}
+<div class="container col-md-6">
+  <div class="event-page">
+    <form action="/event/" class="edit-form" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="title" class="event-label">タイトル（活動内容）</label>
+        <input type="text" class="form-control" id="title" name="title">
+      </div>
+      <br>
+      <div class="form-group">
+        <label for="place" class="event-label">場所</label>
+        <input type="text" class="form-control" id="place" name="place">
+      </div>
+      <br>
+      <div class="form-group">
+        <label for="date-time" class="event-label">日時</label>
+        <input type="text" class="form-control" id="date-time" name="date-time">
+      </div>
+      <br>
+      <div class="form-group">
+        <label for="category" class="event-label">カテゴリー</label>
+        <select class="form-control" id="category" name="category">
+          <option value="" selected>選択してください</option>
+          <option value="アウトドア">アウトドア</option>
+          <option value="カフェ巡り">カフェ巡り</option>
+          <option value="カラオケ">カラオケ</option>
+          <option value="ガーデニング">ガーデニング</option>
+          <option value="ゲーム">ゲーム</option>
+          <option value="サイクリング">サイクリング</option>
+          <option value="ショッピング">ショッピング</option>
+          <option value="スポーツ">スポーツ</option>
+          <option value="スポーツ観戦">スポーツ観戦</option>
+          <option value="ダンス">ダンス</option>
+          <option value="トレーニング">トレーニング</option>
+          <option value="ドライブ">ドライブ</option>
+          <option value="ハイキング">ハイキング</option>
+          <option value="ペット">ペット</option>
+          <option value="写真">写真</option>
+          <option value="写真撮影">写真撮影</option>
+          <option value="手芸">手芸</option>
+          <option value="手芸・DIY">手芸・DIY</option>
+          <option value="料理">料理</option>
+          <option value="旅行">旅行</option>
+          <option value="映画">映画</option>
+          <option value="映画鑑賞">映画鑑賞</option>
+          <option value="絵画">絵画</option>
+          <option value="読書">読書</option>
+          <option value="釣り">釣り</option>
+          <option value="音楽">音楽</option>
+          <option value="音楽鑑賞">音楽鑑賞</option>
+        </select>
+        <br>
+        <button type="submit" class="confirm-btn">作成</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

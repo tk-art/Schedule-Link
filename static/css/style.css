@@ -155,7 +155,8 @@ black-bg(ハンバーガーメニュー解除用bg)
 
 /* ボタン */
 .confirm-btn {
-  font-size: 12px;
+  font-size: 14px;
+  letter-spacing: 1.2px;
   border: 1px solid rgb(146, 147, 152);
   color: black;
   border-radius: 5px;
@@ -768,4 +769,15 @@ footer {
   align-items: center;
   text-decoration: none;
   margin-top: 20px;
+}
+
+/* イベントページ */
+.event-page {
+  margin-top: 40px;
+  border: 2px solid #837e7e;
+  border-radius: 10px;
+}
+
+.event-label {
+  padding-bottom: 10px;
 }
