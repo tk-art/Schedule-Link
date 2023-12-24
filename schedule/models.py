@@ -66,3 +66,12 @@ class Notification(models.Model):
     content = models.TextField()
     read = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
+
+class Event(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)
+    place = models.CharField(max_length=100)
+    date = models.DateField()
+    time = models.CharField(max_length=20)
+    category = models.CharField(max_length=30)
+    timestamp = models.DateTimeField(auto_now_add=True)

@@ -189,16 +189,41 @@ $(document).ready(function() {
   });
 });
 
+
+/* カレンダー */
+function customTitleGenerator(date) {
+  var monthNames = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+  var year = date.getFullYear();
+  var monthIndex = date.getMonth() + 1;
+  var monthName = monthNames[monthIndex];
+
+  return year + ' ' + monthName;
+}
+
+function formatTime(data) {
+  var hours = data.getHours();
+  var minutes = data.getMinutes();
+
+  if (hours < 10) hours = '0' + hours;
+  if (minutes < 10) minutes = '0' + minutes;
+
+  return hours + ':' + minutes;
+}
+
 $(document).ready(function() {
   var calendarEl = $('#calendar')[0];
   var modalCalendar;
 
   var calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridMonth',
-      locale: 'ja',
       fixedWeekCount: false,
       selectable: true,
       events: '/api/calendar_events/' + userId + '/',
+
+    datesSet: function(dateInfo) {
+      var customTitle = customTitleGenerator(dateInfo.start);
+      $('#fc-dom-1').text(customTitle);
+    },
 
     select: function(info) {
       if (currentUser == 'true') {
@@ -240,7 +265,7 @@ $(document).ready(function() {
                   $('#partialmodal').modal('show');
                 });
 
-                $('#partialmodal').on('shown.bs.modal', function () {
+                $('#partialmodal').on('shown.bs.modal', function() {
                   modalCalendar.render();
                 });
 
@@ -250,17 +275,16 @@ $(document).ready(function() {
             });
 
             $('#saveEvent').off('click').on('click', function() {
-                var title = $('#eventTitle').val();
-
-                if (title) {
-                    calendar.addEvent({
-                        title: title,
-                        start: info.startStr,
-                        end: info.endStr,
-                    });
-                }
-                $('#eventModal').modal('hide');
-                calendar.unselect();
+              var title = $('#eventTitle').val();
+              if (title) {
+                  calendar.addEvent({
+                      title: title,
+                      start: info.startStr,
+                      end: info.endStr,
+                  });
+              }
+              $('#eventModal').modal('hide');
+              calendar.unselect();
             });
         }
 
@@ -306,15 +330,55 @@ $(document).ready(function() {
   calendar.render();
 });
 
-function formatTime(data) {
-  var hours = data.getHours();
-  var minutes = data.getMinutes();
+/* イベントページカレンダー */
+$('#date-time').on('click', function() {
+  var calendarEl = $('#date-calendar')[0];
+  var timeCalendar;
 
-  if (hours < 10) hours = '0' + hours;
-  if (minutes < 10) minutes = '0' + minutes;
+  var dateCalendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      fixedWeekCount: false,
+      selectable: true,
 
-  return hours + ':' + minutes;
-}
+      datesSet: function(dateInfo) {
+        var customTitle = customTitleGenerator(dateInfo.start);
+        $('#fc-dom-1').text(customTitle);
+      },
+
+      select: function(info) {
+        if (!timeCalendar) {
+          timeCalendar = new FullCalendar.Calendar($('#time-calendar')[0], {
+              initialView: 'timeGridDay',
+              headerToolbar: {
+                left: '',
+                center: '',
+                right: ''
+              },
+              allDaySlot: false,
+              locale: 'ja',
+              selectable: true,
+              select: function(info) {
+                var start = formatTime(info.start);
+                var end = formatTime(info.end);
+                $('#date-time').val(info.startStr.split('T')[0] + ' ' + start + '~' + end);
+                $('#timemodal').modal('hide');
+              }
+          });
+          $('#timemodal').modal('show');
+          $('#datetimemodal').modal('hide');
+        }
+        $('#timemodal').on('shown.bs.modal', function() {
+          timeCalendar.render();
+        });
+      }
+  })
+
+  $('#datetimemodal').modal('show');
+
+  $('#datetimemodal').on('shown.bs.modal', function() {
+    dateCalendar.render();
+  });
+})
 
 function getEventData(selectedDate, callback) {
   $.ajax({

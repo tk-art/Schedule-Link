@@ -764,11 +764,16 @@ footer {
   color: #fff;
 }
 
+.search-results {
+  border-bottom: 1px solid #827e7e;
+}
+
 .search-results-list {
   display: flex;
   align-items: center;
   text-decoration: none;
   margin-top: 20px;
+  margin-bottom: 10px;
 }
 
 /* イベントページ */
@@ -780,4 +785,13 @@ footer {
 
 .event-label {
   padding-bottom: 10px;
+  letter-spacing: 1.2px;
+}
+
+#date-calendar {
+  color: black;
+}
+
+#time-calendar {
+  color: black;
 }

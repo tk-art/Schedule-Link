@@ -56,6 +56,35 @@
         <button type="submit" class="confirm-btn">作成</button>
       </div>
     </form>
+
+    <!--日付選択モーダル-->
+    <div class="modal fade cursor" id="datetimemodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <p class="modal-title">日付選択</p>
+          </div>
+          <div class="modal-body">
+            <div id="date-calendar"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--時間選択モーダル-->
+    <div class="modal fade" id="timemodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <p class="modal-title">時間選択</p>
+          </div>
+          <div class="modal-body">
+            <div id="time-calendar"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 {% endblock %}

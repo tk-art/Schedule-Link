@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import CustomUser, Hobby, Interest, Profile, Calendar
+from .models import CustomUser, Hobby, Interest, Profile, Calendar, Event
 
 class SignupForm(forms.ModelForm):
     email_conf = forms.EmailField()
@@ -92,3 +92,8 @@ class SearchForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['residence', 'gender', 'hobby', 'interest']
+
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        fields = ['title', 'place', 'date', 'time', 'category']

@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login, logout
-from .forms import SignupForm, ProfileForm, CalendarForm, SearchForm
-from .models import CustomUser, Profile, Calendar, UserRequest, UserResponse, ChatMessage, Notification
+from .forms import SignupForm, ProfileForm, CalendarForm, SearchForm, EventForm
+from .models import CustomUser, Profile, Calendar, UserRequest, UserResponse, ChatMessage, Notification, Event
 from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.core.serializers import serialize
@@ -499,4 +499,22 @@ def search(request):
     return render(request, 'search.html', context)
 
 def event(request):
-    return render(request, 'event.html')
+    if request.method == 'POST':
+      form = EventForm(request.POST)
+      if form.is_valid():
+          title = form.cleaned_data.get('title')
+          place = form.cleaned_data.get('place')
+          datetime = form.cleaned_data.get('date-time')
+          category = form.cleaned_data.get('cetegory')
+
+          date, time = datetime.split(' ')
+
+          Event.objects.create(
+              user=request.user, title=title, place=place, cetegory=category, date=date, time=time
+          )
+
+          return redirect('profile', user_id=request.user.id)
+
+    else:
+      form = EventForm()
+    return render(request, 'event.html', {'form': form})
