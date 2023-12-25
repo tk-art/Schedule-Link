@@ -500,20 +500,21 @@ def search(request):
 
 def event(request):
     if request.method == 'POST':
-      form = EventForm(request.POST)
-      if form.is_valid():
-          title = form.cleaned_data.get('title')
-          place = form.cleaned_data.get('place')
-          datetime = form.cleaned_data.get('date-time')
-          category = form.cleaned_data.get('cetegory')
+        form = EventForm(request.POST)
+        print(form)
+        if form.is_valid():
+            title = form.cleaned_data.get('title')
+            place = form.cleaned_data.get('place')
+            datetime = form.cleaned_data.get('datetime')
+            category = form.cleaned_data.get('category')
 
-          date, time = datetime.split(' ')
+            date, time = datetime.split(' ')
 
-          Event.objects.create(
-              user=request.user, title=title, place=place, cetegory=category, date=date, time=time
-          )
+            Event.objects.create(
+                user=request.user, title=title, place=place, category=category, date=date, time=time
+            )
 
-          return redirect('profile', user_id=request.user.id)
+            return redirect('profile', user_id=request.user.id)
 
     else:
       form = EventForm()

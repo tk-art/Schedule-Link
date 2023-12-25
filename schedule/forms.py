@@ -94,6 +94,12 @@ class SearchForm(forms.ModelForm):
         fields = ['residence', 'gender', 'hobby', 'interest']
 
 class EventForm(forms.ModelForm):
+    datetime = forms.CharField()
+
     class Meta:
         model = Event
-        fields = ['title', 'place', 'date', 'time', 'category']
+        fields = ['title', 'place', 'category']
+
+    def clean_datetime(self):
+        datetime = self.cleaned_data.get('datetime')
+        return datetime
