@@ -394,7 +394,7 @@ function getEventData(selectedDate, callback) {
 }
 
 /* 画像用モーダル */
-$('.profile-image-modal').click(function() {
+$('.profile-image-modal, .event-card-size').click(function() {
   const modal = $('#modal');
   const modalImage = $('#modal-image');
 
@@ -405,6 +405,7 @@ $('.profile-image-modal').click(function() {
 $('#close-modal').click(function() {
   $('#modal').hide();
 });
+
 
 
 $(".request-btn button").click(function() {

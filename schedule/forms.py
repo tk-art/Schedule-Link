@@ -95,10 +95,12 @@ class SearchForm(forms.ModelForm):
 
 class EventForm(forms.ModelForm):
     datetime = forms.CharField()
+    detail = forms.CharField(required=False)
+    image = forms.ImageField(required=False)
 
     class Meta:
         model = Event
-        fields = ['title', 'place', 'category']
+        fields = ['title','place', 'category', 'image', 'detail']
 
     def clean_datetime(self):
         datetime = self.cleaned_data.get('datetime')

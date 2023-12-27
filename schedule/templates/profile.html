@@ -2,7 +2,7 @@
 {% block title %}プロフィール{% endblock %}
 {% block content %}
 
-<div class="container col-md-6">
+<div class="container col-md-9">
   <div class="profile-container">
     <div class="profile-info">
       <div class="profile-image-link">
@@ -47,8 +47,48 @@
 
   <div class="separator"></div>
 
-  <div class="calendar-container">
-    <div id="calendar"></div>
+  <ul class="nav request-nav calendar-tab" id="myTabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link header-right active" id="tab1-tab" data-bs-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">
+        カレンダー
+      </a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link header-right" id="tab2-tab" data-bs-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">
+        作成済みの提案
+      </a>
+    </li>
+  </ul>
+
+  <div class="tab-content" id="myTabContent">
+    <!--カレンダータブ-->
+    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
+      <div class="calendar-container">
+        <div id="calendar"></div>
+      </div>
+    </div>
+
+    <!--作成済みの提案タブ-->
+    <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for event in events %}
+          <div class="col">
+            <div class="card">
+              <img src="{{ event.image.url }}" alt="{{ profile.username }}" class="event-card-size">
+              <div class="card-body">
+                <div class="card-body">
+                  <h5 class="card-title">{{ event.title }}</h5>
+                  <p class="card-text">{{ event.place }}</p>
+                  <p class="card-text"><small class="text-muted">{{ event.date|date:'Y-m-d' }}</small></p>
+                  <p class="card-text"><small class="text-muted">{{ event.time }}</small></p>
+                  <p class="card-text"><small class="text-muted">{{ event.category }}</small></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
   </div>
 
   <!--フォローモーダル-->

@@ -3,8 +3,13 @@
 {% block content %}
 <div class="container col-md-6">
   <div class="event-page">
-    <form action="/event/" class="edit-form" method="post">
+    <form action="/event/" class="edit-form" method="post" enctype="multipart/form-data">
       {% csrf_token %}
+      <div class="form-group">
+        <label for="image">トップ画像（任意）</label>
+        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+      </div>
+      <br>
       <div class="form-group">
         <label for="title" class="event-label">タイトル（活動内容）</label>
         <input type="text" class="form-control" id="title" name="title">
@@ -51,7 +56,13 @@
           <option value="釣り">釣り</option>
           <option value="音楽">音楽</option>
           <option value="音楽鑑賞">音楽鑑賞</option>
+          <option value="その他">その他</option>
         </select>
+        <br>
+        <div class="form-group">
+          <label for="detail">詳細情報（任意）</label>
+          <textarea class="form-control" id="detail" name="detail"></textarea>
+        </div>
         <br>
         <button type="submit" class="confirm-btn">作成</button>
       </div>

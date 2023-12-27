@@ -88,6 +88,7 @@ def profile(request, user_id):
   follows = profile.follows.all()
   followers = profile.followed_by.all()
   calendars = Calendar.objects.filter(user=profile.user)
+  events = Event.objects.filter(user=profile.user)
 
   current_user = request.user == profile.user
 
@@ -97,7 +98,8 @@ def profile(request, user_id):
     'interests': interests,
     'follows': follows,
     'followers': followers,
-    'current_user': current_user
+    'current_user': current_user,
+    'events': events
   }
   return render(request, 'profile.html', context)
 
@@ -500,10 +502,11 @@ def search(request):
 
 def event(request):
     if request.method == 'POST':
-        form = EventForm(request.POST)
-        print(form)
+        form = EventForm(request.POST, request.FILES)
         if form.is_valid():
             title = form.cleaned_data.get('title')
+            image = form.cleaned_data.get('image')
+            detail = form.cleaned_data.get('detail')
             place = form.cleaned_data.get('place')
             datetime = form.cleaned_data.get('datetime')
             category = form.cleaned_data.get('category')
@@ -511,7 +514,8 @@ def event(request):
             date, time = datetime.split(' ')
 
             Event.objects.create(
-                user=request.user, title=title, place=place, category=category, date=date, time=time
+                user=request.user, title=title, place=place, category=category, date=date,
+                time=time, image=image, detail=detail
             )
 
             return redirect('profile', user_id=request.user.id)
