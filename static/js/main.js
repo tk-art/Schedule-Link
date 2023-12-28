@@ -394,7 +394,7 @@ function getEventData(selectedDate, callback) {
 }
 
 /* 画像用モーダル */
-$('.profile-image-modal, .event-card-size').click(function() {
+$('.profile-image-modal').click(function() {
   const modal = $('#modal');
   const modalImage = $('#modal-image');
 
@@ -601,3 +601,20 @@ $(document).ready(function() {
   var chatContainer = $('.chat-full-container');
   chatContainer.scrollTop(chatContainer.prop('scrollHeight'));
 });
+
+/* イベントクリック時のモーダル動作 */
+$('#event-modal').on('click', function() {
+  var eventId = $(this).data('event-id');
+  console.log(eventId);
+
+  $.ajax({
+    url: '/get_event_details/',
+    data: {
+        'event_id': eventId
+    },
+    success: function(data) {
+      $('#eventmodal .card-modal-left img').attr('src', data.image_url);
+      $('#eventmodal').modal('show');
+    }
+  })
+})

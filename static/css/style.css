@@ -803,6 +803,50 @@ footer {
 
 .event-card-size {
   width: 100%;
-  height: 250px;
+  height: 120px;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
   object-fit: cover;
+}
+
+.event-image-size {
+  width: 20px;
+  height: 20px;
+  border-radius: 50px;
+}
+
+.black {
+  color: black;
+}
+
+.event-card {
+  margin-top: 15px;
+  cursor: pointer;
+}
+.event-card:hover {
+  opacity: 0.8;
+}
+
+.card {
+  border: none !important;
+}
+
+.card-b {
+  height: 120px;
+  overflow: hidden;
+}
+
+.card-f {
+  display: flex;
+  margin: auto 0;
+  margin-top: 5px;
+  margin-left: 5px;
+  margin-bottom: 5px;
+}
+
+.card-name {
+  margin: auto 0;
+  margin-left: 5px;
+  font-size: 12px;
+  color: #817e7e;
 }

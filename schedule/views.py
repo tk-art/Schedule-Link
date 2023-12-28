@@ -88,7 +88,10 @@ def profile(request, user_id):
   follows = profile.follows.all()
   followers = profile.followed_by.all()
   calendars = Calendar.objects.filter(user=profile.user)
-  events = Event.objects.filter(user=profile.user)
+  events = Event.objects.filter(user=profile.user).order_by('-timestamp')
+
+  for event in events:
+    event.delta = human_readable_time_from_utc(event.timestamp)
 
   current_user = request.user == profile.user
 
@@ -506,6 +509,8 @@ def event(request):
         if form.is_valid():
             title = form.cleaned_data.get('title')
             image = form.cleaned_data.get('image')
+            if image == None:
+              image = 'item_images/フリー女.jpeg'
             detail = form.cleaned_data.get('detail')
             place = form.cleaned_data.get('place')
             datetime = form.cleaned_data.get('datetime')
@@ -523,3 +528,11 @@ def event(request):
     else:
       form = EventForm()
     return render(request, 'event.html', {'form': form})
+
+def get_event_details(request):
+    event_id = request.GET.get('event_id')
+    event = Event.objects.get(id=event_id)
+    data = {
+      'image_url': event.image.url
+    }
+    return JsonResponse(data)

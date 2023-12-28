@@ -69,7 +69,7 @@ class Notification(models.Model):
 
 class Event(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='item_images/', default='item_images/フリー女.jpeg', null=True, blank=True)
+    image = models.ImageField(upload_to='item_images/', null=True, blank=True)
     title = models.CharField(max_length=100)
     place = models.CharField(max_length=100)
     date = models.DateField()
