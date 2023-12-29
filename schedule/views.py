@@ -36,7 +36,23 @@ def human_readable_time_from_utc(timestamp, timezone='Asia/Tokyo'):
         return "たった今"
 
 def top(request):
-  return render(request, 'top.html')
+    category = request.GET.get('category', '')
+    if category:
+        events = Event.objects.filter(category=category).order_by('-timestamp')
+    else:
+        events = Event.objects.all().order_by('-timestamp')
+
+    for event in events:
+      event.delta = human_readable_time_from_utc(event.timestamp)
+    return render(request, 'top.html', {'events': events})
+
+def search_by_category(request):
+    category = request.GET.get('category', '')
+    if category:
+        items = Event.objects.filter(category=category).order_by('-timestamp')
+    else:
+        items = Event.objects.all().order_by('-timestamp')
+    return render(request, 'top.html', {'items': items})
 
 def signup(request):
   if request.method == 'POST':

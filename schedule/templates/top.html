@@ -1,19 +1,97 @@
 {% extends "base.html" %}
 {% block title %}トップページ{% endblock %}
 {% block content %}
-<div class="container col-md-6">
-  <div class="explanation">
-    <h3>使い方</h3>
-    <p>
-      このアプリは予定のマッチングを簡単にするアプリです<br>
-      自分の予定をプロフィールにあるカレンダーに打ち込み、<br>
-      それにマッチするユーザからリクエストが送られてきます<br>
-      自動的に、自分の暇な時間にマッチし、<br>
-      共通点のあるユーザーが選択肢に上がることもあります<br>
-      あるいは、自分で検索し、予定の合う友人を見つけるのもありです<br>
-      その中で自分からリクエストを送り、レスポンスがあった場合、<br>
-      チャットで予定を決めれば、少しは楽になるかと思います<br>
-    </p>
+<div class="container col-md-9">
+  <div class="top-content">
+    <div class="top-left col-md-9">
+      <div class="row row-cols-2 row-cols-md-3 g-4">
+        {% for event in events %}
+          <div class="col">
+            <div class="card event-card event-modal" data-event-id="{{ event.id }}">
+              <img src="{{ event.image.url }}" alt="{{ profile.username }}" class="event-card-size">
+              <div class="card-body card-b">
+                <p class="card-text black">{{ event.title }}</p>
+                <p class="card-text"><small class="text-muted">{{ event.place }}</small></p>
+              </div>
+              <div class="card-f">
+                <img src="{{ event.user.profile.image.url }}" alt="{{ event.user.profile.username }}" class="event-image-size">
+                <p class="card-name">{{ event.user.profile.username }}</p>
+                <p class="chat-delta">{{ event.delta }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!--提案詳細モーダル-->
+          <div class="modal fade event-modal" id="eventmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+              <div class="modal-content">
+                <div class="card-modal">
+                  <div class="card-modal-left">
+                    <img src="" alt="イベント画像" class="card-modal-image">
+                  </div>
+                  <div class="card-modal-right">
+                    <div class="card-modal-profile">
+                      <a href="/profile/{{ event.user.id }}" class="top-card-modal">
+                        <img src="{{ event.user.profile.image.url }}" alt="{{ event.user.profile.username }}" class="card-modal-image-size">
+                        <p class="card-modal-name">{{ event.user.profile.username }}</p>
+                      </a>
+                      <p class="chat-delta"></p>
+                    </div>
+                    <div class="card-details">
+                      <p class="title"></p>
+                      <p class="place"></p>
+                      <p class="date"></p>
+                      <p class="time"></p>
+                      <p class="detail"></p>
+                    </div>
+                    <div class="card-btn">
+                      <a id="intentionalBtn" class="intentional-btn" data-key="{{ event.user.id }}" onclick="requestClicked()">ヒマリク</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="top-right col-md-3">
+      <div class="category-list">
+        <label for="category" class="event-label">カテゴリー</label>
+        <select class="form-control" id="category" name="category" onchange="searchCategory()">
+          <option value="" selected>選択してください</option>
+          <option value="アウトドア">アウトドア</option>
+          <option value="カフェ巡り">カフェ巡り</option>
+          <option value="カラオケ">カラオケ</option>
+          <option value="ガーデニング">ガーデニング</option>
+          <option value="ゲーム">ゲーム</option>
+          <option value="サイクリング">サイクリング</option>
+          <option value="ショッピング">ショッピング</option>
+          <option value="スポーツ">スポーツ</option>
+          <option value="スポーツ観戦">スポーツ観戦</option>
+          <option value="ダンス">ダンス</option>
+          <option value="トレーニング">トレーニング</option>
+          <option value="ドライブ">ドライブ</option>
+          <option value="ハイキング">ハイキング</option>
+          <option value="ペット">ペット</option>
+          <option value="写真">写真</option>
+          <option value="写真撮影">写真撮影</option>
+          <option value="手芸">手芸</option>
+          <option value="手芸・DIY">手芸・DIY</option>
+          <option value="料理">料理</option>
+          <option value="旅行">旅行</option>
+          <option value="映画">映画</option>
+          <option value="映画鑑賞">映画鑑賞</option>
+          <option value="絵画">絵画</option>
+          <option value="読書">読書</option>
+          <option value="釣り">釣り</option>
+          <option value="音楽">音楽</option>
+          <option value="音楽鑑賞">音楽鑑賞</option>
+          <option value="その他">その他</option>
+        </select>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}

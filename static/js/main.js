@@ -623,3 +623,9 @@ $('.event-modal').on('click', function() {
     }
   })
 })
+
+/* トップページカテゴリー検索 */
+function searchCategory() {
+  var selectedCategory = $('#category').val();
+  window.location.href = `?category=${selectedCategory}`;
+}
