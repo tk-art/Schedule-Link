@@ -603,9 +603,8 @@ $(document).ready(function() {
 });
 
 /* イベントクリック時のモーダル動作 */
-$('#event-modal').on('click', function() {
+$('.event-modal').on('click', function() {
   var eventId = $(this).data('event-id');
-  console.log(eventId);
 
   $.ajax({
     url: '/get_event_details/',
@@ -613,7 +612,13 @@ $('#event-modal').on('click', function() {
         'event_id': eventId
     },
     success: function(data) {
+      $('#eventmodal .card-modal-profile .chat-delta').text(data.delta);
       $('#eventmodal .card-modal-left img').attr('src', data.image_url);
+      $('#eventmodal .card-modal-right .title').text(data.title);
+      $('#eventmodal .card-modal-right .place').text(data.place);
+      $('#eventmodal .card-modal-right .date').text(data.date);
+      $('#eventmodal .card-modal-right .time').text(data.time);
+      $('#eventmodal .card-modal-right .detail').text(data.detail);
       $('#eventmodal').modal('show');
     }
   })

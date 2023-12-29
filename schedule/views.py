@@ -532,7 +532,16 @@ def event(request):
 def get_event_details(request):
     event_id = request.GET.get('event_id')
     event = Event.objects.get(id=event_id)
+
+    event.delta = human_readable_time_from_utc(event.timestamp)
+
     data = {
-      'image_url': event.image.url
+      'title': event.title,
+      'place': event.place,
+      'date': event.date,
+      'time': event.time,
+      'detail': event.detail,
+      'image_url': event.image.url,
+      'delta': event.delta
     }
     return JsonResponse(data)

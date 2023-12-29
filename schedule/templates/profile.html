@@ -73,7 +73,7 @@
       <div class="row row-cols-2 row-cols-md-4 g-4">
         {% for event in events %}
           <div class="col">
-            <div class="card event-card" id="event-modal" data-event-id="{{ event.id }}">
+            <div class="card event-card event-modal" data-event-id="{{ event.id }}">
               <img src="{{ event.image.url }}" alt="{{ profile.username }}" class="event-card-size">
               <div class="card-body card-b">
                 <p class="card-text black">{{ event.title }}</p>
@@ -93,12 +93,27 @@
 
   <!--提案詳細モーダル-->
   <div class="modal fade event-modal" id="eventmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
-        <div class="card-modal-left">
-          <img src="" alt="イベント画像">
+        <div class="card-modal">
+          <div class="card-modal-left">
+            <img src="" alt="イベント画像" class="card-modal-image">
+          </div>
+          <div class="card-modal-right">
+            <div class="card-modal-profile">
+              <img src="{{ profile.image.url }}" alt="{{ profile.username }}" class="card-modal-image-size">
+              <p class="card-modal-name">{{ profile.username }}</p>
+              <p class="chat-delta"></p>
+            </div>
+            <div class="card-details">
+              <p class="title"></p>
+              <p class="place"></p>
+              <p class="date"></p>
+              <p class="time"></p>
+              <p class="detail"></p>
+            </div>
+          </div>
         </div>
-        <div class="card-modal-right"></div>
       </div>
     </div>
   </div>
