@@ -114,25 +114,41 @@ $('#followed-by').on('click', function() {
   }
 });
 
+
+/* リクエストクリック */
+
 function requestClicked(element) {
-  var userData;
+  var userId, userData, eventId;
 
   if (element) {
-    var userId = $(element).data('key');
+    userId = $(element).data('key');
     userData = $("#selectedData-" + userId).text();
   } else {
-    var userId = $('#intentionalBtn').data('key');
-    userData = $("#selectedData").text();
+    userId = $('#intentionalBtn').data('key');
+    if ($('.profile-page-container').length) {
+      userData = $("#selectedData").text();
+    } else {
+      eventId = $('#intentionalBtn').data('event-id');
+      console.log(eventId);
+    }
+  }
+
+  var dataToSend = {
+    user_id: userId,
+    csrfmiddlewaretoken: csrfToken
+  };
+
+  if (userData) {
+    dataToSend.userData = userData;
+  }
+  if (eventId) {
+    dataToSend.eventId = eventId;
   }
 
   $.ajax({
     type: "POST",
     url: "/intentional_request/" + userId + "/",
-    data: {
-      user_id: userId,
-      csrfmiddlewaretoken: csrfToken,
-      userData: userData
-    },
+    data: dataToSend,
     success: function(response) {
       if(response.status == "success"){
         alert("正常にリクエストが送信されました");
@@ -144,6 +160,7 @@ function requestClicked(element) {
     }
   });
 }
+
 
 $('#otherUserModal').on('shown.bs.modal', function () {
   var btn = $("#intentionalBtn");
@@ -394,6 +411,7 @@ function getEventData(selectedDate, callback) {
 }
 
 /* 画像用モーダル */
+
 $('.profile-image-modal').click(function() {
   const modal = $('#modal');
   const modalImage = $('#modal-image');
@@ -505,6 +523,8 @@ $(document).ready(function() {
 
     unread.push(request);
   });
+
+  /* ヘッダーの赤丸制御 */
 
   $.when.apply($, unread).then(function() {
     if (unread_messages) {

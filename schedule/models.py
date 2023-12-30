@@ -39,7 +39,8 @@ class Calendar(models.Model):
 class UserRequest(models.Model):
     sender = models.ForeignKey(CustomUser, related_name="sent_request", on_delete=models.CASCADE)
     receiver = models.ForeignKey(CustomUser, related_name="received_request", on_delete=models.CASCADE)
-    userData = models.DateField(default='2023-01-14')
+    eventId = models.ForeignKey('Event', on_delete=models.CASCADE, null=True)
+    userData = models.DateField(default='2023-01-14', null=True)
     is_processed = models.BooleanField(default=False)
     situation = models.BooleanField(default=False)
     read = models.BooleanField(default=False)
@@ -48,7 +49,8 @@ class UserRequest(models.Model):
 class UserResponse(models.Model):
     sender = models.ForeignKey(CustomUser, related_name="sent_response", on_delete=models.CASCADE)
     receiver = models.ForeignKey(CustomUser, related_name="received_response", on_delete=models.CASCADE)
-    userData = models.DateField(default='2023-01-14')
+    eventId = models.ForeignKey('Event', on_delete=models.CASCADE, null=True)
+    userData = models.DateField(default='2023-01-14', null=True)
     buttonType = models.CharField(max_length=100)
     read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

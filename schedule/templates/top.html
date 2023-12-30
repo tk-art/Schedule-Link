@@ -12,6 +12,7 @@
               <div class="card-body card-b">
                 <p class="card-text black">{{ event.title }}</p>
                 <p class="card-text"><small class="text-muted">{{ event.place }}</small></p>
+                <p class="black">{{ event.id }}</p>
               </div>
               <div class="card-f">
                 <img src="{{ event.user.profile.image.url }}" alt="{{ event.user.profile.username }}" class="event-image-size">
@@ -45,8 +46,9 @@
                       <p class="detail"></p>
                     </div>
                     <div class="card-btn">
-                      <a id="intentionalBtn" class="intentional-btn" data-key="{{ event.user.id }}" onclick="requestClicked()">ヒマリク</a>
+                      <a id="intentionalBtn" class="intentional-btn" data-key="{{ event.user.id }}" data-event-id="{{ event.id }}" onclick="requestClicked()">ヒマリク</a>
                     </div>
+                    {{ event.id }}
                   </div>
                 </div>
               </div>
@@ -94,4 +96,8 @@
     </div>
   </div>
 </div>
+
+<script>
+  var csrfToken = '{{ csrf_token }}';
+</script>
 {% endblock %}

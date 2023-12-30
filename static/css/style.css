@@ -646,6 +646,25 @@ footer {
   margin: auto 0;
 }
 
+/* リクエストリストページ　イベント詳細 */
+
+.request-event-detail {
+  flex-direction: column;
+}
+
+.event-detail-link {
+  text-decoration: none;
+  color: #afaaaa;
+  font-size: 12px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.event-detail-link:hover {
+  color: #fff;
+}
+
+
 /* メッセージ */
 .response-message {
   background-color: #85B4B2;
@@ -823,7 +842,6 @@ footer {
 
 .card-b {
   height: 120px;
-  overflow: hidden;
 }
 
 .card-f {
@@ -858,10 +876,8 @@ footer {
 }
 
 .card-modal-right {
-  position: relative;
   width: 50%;
-  height: 500px;
-  overflow-y: auto;
+  position: relative;
   background-color: black;
 }
 
@@ -881,6 +897,8 @@ footer {
 }
 
 .card-details {
+  max-height: 350px;
+  overflow-y: auto;
   margin-top: 20px;
   margin-left: 30px;
   margin-right: 30px;

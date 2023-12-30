@@ -46,14 +46,6 @@ def top(request):
       event.delta = human_readable_time_from_utc(event.timestamp)
     return render(request, 'top.html', {'events': events})
 
-def search_by_category(request):
-    category = request.GET.get('category', '')
-    if category:
-        items = Event.objects.filter(category=category).order_by('-timestamp')
-    else:
-        items = Event.objects.all().order_by('-timestamp')
-    return render(request, 'top.html', {'items': items})
-
 def signup(request):
   if request.method == 'POST':
     form = SignupForm(request.POST)
@@ -263,8 +255,9 @@ def intentional_request(request, user_id):
         sender = request.user
         receiver = CustomUser.objects.get(id=user_id)
         userData = request.POST.get('userData')
+        eventId = request.POST.get('eventId')
 
-        UserRequest.objects.create(sender=sender, receiver=receiver, userData=userData, situation=True)
+        UserRequest.objects.create(sender=sender, receiver=receiver, userData=userData, eventId_id=eventId, situation=True)
 
         return JsonResponse({"status": "success"})
     return JsonResponse({"status": "error"})
@@ -284,7 +277,7 @@ def check_user_request(request, user_id):
 
 def request_list(request):
     current_user = request.user
-    request_users = UserRequest.objects.filter(receiver_id=current_user.id).order_by('-created_at')
+    request_users = UserRequest.objects.filter(receiver_id=current_user.id).select_related('eventId').order_by('-created_at')
     response_users = UserResponse.objects.filter(receiver_id=current_user.id).order_by('-created_at')
     users, user_first_match = automatic_request_list(request)
 
@@ -303,6 +296,7 @@ def automatic_request_list(request):
 
     user_free_times = Calendar.objects.filter(user=current_user, selectedDate__gte=today_date)
     user_profile = Profile.objects.get(id=current_user.profile.id)
+    #これはユーザのプロフィール内容のresidenceを参考にしないと
     range_profile = Profile.objects.filter(residence="宮崎県")
 
     followed_users = current_user.profile.follows.all()
@@ -358,10 +352,15 @@ def process_button(request, user_id):
       sender = request.user
       receiver = CustomUser.objects.get(id=user_id)
       userData = request.POST.get('userData')
+      eventId = request.POST.get('eventId')
+      print(eventId)
 
-      UserResponse.objects.create(sender=sender, receiver=receiver, userData=userData, buttonType=buttonType)
+      UserResponse.objects.create(sender=sender, receiver=receiver, userData=userData, eventId=eventId, buttonType=buttonType)
 
-      user_request = UserRequest.objects.get(sender=receiver, receiver=sender, userData=userData)
+      if eventId:
+        user_request = UserRequest.objects.get(sender=receiver, receiver=sender, eventId=eventId)
+      else:
+        user_request = UserRequest.objects.get(sender=receiver, receiver=sender, userData=userData)
       user_request.is_processed = True
       user_request.save()
 

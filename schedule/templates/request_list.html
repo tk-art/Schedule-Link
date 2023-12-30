@@ -34,14 +34,59 @@
           <a href="/profile/{{ user.sender.id }}" class="request-profile-link">
             <img src="{{ user.sender.profile.image.url }}" alt="{{ user.sender.profile.username }}" class="request-image-size">
           </a>
-          <p>「{{ user.sender.profile.username }}」から「{{ user.userData|date:"Y-m-d" }}」に対してヒマリクが送られてきています</p>
+
+          {% if user.eventId %}
+            {% with event=user.eventId %}
+            <div class="request-event-detail">
+              <p>「{{ user.sender.profile.username }}」から、あなたが作成した「{{ event.title }}」に対してヒマリクが送られてきています</p>
+              <a class="event-modal event-detail-link" data-event-id="{{ event.id }}">イベント詳細</a>
+            </div>
+
+            <!--提案詳細モーダル-->
+            <div class="modal fade event-modal" id="eventmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                  <div class="card-modal">
+                    <div class="card-modal-left">
+                      <img src="" alt="イベント画像" class="card-modal-image">
+                    </div>
+                    <div class="card-modal-right">
+                      <div class="card-modal-profile">
+                        <a href="/profile/{{ event.user.id }}" class="top-card-modal">
+                          <img src="{{ event.user.profile.image.url }}" alt="{{ event.user.profile.username }}" class="card-modal-image-size">
+                          <p class="card-modal-name">{{ event.user.profile.username }}</p>
+                        </a>
+                        <p class="chat-delta"></p>
+                      </div>
+                      <div class="card-details">
+                        <p class="title"></p>
+                        <p class="place"></p>
+                        <p class="date"></p>
+                        <p class="time"></p>
+                        <p class="detail"></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endwith %}
+
+          {% else %}
+            <p>「{{ user.sender.profile.username }}」から「{{ user.userData|date:"Y-m-d" }}」に対してヒマリクが送られてきています</p>
+          {% endif %}
         </div>
 
         {% if not user.is_processed %}
           <div class="request-btn">
             <form action="/process_button/{{ user.sender.id }}/" method="post">
               {% csrf_token %}
-              <input type="hidden" name="userData" value="{{ user.userData|date:'Y-m-d' }}">
+              {% if user.eventId %}
+                {{ user.eventId.id }}
+                <input type="hidden" name="eventId" value="{{ user.eventId.id }}">
+              {% else %}
+                <input type="hidden" name="userData" value="{{ user.userData|date:'Y-m-d' }}">
+              {% endif %}
               <button type="submit" name="buttonType" class="approval-btn" value="承認する">承認する</button>
               <button type="submit" name="buttonType" class="rejection-btn" value="拒否する">拒否する</button>
             </form>
