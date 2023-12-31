@@ -48,12 +48,12 @@
 
   <ul class="nav request-nav calendar-tab" id="myTabs" role="tablist">
     <li class="nav-item">
-      <a class="nav-link header-right active" id="tab1-tab" data-bs-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">
+      <a class="nav-link header-right active" data-bs-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">
         カレンダー
       </a>
     </li>
     <li class="nav-item" role="presentation">
-      <a class="nav-link header-right" id="tab2-tab" data-bs-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">
+      <a class="nav-link header-right" data-bs-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">
         作成済みの提案
       </a>
     </li>
@@ -73,7 +73,7 @@
         {% for event in events %}
           <div class="col">
             <div class="card event-card event-modal" data-event-id="{{ event.id }}">
-              <img src="{{ event.image.url }}" alt="{{ profile.username }}" class="event-card-size">
+              <img src="{{ event.image.url }}" alt="イベント画像" class="event-card-size">
               <div class="card-body card-b">
                 <p class="card-text black">{{ event.title }}</p>
                 <p class="card-text"><small class="text-muted">{{ event.place }}</small></p>
@@ -100,7 +100,7 @@
           </div>
           <div class="card-modal-right">
             <div class="card-modal-profile">
-              <img src="{{ profile.image.url }}" alt="{{ profile.username }}" class="card-modal-image-size">
+              <img src="" alt="プロフィール画像" class="card-modal-image-size">
               <p class="card-modal-name">{{ profile.username }}</p>
               <p class="chat-delta"></p>
             </div>

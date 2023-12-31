@@ -43,7 +43,9 @@ def top(request):
         events = Event.objects.all().order_by('-timestamp')
 
     for event in events:
-      event.delta = human_readable_time_from_utc(event.timestamp)
+        event.delta = human_readable_time_from_utc(event.timestamp)
+        event.current_user = (request.user == event.user)
+
     return render(request, 'top.html', {'events': events})
 
 def signup(request):
@@ -264,10 +266,13 @@ def intentional_request(request, user_id):
 
 def check_user_request(request, user_id):
     userData = request.POST.get('userData')
+    eventId = request.POST.get('eventId')
+
     user_request = UserRequest.objects.filter(
         sender=request.user.id,
         receiver_id=user_id,
-        userData=userData
+        userData=userData,
+        eventId=eventId
     ).order_by('-created_at').first()
 
     if user_request and user_request.situation:
@@ -353,7 +358,6 @@ def process_button(request, user_id):
       receiver = CustomUser.objects.get(id=user_id)
       userData = request.POST.get('userData')
       eventId = request.POST.get('eventId')
-      print(eventId)
 
       UserResponse.objects.create(sender=sender, receiver=receiver, userData=userData, eventId=eventId, buttonType=buttonType)
 
@@ -550,6 +554,8 @@ def get_event_details(request):
 
     event.delta = human_readable_time_from_utc(event.timestamp)
 
+    event.current_user = (request.user == event.user)
+
     data = {
       'title': event.title,
       'place': event.place,
@@ -557,6 +563,9 @@ def get_event_details(request):
       'time': event.time,
       'detail': event.detail,
       'image_url': event.image.url,
-      'delta': event.delta
+      'delta': event.delta,
+      'profile_url': event.user.profile.image.url,
+      'username': event.user.profile.username,
+      'current_user': event.current_user
     }
     return JsonResponse(data)

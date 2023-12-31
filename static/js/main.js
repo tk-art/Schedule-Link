@@ -129,7 +129,6 @@ function requestClicked(element) {
       userData = $("#selectedData").text();
     } else {
       eventId = $('#intentionalBtn').data('event-id');
-      console.log(eventId);
     }
   }
 
@@ -182,6 +181,8 @@ $('#otherUserModal').on('shown.bs.modal', function () {
 });
 
 
+/* リクエストが存在する場合ヒマリクボタンを消す */
+
 $(document).ready(function() {
   $('.intentional-btn').each(function() {
     var btn = $(this);
@@ -198,16 +199,39 @@ $(document).ready(function() {
         if (response.situation) {
           btn.hide();
         }
+      }
+    });
+  });
+});
+
+$(document).ready(function() {
+  $('.event-card').each(function() {
+    var card = $(this);
+    var eventId = card.data('event-id');
+    var userId = card.data('key');
+
+    $.ajax({
+      type: "POST",
+      url: "/check_user_request/" + userId + "/",
+      data: {
+        csrfmiddlewaretoken: csrfToken,
+        eventId: eventId
       },
-      error: function(error) {
-        console.log(error);
+      success: function(response) {
+        if (response.situation) {
+          $('#eventmodal').on('shown.bs.modal', function() {
+            $(this).find('#cardBtn-' + eventId).hide();
+          });
+        }
       }
     });
   });
 });
 
 
+
 /* カレンダー */
+
 function customTitleGenerator(date) {
   var monthNames = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
   var year = date.getFullYear();
@@ -348,6 +372,7 @@ $(document).ready(function() {
 });
 
 /* イベントページカレンダー */
+
 $('#date-time').on('click', function() {
   var calendarEl = $('#date-calendar')[0];
   var timeCalendar;
@@ -424,13 +449,12 @@ $('#close-modal').click(function() {
   $('#modal').hide();
 });
 
-
-
 $(".request-btn button").click(function() {
   $(this).closest('.request-btn').hide();
 });
 
 /*リクエストチェック*/
+
 $(document).ready(function() {
   function checkNewRequests() {
     $.ajax({
@@ -500,8 +524,8 @@ $(document).ready(function() {
   }
 });
 
-
 /*　チャットチェック　*/
+
 $(document).ready(function() {
   var unread_messages = false;
   var unread = [];
@@ -562,8 +586,8 @@ $(document).ready(function() {
 
 });
 
-
 /*チャット*/
+
 $(function() {
   var chatSocket = new WebSocket(
     'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
@@ -625,6 +649,8 @@ $(document).ready(function() {
 /* イベントクリック時のモーダル動作 */
 $('.event-modal').on('click', function() {
   var eventId = $(this).data('event-id');
+  var userId = $(this).data('key');
+
 
   $.ajax({
     url: '/get_event_details/',
@@ -632,6 +658,9 @@ $('.event-modal').on('click', function() {
         'event_id': eventId
     },
     success: function(data) {
+      $('#eventmodal .card-modal-profile a').attr('href', '/profile/' + userId);
+      $('#eventmodal .card-modal-profile img').attr('src', data.profile_url);
+      $('#eventmodal .card-modal-profile .card-modal-name').text(data.username);
       $('#eventmodal .card-modal-profile .chat-delta').text(data.delta);
       $('#eventmodal .card-modal-left img').attr('src', data.image_url);
       $('#eventmodal .card-modal-right .title').text(data.title);
@@ -639,6 +668,17 @@ $('.event-modal').on('click', function() {
       $('#eventmodal .card-modal-right .date').text(data.date);
       $('#eventmodal .card-modal-right .time').text(data.time);
       $('#eventmodal .card-modal-right .detail').text(data.detail);
+
+      $('#eventmodal .card-btn .intentional-btn').attr('data-key', userId);
+      $('#eventmodal .card-btn .intentional-btn').attr('data-event-id', eventId);
+
+      if (!data.current_user) {
+        $('#eventmodal .card-btn').show();
+        $('#eventmodal .card-btn').attr('id', 'cardBtn-' + eventId );
+      } else {
+        $('#eventmodal .card-btn').hide();
+      }
+
       $('#eventmodal').modal('show');
     }
   })

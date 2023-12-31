@@ -898,10 +898,14 @@ footer {
 
 .card-details {
   max-height: 350px;
-  overflow-y: auto;
+  overflow-y: scroll;
   margin-top: 20px;
   margin-left: 30px;
   margin-right: 30px;
+}
+
+.card-details::-webkit-scrollbar {
+  display: none;
 }
 
 .card-modal-profile {

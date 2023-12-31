@@ -39,7 +39,7 @@
             {% with event=user.eventId %}
             <div class="request-event-detail">
               <p>「{{ user.sender.profile.username }}」から、あなたが作成した「{{ event.title }}」に対してヒマリクが送られてきています</p>
-              <a class="event-modal event-detail-link" data-event-id="{{ event.id }}">イベント詳細</a>
+              <a class="event-modal event-detail-link" data-key="{{ event.user.id }}" data-event-id="{{ event.id }}">イベント詳細</a>
             </div>
 
             <!--提案詳細モーダル-->
@@ -52,9 +52,9 @@
                     </div>
                     <div class="card-modal-right">
                       <div class="card-modal-profile">
-                        <a href="/profile/{{ event.user.id }}" class="top-card-modal">
-                          <img src="{{ event.user.profile.image.url }}" alt="{{ event.user.profile.username }}" class="card-modal-image-size">
-                          <p class="card-modal-name">{{ event.user.profile.username }}</p>
+                        <a href="" class="top-card-modal">
+                          <img src="" alt="プロフィール画像" class="card-modal-image-size">
+                          <p class="card-modal-name"></p>
                         </a>
                         <p class="chat-delta"></p>
                       </div>
@@ -82,7 +82,6 @@
             <form action="/process_button/{{ user.sender.id }}/" method="post">
               {% csrf_token %}
               {% if user.eventId %}
-                {{ user.eventId.id }}
                 <input type="hidden" name="eventId" value="{{ user.eventId.id }}">
               {% else %}
                 <input type="hidden" name="userData" value="{{ user.userData|date:'Y-m-d' }}">

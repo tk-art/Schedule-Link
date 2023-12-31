@@ -7,12 +7,11 @@
       <div class="row row-cols-2 row-cols-md-3 g-4">
         {% for event in events %}
           <div class="col">
-            <div class="card event-card event-modal" data-event-id="{{ event.id }}">
+            <div class="card event-card event-modal" data-event-id="{{ event.id }}" data-key="{{ event.user.id }}">
               <img src="{{ event.image.url }}" alt="{{ profile.username }}" class="event-card-size">
               <div class="card-body card-b">
                 <p class="card-text black">{{ event.title }}</p>
                 <p class="card-text"><small class="text-muted">{{ event.place }}</small></p>
-                <p class="black">{{ event.id }}</p>
               </div>
               <div class="card-f">
                 <img src="{{ event.user.profile.image.url }}" alt="{{ event.user.profile.username }}" class="event-image-size">
@@ -21,40 +20,39 @@
               </div>
             </div>
           </div>
+        {% endfor %}
 
-          <!--提案詳細モーダル-->
-          <div class="modal fade event-modal" id="eventmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-              <div class="modal-content">
-                <div class="card-modal">
-                  <div class="card-modal-left">
-                    <img src="" alt="イベント画像" class="card-modal-image">
+        <!--提案詳細モーダル-->
+        <div class="modal fade" id="eventmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+              <div class="card-modal">
+                <div class="card-modal-left">
+                  <img src="" alt="イベント画像" class="card-modal-image">
+                </div>
+                <div class="card-modal-right">
+                  <div class="card-modal-profile">
+                    <a href="" class="top-card-modal">
+                      <img src="" alt="プロフィール画像" class="card-modal-image-size">
+                      <p class="card-modal-name"></p>
+                    </a>
+                    <p class="chat-delta"></p>
                   </div>
-                  <div class="card-modal-right">
-                    <div class="card-modal-profile">
-                      <a href="/profile/{{ event.user.id }}" class="top-card-modal">
-                        <img src="{{ event.user.profile.image.url }}" alt="{{ event.user.profile.username }}" class="card-modal-image-size">
-                        <p class="card-modal-name">{{ event.user.profile.username }}</p>
-                      </a>
-                      <p class="chat-delta"></p>
-                    </div>
-                    <div class="card-details">
-                      <p class="title"></p>
-                      <p class="place"></p>
-                      <p class="date"></p>
-                      <p class="time"></p>
-                      <p class="detail"></p>
-                    </div>
-                    <div class="card-btn">
-                      <a id="intentionalBtn" class="intentional-btn" data-key="{{ event.user.id }}" data-event-id="{{ event.id }}" onclick="requestClicked()">ヒマリク</a>
-                    </div>
-                    {{ event.id }}
+                  <div class="card-details">
+                    <p class="title"></p>
+                    <p class="place"></p>
+                    <p class="date"></p>
+                    <p class="time"></p>
+                    <p class="detail"></p>
+                  </div>
+                  <div class="card-btn" style="display: none;">
+                    <a id="intentionalBtn" class="intentional-btn" onclick="requestClicked()">ヒマリク</a>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        {% endfor %}
+        </div>
       </div>
     </div>
 
