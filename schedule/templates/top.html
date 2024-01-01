@@ -3,6 +3,43 @@
 {% block content %}
 <div class="container col-md-9">
   <div class="top-content">
+    <div class="phone-size-category" style="display: none;">
+      <div class="phone-size-category-list">
+        <label for="category" class="event-label">カテゴリー</label>
+        <select class="form-control" id="category" name="category" onchange="searchCategory()">
+          <option value="" selected>選択してください</option>
+          <option value="アウトドア">アウトドア</option>
+          <option value="カフェ巡り">カフェ巡り</option>
+          <option value="カラオケ">カラオケ</option>
+          <option value="ガーデニング">ガーデニング</option>
+          <option value="ゲーム">ゲーム</option>
+          <option value="サイクリング">サイクリング</option>
+          <option value="ショッピング">ショッピング</option>
+          <option value="スポーツ">スポーツ</option>
+          <option value="スポーツ観戦">スポーツ観戦</option>
+          <option value="ダンス">ダンス</option>
+          <option value="トレーニング">トレーニング</option>
+          <option value="ドライブ">ドライブ</option>
+          <option value="ハイキング">ハイキング</option>
+          <option value="ペット">ペット</option>
+          <option value="写真">写真</option>
+          <option value="写真撮影">写真撮影</option>
+          <option value="手芸">手芸</option>
+          <option value="手芸・DIY">手芸・DIY</option>
+          <option value="料理">料理</option>
+          <option value="旅行">旅行</option>
+          <option value="映画">映画</option>
+          <option value="映画鑑賞">映画鑑賞</option>
+          <option value="絵画">絵画</option>
+          <option value="読書">読書</option>
+          <option value="釣り">釣り</option>
+          <option value="音楽">音楽</option>
+          <option value="音楽鑑賞">音楽鑑賞</option>
+          <option value="その他">その他</option>
+        </select>
+      </div>
+    </div>
+
     <div class="top-left col-md-9">
       <div class="row row-cols-2 row-cols-md-3 g-4">
         {% for event in events %}

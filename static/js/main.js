@@ -424,14 +424,14 @@ $('#date-time').on('click', function() {
 
 function getEventData(selectedDate, callback) {
   $.ajax({
-      url: "/get_event_data/" + userId + "/",
-      method: "GET",
-      data: {
-          date: selectedDate,
-      },
-      success: function(data) {
-          callback(data);
-      }
+    url: "/get_event_data/" + userId + "/",
+    method: "GET",
+    data: {
+        date: selectedDate,
+    },
+    success: function(data) {
+        callback(data);
+    }
   });
 }
 
@@ -469,9 +469,10 @@ $(document).ready(function() {
         }
 
         if (response.requests_unread || response.responses_unread) {
-          showTabIndicator('#requests-link');
+          console.log('link' + response.requests_unread);
+          showTabIndicator('#nav-requests-link');
         } else {
-          hideTabIndicator('#requests-link');
+          hideTabIndicator('#nev-requests-link');
         }
       },
       error: function(error) {

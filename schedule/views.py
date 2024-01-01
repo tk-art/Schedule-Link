@@ -283,7 +283,7 @@ def check_user_request(request, user_id):
 def request_list(request):
     current_user = request.user
     request_users = UserRequest.objects.filter(receiver_id=current_user.id).select_related('eventId').order_by('-created_at')
-    response_users = UserResponse.objects.filter(receiver_id=current_user.id).order_by('-created_at')
+    response_users = UserResponse.objects.filter(receiver_id=current_user.id).select_related('eventId').order_by('-created_at')
     users, user_first_match = automatic_request_list(request)
 
     context = {
@@ -357,7 +357,9 @@ def process_button(request, user_id):
       sender = request.user
       receiver = CustomUser.objects.get(id=user_id)
       userData = request.POST.get('userData')
-      eventId = request.POST.get('eventId')
+      event_id = int(request.POST.get('eventId'))
+      eventId = Event.objects.get(id=event_id)
+
 
       UserResponse.objects.create(sender=sender, receiver=receiver, userData=userData, eventId=eventId, buttonType=buttonType)
 
@@ -377,6 +379,7 @@ def process_button(request, user_id):
 def check_new_requests(request):
     user = request.user
     requests_unread = UserRequest.objects.filter(receiver=user, read=False).exists()
+    print(requests_unread)
     responses_unread = UserResponse.objects.filter(receiver=user, read=False).exists()
 
     response = {

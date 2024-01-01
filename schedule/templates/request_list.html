@@ -126,10 +126,51 @@
           <a href="/profile/{{ user.sender.id }}" class="request-profile-link">
             <img src="{{ user.sender.profile.image.url }}" alt="{{ user.sender.profile.username }}" class="request-image-size">
           </a>
-          <p>
-            「{{ user.sender.profile.username }}」から「{{ user.userData|date:"Y-m-d" }}」に対するリクエストに関して、<br>
-            「{{ user.buttonType }}」と返答があります
-          </p>
+            {% if user.eventId %}
+              {% with event=user.eventId %}
+                <div class="request-event-detail">
+                  <p>
+                    「{{ user.sender.profile.username }}」から「{{ event.title }}」に対するリクエストに関して,
+                    「{{ user.buttonType }}」とレスポンスがあります
+                  </p>
+                  <a class="event-modal event-detail-link" data-key="{{ event.user.id }}" data-event-id="{{ event.id }}">イベント詳細</a>
+                </div>
+
+                <!--提案詳細モーダル-->
+                <div class="modal fade event-modal" id="eventmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                      <div class="card-modal">
+                        <div class="card-modal-left">
+                          <img src="" alt="イベント画像" class="card-modal-image">
+                        </div>
+                        <div class="card-modal-right">
+                          <div class="card-modal-profile">
+                            <a href="" class="top-card-modal">
+                              <img src="" alt="プロフィール画像" class="card-modal-image-size">
+                              <p class="card-modal-name"></p>
+                            </a>
+                            <p class="chat-delta"></p>
+                          </div>
+                          <div class="card-details">
+                            <p class="title"></p>
+                            <p class="place"></p>
+                            <p class="date"></p>
+                            <p class="time"></p>
+                            <p class="detail"></p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            {% endwith %}
+          {% else %}
+            <p>
+              「{{ user.sender.profile.username }}」から「{{ user.userData|date:"Y-m-d" }}」に対するリクエストに関して
+              「{{ user.buttonType }}」とレスポンスがあります
+            </p>
+          {% endif %}
         </div>
         {% if user.buttonType == '承認する' %}
           <a href="/chat/{{ user.sender.id }}" class="chat">個別チャットへ</a>

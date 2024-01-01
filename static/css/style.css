@@ -18,7 +18,7 @@ hamburger(ハンバーガーアイコン)
 .hamburger {
   position: absolute;
   right: 20px;
-  top: 20px;
+  top: 25px;
   width: 50px;
   height: 40px;
   cursor: pointer;
@@ -27,7 +27,7 @@ hamburger(ハンバーガーアイコン)
 
 .hamburger__line {
   position: absolute;
-  width: 40px;
+  width: 30px;
   height: 2px;
   right: 0;
   background-color: #000;
@@ -40,12 +40,12 @@ hamburger(ハンバーガーアイコン)
 }
 
 .hamburger__line--2 {
-  top: 14px;
+  top: 12px;
   background-color: #fff;
 }
 
 .hamburger__line--3 {
-  top: 28px;
+  top: 24px;
   background-color: #fff;
 }
 
@@ -134,7 +134,7 @@ black-bg(ハンバーガーメニュー解除用bg)
   visibility: visible;
 }
 
-@media only screen and (max-width: 768px) {
+@media (max-width: 768px) {
   .nav-wrapper {
     display: block;
   }
@@ -642,10 +642,6 @@ footer {
   margin-bottom: 20px;
 }
 
-.response-list p {
-  margin: auto 0;
-}
-
 /* リクエストリストページ　イベント詳細 */
 
 .request-event-detail {
@@ -666,6 +662,7 @@ footer {
 
 
 /* メッセージ */
+
 .response-message {
   background-color: #85B4B2;
   color: black;
@@ -677,6 +674,7 @@ footer {
 }
 
 /*　チャット */
+
 .chat {
   display: inline-block;
   font-weight: bold;
@@ -767,6 +765,7 @@ footer {
 }
 
 /* 検索 */
+
 .last-calendar {
   margin-left: auto;
   margin-right: 10px;
@@ -791,6 +790,7 @@ footer {
 }
 
 /* イベントページ */
+
 .event-page {
   margin-top: 40px;
   border: 2px solid #837e7e;
@@ -861,6 +861,7 @@ footer {
 
 
 /* カードモーダル */
+
 .card-modal {
   display: flex;
 }
@@ -935,4 +936,22 @@ footer {
   position: absolute;
   bottom: 20px;
   right: 20px;
+}
+
+.phone-size-category-list {
+  margin-left: 10px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 500px) {
+  .phone-size-category {
+    display: block !important;
+  }
+  .top-right {
+    display: none;
+  }
+
+  .top-content {
+    display: block;
+  }
 }
