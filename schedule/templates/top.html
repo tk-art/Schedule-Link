@@ -42,58 +42,92 @@
 
     <div class="top-left col-md-9">
       <div class="row row-cols-2 row-cols-md-3 g-4">
-        {% for event in events %}
-          <div class="col">
-            <div class="card event-card event-modal" data-event-id="{{ event.id }}" data-key="{{ event.user.id }}">
-              <img src="{{ event.image.url }}" alt="{{ profile.username }}" class="event-card-size">
-              <div class="card-body card-b">
-                <p class="card-text black">{{ event.title }}</p>
-                <p class="card-text"><small class="text-muted">{{ event.place }}</small></p>
+        {% if users %}
+          {% for user in users %}
+            <div class="row">
+              <div class="request-list">
+                <a href="/profile/{{ user.id }}" class="request-profile-link">
+                  <img src="{{ user.profile.image.url }}" alt="{{ user.profile.username }}" class="request-image-size">
+                </a>
+                <div>
+                  <p>「{{ user.profile.username }}」とは、暇な時間が一致しています</p>
+                  {% for key, value in user_first_match.items %}
+                    {% if user.id == key %}
+                      <p class="first-match-p">直近での一致は{{ value|date:"Y-m-d" }}です</p>
+                      <div id="selectedData-{{ key }}" style="display: none;">{{ value|date:"Y-m-d" }}</div>
+                      <a class="intentional-btn" data-key="{{ key }}" onclick="requestClicked(this)">ヒマリク</a>
+                    {% endif %}
+                  {% endfor %}
+                </div>
               </div>
-              <div class="card-f">
-                <img src="{{ event.user.profile.image.url }}" alt="{{ event.user.profile.username }}" class="event-image-size">
-                <p class="card-name">{{ event.user.profile.username }}</p>
-                <p class="chat-delta">{{ event.delta }}</p>
-              </div>
+              <div class="separator"></div>
             </div>
-          </div>
-        {% endfor %}
+          {% endfor %}
 
-        <!--提案詳細モーダル-->
-        <div class="modal fade" id="eventmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-              <div class="card-modal">
-                <div class="card-modal-left">
-                  <img src="" alt="イベント画像" class="card-modal-image">
+        {% else %}
+          {% for event in events %}
+            <div class="col">
+              <div class="card event-card event-modal" data-event-id="{{ event.id }}" data-key="{{ event.user.id }}">
+                <img src="{{ event.image.url }}" alt="{{ profile.username }}" class="event-card-size">
+                <div class="card-body card-b">
+                  <p class="card-text black">{{ event.title }}</p>
+                  <p class="card-text"><small class="text-muted">{{ event.place }}</small></p>
                 </div>
-                <div class="card-modal-right">
-                  <div class="card-modal-profile">
-                    <a href="" class="top-card-modal">
-                      <img src="" alt="プロフィール画像" class="card-modal-image-size">
-                      <p class="card-modal-name"></p>
-                    </a>
-                    <p class="chat-delta"></p>
+                <div class="card-f">
+                  <img src="{{ event.user.profile.image.url }}" alt="{{ event.user.profile.username }}" class="event-image-size">
+                  <p class="card-name">{{ event.user.profile.username }}</p>
+                  <p class="chat-delta">{{ event.delta }}</p>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+
+          <!--提案詳細モーダル-->
+          <div class="modal fade" id="eventmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+              <div class="modal-content">
+                <div class="card-modal">
+                  <div class="card-modal-left">
+                    <img src="" alt="イベント画像" class="card-modal-image">
                   </div>
-                  <div class="card-details">
-                    <p class="title"></p>
-                    <p class="place"></p>
-                    <p class="date"></p>
-                    <p class="time"></p>
-                    <p class="detail"></p>
-                  </div>
-                  <div class="card-btn" style="display: none;">
-                    <a id="intentionalBtn" class="intentional-btn" onclick="requestClicked()">ヒマリク</a>
+                  <div class="card-modal-right">
+                    <div class="card-modal-profile">
+                      <a href="" class="top-card-modal">
+                        <img src="" alt="プロフィール画像" class="card-modal-image-size">
+                        <p class="card-modal-name"></p>
+                      </a>
+                      <p class="chat-delta"></p>
+                    </div>
+                    <div class="card-details">
+                      <p class="title"></p>
+                      <p class="place"></p>
+                      <p class="date"></p>
+                      <p class="time"></p>
+                      <p class="detail"></p>
+                    </div>
+                    <div class="card-btn" style="display: none;">
+                      <a id="intentionalBtn" class="intentional-btn" onclick="requestClicked()">ヒマリク</a>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        {% endif %}
       </div>
     </div>
 
     <div class="top-right col-md-3">
+
+      <div class="recommendation">
+        <label for="recommendation" class="event-label">おすすめ</label>
+        <select class="form-control" id="recommendation" name="recommendation" onchange="searchRecom()">
+          <option value="" selected>選択してください</option>
+          <option value="おすすめユーザー">おすすめユーザー</option>
+          <option value="おすすめイベント">おすすめイベント</option>
+        </select>
+      </div>
+
       <div class="category-list">
         <label for="category" class="event-label">カテゴリー</label>
         <select class="form-control" id="category" name="category" onchange="searchCategory()">

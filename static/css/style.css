@@ -786,7 +786,7 @@ footer {
   margin-bottom: 10px;
 }
 
-/* イベントページ */
+/* イベントページ 作成 */
 
 .event-page {
   margin-top: 40px;
@@ -839,6 +839,7 @@ footer {
 
 .card-b {
   height: 120px;
+  overflow: hidden;
 }
 
 .card-f {
@@ -855,7 +856,6 @@ footer {
   font-size: 12px;
   color: #817e7e;
 }
-
 
 /* カードモーダル */
 
@@ -921,7 +921,7 @@ footer {
 }
 
 .category-list {
-  margin-left: 40px;
+  margin-left: 30px;
 }
 
 .top-card-modal {
@@ -951,6 +951,11 @@ footer {
   .top-content {
     display: block;
   }
+}
+
+.recommendation {
+  margin-bottom: 20px;
+  margin-left: 30px;
 }
 
 /* カード編集 プロフィールページ */

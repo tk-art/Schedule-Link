@@ -698,3 +698,8 @@ function searchCategory() {
   var selectedCategory = $('#category').val();
   window.location.href = `?category=${selectedCategory}`;
 }
+
+function searchRecom() {
+  var selectedRecom = $('#recommendation').val();
+  window.location.href = `?recommendation=${selectedRecom}`;
+}

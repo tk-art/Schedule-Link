@@ -37,6 +37,14 @@ def human_readable_time_from_utc(timestamp, timezone='Asia/Tokyo'):
 
 def top(request):
     category = request.GET.get('category', '')
+    recommendation = request.GET.get('recommendation', '')
+
+    if recommendation:
+        users, user_first_match = automatic_request_list(request)
+    else:
+        users = None
+        user_first_match = None
+
     if category:
         events = Event.objects.filter(category=category).order_by('-timestamp')
     else:
@@ -46,7 +54,13 @@ def top(request):
         event.delta = human_readable_time_from_utc(event.timestamp)
         event.current_user = (request.user == event.user)
 
-    return render(request, 'top.html', {'events': events})
+    context = {
+        'events': events,
+        'users': users,
+        'user_first_match': user_first_match
+    }
+
+    return render(request, 'top.html', context)
 
 def signup(request):
   if request.method == 'POST':
@@ -301,8 +315,8 @@ def automatic_request_list(request):
 
     user_free_times = Calendar.objects.filter(user=current_user, selectedDate__gte=today_date)
     user_profile = Profile.objects.get(id=current_user.profile.id)
-    #これはユーザのプロフィール内容のresidenceを参考にしないと
-    range_profile = Profile.objects.filter(residence="宮崎県")
+
+    range_profile = Profile.objects.filter(residence=user_profile.residence)
 
     followed_users = current_user.profile.follows.all()
 
