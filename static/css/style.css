@@ -147,7 +147,6 @@ black-bg(ハンバーガーメニュー解除用bg)
 .confirm-btn {
   font-size: 14px;
   letter-spacing: 1.2px;
-  border: 1px solid rgb(146, 147, 152);
   color: black;
   border-radius: 5px;
   padding: 6px 12px;
@@ -176,8 +175,6 @@ black-bg(ハンバーガーメニュー解除用bg)
   border: 1px solid rgb(62, 105, 213);
   cursor: pointer;
 }
-
-/* ボタン終了 */
 
 .cursor {
   cursor: pointer;
@@ -954,4 +951,31 @@ footer {
   .top-content {
     display: block;
   }
+}
+
+/* カード編集 プロフィールページ */
+.card-edit-btn {
+  display: flex;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+#card_editing_modal {
+  color: black;
+}
+
+.confirm-card-btn {
+  font-size: 14px;
+  letter-spacing: 1.2px;
+  border: 1px solid rgb(206,212,218);
+  color: black;
+  border-radius: 5px;
+  padding: 6px 12px;
+  background: #fff;
+  margin-bottom: 18px;
+}
+.confirm-card-btn:hover {
+  color: #fff;
+  background: rgb(62, 105, 213);
 }

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate, login, logout
-from .forms import SignupForm, ProfileForm, CalendarForm, SearchForm, EventForm
+from .forms import SignupForm, ProfileForm, CalendarForm, SearchForm, EventForm, EventEditForm
 from .models import CustomUser, Profile, Calendar, UserRequest, UserResponse, ChatMessage, Notification, Event
 from django.shortcuts import redirect
 from django.http import JsonResponse
@@ -125,32 +125,32 @@ def profile_edit(request):
       profile_data = form.cleaned_data
 
       if profile:
-        fields = ['username', 'image', 'residence', 'age', 'gender', 'content']
-        for field in fields:
-          if profile_data.get(field):
-            setattr(profile, field, profile_data[field])
+          fields = ['username', 'image', 'residence', 'age', 'gender', 'content']
+          for field in fields:
+              if profile_data.get(field):
+                  setattr(profile, field, profile_data[field])
 
-        hobbies = profile_data.get('hobby')
-        interests = profile_data.get('interest')
-        if hobbies:
-            profile.hobby.set(hobbies)
-        if interests:
-            profile.interest.set(interests)
+          hobbies = profile_data.get('hobby')
+          interests = profile_data.get('interest')
+          if hobbies:
+              profile.hobby.set(hobbies)
+          if interests:
+              profile.interest.set(interests)
 
-        profile.save()
+          profile.save()
 
       else:
-        profile = form.save(commit=False)
-        profile.user = request.user
-        profile.save()
-        form.save_m2m()
+          profile = form.save(commit=False)
+          profile.user = request.user
+          profile.save()
+          form.save_m2m()
 
       return redirect('profile', user_id=request.user.id)
   else:
-    form = ProfileForm()
+      form = ProfileForm()
   context = {
-        'form': form,
-        'ages': ages,
+      'form': form,
+      'ages': ages,
       }
   return render(request, 'profile_edit.html', context)
 
@@ -244,13 +244,13 @@ def get_event_data(request, user_id):
     return JsonResponse(data)
 
 def delete_calendar(request):
-  if request.method == 'POST':
-    user_id = request.POST.get('user_id')
-    delete_date = request.POST.get('deleteDate')
+    if request.method == 'POST':
+        user_id = request.POST.get('user_id')
+        delete_date = request.POST.get('deleteDate')
 
-    calendar_entry = Calendar.objects.get(user_id=user_id, selectedDate=delete_date)
-    calendar_entry.delete()
-    return redirect('profile', user_id=user_id)
+        calendar_entry = Calendar.objects.get(user_id=user_id, selectedDate=delete_date)
+        calendar_entry.delete()
+        return redirect('profile', user_id=user_id)
 
 def intentional_request(request, user_id):
     if request.method == "POST":
@@ -360,7 +360,6 @@ def process_button(request, user_id):
       event_id = int(request.POST.get('eventId'))
       eventId = Event.objects.get(id=event_id)
 
-
       UserResponse.objects.create(sender=sender, receiver=receiver, userData=userData, eventId=eventId, buttonType=buttonType)
 
       if eventId:
@@ -379,7 +378,6 @@ def process_button(request, user_id):
 def check_new_requests(request):
     user = request.user
     requests_unread = UserRequest.objects.filter(receiver=user, read=False).exists()
-    print(requests_unread)
     responses_unread = UserResponse.objects.filter(receiver=user, read=False).exists()
 
     response = {
@@ -572,3 +570,39 @@ def get_event_details(request):
       'current_user': event.current_user
     }
     return JsonResponse(data)
+
+# カード編集、削除
+
+def card_editing(request, event_id):
+    if request.method == 'POST':
+        event = Event.objects.filter(id=event_id).first()
+        form = EventEditForm(request.POST, request.FILES)
+        if form.is_valid():
+            event_data = form.cleaned_data
+            if event:
+                fields = ['image', 'title', 'place', 'datetime', 'category', 'detail']
+                for field in fields:
+                    if event_data.get(field):
+                        if field == 'datetime':
+                            date, time = event_data[field].split(' ')
+                            setattr(event, 'date', date)
+                            setattr(event, 'time', time)
+                        else:
+                            setattr(event, field, event_data[field])
+
+                event.save()
+
+            return redirect('profile', user_id=request.user.id)
+    else:
+        form = EventEditForm()
+    return render(request, 'profile_edit.html', {'form': form})
+
+def delete_card(request, event_id):
+    if request.method == 'POST':
+        buttonType = request.POST.get('buttonType')
+        if buttonType == '削除':
+            event = Event.objects.get(id=event_id)
+            event.delete()
+            return redirect('profile', user_id=request.user.id)
+    else:
+        return render(request, 'profile.html')

@@ -232,10 +232,11 @@ $(document).ready(function() {
 
 /* カレンダー */
 
-function customTitleGenerator(date) {
+function customTitleGenerator() {
   var monthNames = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
-  var year = date.getFullYear();
-  var monthIndex = date.getMonth() + 1;
+  var now = new Date();
+  var year = now.getFullYear();
+  var monthIndex = now.getMonth();
   var monthName = monthNames[monthIndex];
 
   return year + ' ' + monthName;
@@ -261,8 +262,8 @@ $(document).ready(function() {
       selectable: true,
       events: '/api/calendar_events/' + userId + '/',
 
-    datesSet: function(dateInfo) {
-      var customTitle = customTitleGenerator(dateInfo.start);
+    datesSet: function() {
+      var customTitle = customTitleGenerator();
       $('#fc-dom-1').text(customTitle);
     },
 
@@ -373,7 +374,7 @@ $(document).ready(function() {
 
 /* イベントページカレンダー */
 
-$('#date-time').on('click', function() {
+$('#datetime').on('click', function() {
   var calendarEl = $('#date-calendar')[0];
   var timeCalendar;
 
@@ -382,15 +383,19 @@ $('#date-time').on('click', function() {
       fixedWeekCount: false,
       selectable: true,
 
-      datesSet: function(dateInfo) {
-        var customTitle = customTitleGenerator(dateInfo.start);
+      datesSet: function() {
+        var customTitle = customTitleGenerator();
         $('#fc-dom-1').text(customTitle);
+        $('#fc-dom-72').text(customTitle);
       },
 
       select: function(info) {
+        var selectedDate = info.start;
+
         if (!timeCalendar) {
           timeCalendar = new FullCalendar.Calendar($('#time-calendar')[0], {
               initialView: 'timeGridDay',
+              initialDate: selectedDate,
               headerToolbar: {
                 left: '',
                 center: '',
@@ -402,9 +407,9 @@ $('#date-time').on('click', function() {
               select: function(info) {
                 var start = formatTime(info.start);
                 var end = formatTime(info.end);
-                $('#date-time').val(info.startStr.split('T')[0] + ' ' + start + '~' + end);
+                $('#datetime').val(info.startStr.split('T')[0] + ' ' + start + '~' + end);
                 $('#timemodal').modal('hide');
-              }
+              },
           });
           $('#timemodal').modal('show');
           $('#datetimemodal').modal('hide');
@@ -672,6 +677,9 @@ $('.event-modal').on('click', function() {
 
       $('#eventmodal .card-btn .intentional-btn').attr('data-key', userId);
       $('#eventmodal .card-btn .intentional-btn').attr('data-event-id', eventId);
+
+      $('#card_editing_modal .modal-body form').attr('action', '/card_editing/' + eventId + '/');
+      $('#eventmodal .card-edit-btn form').attr('action', '/delete_card/' + eventId + '/');
 
       if (!data.current_user) {
         $('#eventmodal .card-btn').show();

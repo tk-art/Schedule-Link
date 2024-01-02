@@ -105,3 +105,19 @@ class EventForm(forms.ModelForm):
     def clean_datetime(self):
         datetime = self.cleaned_data.get('datetime')
         return datetime
+
+class EventEditForm(forms.ModelForm):
+    image = forms.ImageField(required=False)
+    title = forms.CharField(required=False)
+    place = forms.CharField(required=False)
+    datetime = forms.CharField(required=False)
+    category = forms.CharField(required=False)
+    detail = forms.CharField(required=False)
+
+    class Meta:
+        model = Event
+        fields = ['title', 'place', 'image', 'category', 'detail']
+
+    def clean_datetime(self):
+        datetime = self.cleaned_data.get('datetime')
+        return datetime

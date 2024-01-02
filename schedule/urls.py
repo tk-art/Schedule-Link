@@ -32,6 +32,8 @@ urlpatterns = [
     path('confirm_followers_viewed/', views.confirm_followers_viewed, name='confirm_followers_viewed'),
     path('event/', views.event, name='event'),
     path('get_event_details/', views.get_event_details, name='get_event_details'),
+    path('card_editing/<int:event_id>/', views.card_editing, name='card_editing'),
+    path('delete_card/<int:event_id>/', views.delete_card, name='delete_card'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

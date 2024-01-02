@@ -111,11 +111,129 @@
               <p class="time"></p>
               <p class="detail"></p>
             </div>
+
+            <div class="card-edit-btn">
+              <button class="approval-btn" data-bs-toggle="modal" data-bs-target="#card_editing_modal">編集</button>
+              <form action="" method="post">
+                {% csrf_token %}
+                <button type="submit" name="buttonType" class="rejection-btn" value="削除">削除</button>
+              </form>
+            </div>
+
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <!--編集モーダル-->
+
+  <div class="modal fade" id="card_editing_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <p class="modal-title">イベント編集</p>
+        </div>
+        <div class="modal-body">
+          <form action="" class="edit-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="image" class="event-label">トップ画像（任意）</label>
+              <input type="file" class="form-control" id="image" name="image" accept="image/*">
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="title" class="event-label">タイトル（活動内容）</label>
+              <input type="text" class="form-control" id="title" name="title">
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="place" class="event-label">場所</label>
+              <input type="text" class="form-control" id="place" name="place">
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="datetime" class="event-label">日時</label>
+              <input type="text" class="form-control" id="datetime" name="datetime">
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="category" class="event-label">カテゴリー</label>
+              <select class="form-control" id="category" name="category">
+                <option value="" selected>選択してください</option>
+                <option value="アウトドア">アウトドア</option>
+                <option value="カフェ巡り">カフェ巡り</option>
+                <option value="カラオケ">カラオケ</option>
+                <option value="ガーデニング">ガーデニング</option>
+                <option value="ゲーム">ゲーム</option>
+                <option value="サイクリング">サイクリング</option>
+                <option value="ショッピング">ショッピング</option>
+                <option value="スポーツ">スポーツ</option>
+                <option value="スポーツ観戦">スポーツ観戦</option>
+                <option value="ダンス">ダンス</option>
+                <option value="トレーニング">トレーニング</option>
+                <option value="ドライブ">ドライブ</option>
+                <option value="ハイキング">ハイキング</option>
+                <option value="ペット">ペット</option>
+                <option value="写真">写真</option>
+                <option value="写真撮影">写真撮影</option>
+                <option value="手芸">手芸</option>
+                <option value="手芸・DIY">手芸・DIY</option>
+                <option value="料理">料理</option>
+                <option value="旅行">旅行</option>
+                <option value="映画">映画</option>
+                <option value="映画鑑賞">映画鑑賞</option>
+                <option value="絵画">絵画</option>
+                <option value="読書">読書</option>
+                <option value="釣り">釣り</option>
+                <option value="音楽">音楽</option>
+                <option value="音楽鑑賞">音楽鑑賞</option>
+                <option value="その他">その他</option>
+              </select>
+              <br>
+              <div class="form-group">
+                <label for="detail" class="event-label">詳細情報（任意）</label>
+                <textarea class="form-control" id="detail" name="detail"></textarea>
+              </div>
+              <br>
+              <button type="submit" class="confirm-card-btn">編集</button>
+            </div>
+          </form>
+
+          <!--日付選択モーダル-->
+          <div class="modal fade cursor" id="datetimemodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <p class="modal-title">日付選択</p>
+                </div>
+                <div class="modal-body">
+                  <div id="date-calendar"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!--時間選択モーダル-->
+          <div class="modal fade" id="timemodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <p class="modal-title">時間選択</p>
+                </div>
+                <div class="modal-body">
+                  <div id="time-calendar"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 
   <!--フォローモーダル-->
   <div class="modal fade follow-modal" id="followmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
