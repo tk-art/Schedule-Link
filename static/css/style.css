@@ -937,11 +937,39 @@ footer {
 
 .phone-size-category-list {
   margin-left: 10px;
+  margin-right: 10px;
   margin-bottom: 20px;
+}
+
+.recommendation {
+  margin-bottom: 20px;
+  margin-left: 30px;
+}
+
+.phone-size-recommendation {
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
+
+.recommend-user {
+  margin-right: 10px;
+}
+
+.pc-size-modal {
+  display: block;
+}
+
+.phone-size-modal {
+  display: none;
 }
 
 @media (max-width: 500px) {
   .phone-size-category {
+    display: block !important;
+  }
+
+  .phone-size-recommendation {
     display: block !important;
   }
   .top-right {
@@ -951,11 +979,14 @@ footer {
   .top-content {
     display: block;
   }
-}
 
-.recommendation {
-  margin-bottom: 20px;
-  margin-left: 30px;
+  .pc-size-modal {
+    display: none;
+  }
+
+  .phone-size-modal {
+    display: block;
+  }
 }
 
 /* カード編集 プロフィールページ */

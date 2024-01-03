@@ -694,12 +694,18 @@ $('.event-modal').on('click', function() {
 })
 
 /* トップページカテゴリー検索 */
-function searchCategory() {
-  var selectedCategory = $('#category').val();
+function searchCategory(categoryType) {
+  var selector = categoryType === 'phone' ? '#phone-size-category' : '#category';
+  var selectedCategory = $(selector).val();
   window.location.href = `?category=${selectedCategory}`;
 }
 
-function searchRecom() {
-  var selectedRecom = $('#recommendation').val();
-  window.location.href = `?recommendation=${selectedRecom}`;
+function searchRecom(recommendationType) {
+  var selector = recommendationType === 'phone' ? '#phone-size-recommendation' : '#recommendation';
+  var selectedRecom = $(selector).val();
+  if (selectedRecom === 'おすすめユーザー') {
+    window.location.href = `?recommend_user=${selectedRecom}`;
+  } else {
+    window.location.href = `?recommend_event=${selectedRecom}`;
+  }
 }

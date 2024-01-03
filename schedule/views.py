@@ -37,13 +37,19 @@ def human_readable_time_from_utc(timestamp, timezone='Asia/Tokyo'):
 
 def top(request):
     category = request.GET.get('category', '')
-    recommendation = request.GET.get('recommendation', '')
+    recommend_user = request.GET.get('recommend_user', '')
+    recommend_event = request.GET.get('recommend_event', '')
 
-    if recommendation:
-        users, user_first_match = automatic_request_list(request)
+    if recommend_user:
+        users, user_first_match = recommendation_user_list(request)
     else:
         users = None
         user_first_match = None
+
+    if recommend_event:
+        matched_events = recommendation_event_list(request)
+    else:
+        matched_events = None
 
     if category:
         events = Event.objects.filter(category=category).order_by('-timestamp')
@@ -57,7 +63,8 @@ def top(request):
     context = {
         'events': events,
         'users': users,
-        'user_first_match': user_first_match
+        'user_first_match': user_first_match,
+        'matched_events': matched_events
     }
 
     return render(request, 'top.html', context)
@@ -309,19 +316,40 @@ def request_list(request):
     }
     return render(request, 'request_list.html', context)
 
-def automatic_request_list(request):
-    current_user = request.user
-    today_date = datetime.now().date()
-
-    user_free_times = Calendar.objects.filter(user=current_user, selectedDate__gte=today_date)
+def get_matching_profiles(current_user):
     user_profile = Profile.objects.get(id=current_user.profile.id)
-
     range_profile = Profile.objects.filter(residence=user_profile.residence)
 
-    followed_users = current_user.profile.follows.all()
+    followed_user_ids = [profile.user_id for profile in current_user.profile.follows.all()]
 
+    priority_matching = []
+    regular_matching = []
+
+    for profile in range_profile:
+        if profile.id == user_profile.id:
+            continue
+
+        if profile.user_id in followed_user_ids:
+            priority_matching.append(profile.user_id)
+        else:
+            hobbies_in_common = set(profile.hobby.all()).intersection(set(user_profile.hobby.all()))
+            interests_in_common = set(profile.interest.all()).intersection(set(user_profile.interest.all()))
+
+            if hobbies_in_common or interests_in_common:
+                regular_matching.append(profile.user_id)
+
+    return priority_matching + regular_matching
+
+def recommendation_user_list(request):
+    current_user = request.user
+    today_date = datetime.now().date()
+    user_free_times = Calendar.objects.filter(user=current_user, selectedDate__gte=today_date)
+
+    #mathing_users = 同じ県でフォローしているユーザ　＋　同じ県で趣味、興味に共通点があるユーザ
+    matching_users = get_matching_profiles(current_user)
+
+    #暇な時間が被っているユーザを取得
     user_first_match = {}
-
     for user_free_time in user_free_times:
         matched_users = Calendar.objects.filter(
             selectedDate=user_free_time.selectedDate
@@ -332,38 +360,39 @@ def automatic_request_list(request):
             if user_id not in user_first_match:
                 user_first_match[user_id] = matched_user.selectedDate
 
+    #暇な時間がマッチしたユーザーのidだけをリスト化
     first_matched_users = list(user_first_match.keys())
 
-    followed_user_ids = [profile.user.id for profile in current_user.profile.follows.all()]
+    # = 暇な時間が一致しているユーザかつmathing_usersをリスト化
+    final_matched_users = list(set(first_matched_users) & set(matching_users))
 
-    priority_matching = []
-    regular_matching = []
-
-    for profile in range_profile:
-        if profile.id == user_profile.id:
-           continue
-
-        if profile.user_id in followed_user_ids:
-            priority_matching.append(profile.user_id)
-            continue
-
-        if set(profile.hobby.all()).intersection(set(user_profile.hobby.all())):
-            regular_matching.append(profile.user_id)
-            continue
-
-        if set(profile.interest.all()).intersection(set(user_profile.interest.all())):
-            regular_matching.append(profile.user_id)
-
-    matching_users = priority_matching + regular_matching
-
-    semifinal_matched_users = list(set(first_matched_users) & set(matching_users))
-
-    additional_users = [user for user in first_matched_users if user not in semifinal_matched_users]
-
-    final_matched_users = semifinal_matched_users + additional_users
-
+    #final_matched_users リストにリストされている順番と同じ順序でユーザーオブジェクトを並べ替え
     users = sorted(CustomUser.objects.filter(id__in=final_matched_users), key=lambda u: final_matched_users.index(u.id))
     return users, user_first_match
+
+def recommendation_event_list(request):
+    current_user = request.user
+    today_date = datetime.now().date()
+    user_free_times = Calendar.objects.filter(user=current_user, selectedDate__gte=today_date)
+
+    #mathing_users = 同じ県でフォローしているユーザ　＋　同じ県で趣味、興味に共通点があるユーザ
+    matching_users = get_matching_profiles(current_user)
+
+    matched_events = []
+    for user_free_time in user_free_times:
+        temp_matched_events = Event.objects.filter(
+            date=user_free_time.selectedDate
+        ).exclude(user=current_user)
+
+        # 一致するイベントをリストに追加
+        for event in temp_matched_events:
+            if event.user.id in matching_users:
+                matched_events.append(event)
+
+    for event in matched_events:
+        event.delta = human_readable_time_from_utc(event.timestamp)
+
+    return matched_events
 
 def process_button(request, user_id):
     if request.method == 'POST':

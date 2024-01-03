@@ -9,11 +9,6 @@
       </a>
     </li>
     <li class="nav-item" role="presentation">
-      <a class="nav-link header-right" id="tab2-tab" data-bs-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">
-        自動リクエスト
-      </a>
-    </li>
-    <li class="nav-item" role="presentation">
       <a class="nav-link header-right" id="tab3-tab" data-bs-toggle="tab" href="#tab3" role="tab" aria-controls="tab3" aria-selected="false">
         レスポンス
       </a>
@@ -37,41 +32,11 @@
 
           {% if user.eventId %}
             {% with event=user.eventId %}
-            <div class="request-event-detail">
-              <p>「{{ user.sender.profile.username }}」から、あなたが作成した「{{ event.title }}」に対してヒマリクが送られてきています</p>
-              <a class="event-modal event-detail-link" data-key="{{ event.user.id }}" data-event-id="{{ event.id }}">イベント詳細</a>
-            </div>
-
-            <!--提案詳細モーダル-->
-            <div class="modal fade event-modal" id="eventmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-                  <div class="card-modal">
-                    <div class="card-modal-left">
-                      <img src="" alt="イベント画像" class="card-modal-image">
-                    </div>
-                    <div class="card-modal-right">
-                      <div class="card-modal-profile">
-                        <a href="" class="top-card-modal">
-                          <img src="" alt="プロフィール画像" class="card-modal-image-size">
-                          <p class="card-modal-name"></p>
-                        </a>
-                        <p class="chat-delta"></p>
-                      </div>
-                      <div class="card-details">
-                        <p class="title"></p>
-                        <p class="place"></p>
-                        <p class="date"></p>
-                        <p class="time"></p>
-                        <p class="detail"></p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div class="request-event-detail">
+                <p>「{{ user.sender.profile.username }}」から、あなたが作成した「{{ event.title }}」に対してヒマリクが送られてきています</p>
+                <a class="event-modal event-detail-link" data-key="{{ event.user.id }}" data-event-id="{{ event.id }}">イベント詳細</a>
               </div>
-            </div>
-          {% endwith %}
-
+            {% endwith %}
           {% else %}
             <p>「{{ user.sender.profile.username }}」から「{{ user.userData|date:"Y-m-d" }}」に対してヒマリクが送られてきています</p>
           {% endif %}
@@ -96,29 +61,6 @@
       {% endfor %}
     </div>
 
-    <!--自動リクエスト-->
-    <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
-      {% for user in users %}
-        <div class="request-list">
-          <a href="/profile/{{ user.id }}" class="request-profile-link">
-            <img src="{{ user.profile.image.url }}" alt="{{ user.profile.username }}" class="request-image-size">
-          </a>
-          <div>
-            <p>「{{ user.profile.username }}」とは、暇な時間が一致しています</p>
-            {% for key, value in user_first_match.items %}
-              {% if user.id == key %}
-                <p class="first-match-p">直近での一致は{{ value|date:"Y-m-d" }}です</p>
-                <div id="selectedData-{{ key }}" style="display: none;">{{ value|date:"Y-m-d" }}</div>
-                <a class="intentional-btn" data-key="{{ key }}" onclick="requestClicked(this)">ヒマリク</a>
-              {% endif %}
-            {% endfor %}
-          </div>
-        </div>
-
-        <div class="separator"></div>
-      {% endfor %}
-    </div>
-
     <!--レスポンス-->
     <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
       {% for user in response_users %}
@@ -126,44 +68,15 @@
           <a href="/profile/{{ user.sender.id }}" class="request-profile-link">
             <img src="{{ user.sender.profile.image.url }}" alt="{{ user.sender.profile.username }}" class="request-image-size">
           </a>
-            {% if user.eventId %}
-              {% with event=user.eventId %}
-                <div class="request-event-detail">
-                  <p>
-                    「{{ user.sender.profile.username }}」から「{{ event.title }}」に対するリクエストに関して,
-                    「{{ user.buttonType }}」とレスポンスがあります
-                  </p>
-                  <a class="event-modal event-detail-link" data-key="{{ event.user.id }}" data-event-id="{{ event.id }}">イベント詳細</a>
-                </div>
-
-                <!--提案詳細モーダル-->
-                <div class="modal fade event-modal" id="eventmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered modal-lg">
-                    <div class="modal-content">
-                      <div class="card-modal">
-                        <div class="card-modal-left">
-                          <img src="" alt="イベント画像" class="card-modal-image">
-                        </div>
-                        <div class="card-modal-right">
-                          <div class="card-modal-profile">
-                            <a href="" class="top-card-modal">
-                              <img src="" alt="プロフィール画像" class="card-modal-image-size">
-                              <p class="card-modal-name"></p>
-                            </a>
-                            <p class="chat-delta"></p>
-                          </div>
-                          <div class="card-details">
-                            <p class="title"></p>
-                            <p class="place"></p>
-                            <p class="date"></p>
-                            <p class="time"></p>
-                            <p class="detail"></p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+          {% if user.eventId %}
+            {% with event=user.eventId %}
+              <div class="request-event-detail">
+                <p>
+                  「{{ user.sender.profile.username }}」から「{{ event.title }}」に対するリクエストに関して,
+                  「{{ user.buttonType }}」とレスポンスがあります
+                </p>
+                <a class="event-modal event-detail-link" data-key="{{ event.user.id }}" data-event-id="{{ event.id }}">イベント詳細</a>
+              </div>
             {% endwith %}
           {% else %}
             <p>
@@ -177,6 +90,35 @@
         {% endif %}
         <div class="separator"></div>
       {% endfor %}
+    </div>
+
+    <!--提案詳細モーダル-->
+    <div class="modal fade event-modal" id="eventmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="card-modal">
+            <div class="card-modal-left">
+              <img src="" alt="イベント画像" class="card-modal-image">
+            </div>
+            <div class="card-modal-right">
+              <div class="card-modal-profile">
+                <a href="" class="top-card-modal">
+                  <img src="" alt="プロフィール画像" class="card-modal-image-size">
+                  <p class="card-modal-name"></p>
+                </a>
+                <p class="chat-delta"></p>
+              </div>
+              <div class="card-details">
+                <p class="title"></p>
+                <p class="place"></p>
+                <p class="date"></p>
+                <p class="time"></p>
+                <p class="detail"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
