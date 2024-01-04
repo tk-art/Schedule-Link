@@ -1,10 +1,12 @@
 from django.test import TestCase
 from django.urls import reverse
-from .models import CustomUser, Calendar, UserRequest, UserResponse, ChatMessage, Profile
+from .models import CustomUser, Calendar, UserRequest, UserResponse, ChatMessage, Profile, Event
 from allauth.socialaccount.models import SocialApp
 from django.contrib.sites.models import Site
 from datetime import datetime, date, timedelta
 from django.core.files.uploadedfile import SimpleUploadedFile
+import json
+from .forms import EventForm
 
 class SignUpTest(TestCase):
 
@@ -327,10 +329,10 @@ class FollowerCountTest(TestCase):
 
         Profile.objects.create(
             user=self.user1, username='test1', age=20, gender="男性", residence="宮崎県", image=image
-            )
+        )
         Profile.objects.create(
             user=self.user2, username='test2', age=20, gender="男性", residence="宮崎県", image=image
-            )
+        )
 
     def test_new_follower(self):
         self.user2.profile.follows.add(self.user1.profile)
@@ -348,3 +350,66 @@ class FollowerCountTest(TestCase):
         response_count = self.client.get(reverse('get_follower_count'))
         self.assertJSONEqual(str(response_count.content, encoding='utf8'), {'new_follower': False})
         self.assertEqual(self.client.session['last_follow_count'], 0)
+
+class EventTestCase(TestCase):
+    def setUp(self):
+        self.user = CustomUser.objects.create_user('testuser', password='password')
+        self.client.login(username='testuser', password='password')
+
+        image = SimpleUploadedFile(name='test_image.jpeg', content=b'', content_type='image/jpeg')
+
+        Profile.objects.create(
+            user=self.user, username='testuser', age=20, gender="男性", residence="宮崎県", image=image
+        )
+
+        self.event = Event.objects.create(
+            user=self.user,
+            title='イベント',
+            place='場所',
+            date='2023-01-01',
+            time='10:00~11:00',
+            category='その他',
+            image=image,
+            detail='詳細情報'
+        )
+
+    def test_event_creation(self):
+        with open('media/item_images/ルフィ.png', 'rb') as img:
+            image = SimpleUploadedFile('ルフィ.png', img.read(), content_type='image/png')
+
+        form_data = {
+            'title': 'イベント',
+            'place': '場所',
+            'datetime': '2023-01-01 10:00~11:00',
+            'category': 'その他',
+            'detail': '詳細情報'
+        }
+        form_files = {'image': image}
+        print(form_files)
+
+        response = self.client.post(reverse('event'), form_data, **form_files)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Event.objects.count(), 2)
+
+    def test_get_event_details(self):
+        response = self.client.get(reverse('get_event_details'), {'event_id': self.event.id})
+        response_data = json.loads(response.content.decode('utf-8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_data['title'], 'イベント')
+
+
+    def test_event_edit(self):
+        form_data = {
+            'title': 'タイトル編集',
+            'place': '場所編集'
+        }
+        response = self.client.post(reverse('card_editing', args=(self.event.id,)), form_data)
+        self.assertEqual(response.status_code, 302)
+        self.event.refresh_from_db()
+        self.assertEqual(self.event.title, 'タイトル編集')
+        self.assertEqual(self.event.place, '場所編集')
+
+    def test_event_delete(self):
+        response = self.client.post(reverse('delete_card', args=(self.event.id,)), {'buttonType': '削除'})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Event.objects.count(), 0)

@@ -657,7 +657,6 @@ $('.event-modal').on('click', function() {
   var eventId = $(this).data('event-id');
   var userId = $(this).data('key');
 
-
   $.ajax({
     url: '/get_event_details/',
     data: {

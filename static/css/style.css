@@ -865,12 +865,13 @@ footer {
 
 .card-modal-left {
   width: 50%;
+  background-color: rgba(183, 179, 179, 0.3);
 }
 
 .card-modal-image {
   width: 100%;
   height: 500px;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .card-modal-right {
@@ -916,6 +917,7 @@ footer {
 }
 
 /* トップページ */
+
 .top-content {
   display: flex;
 }
@@ -956,14 +958,6 @@ footer {
   margin-right: 10px;
 }
 
-.pc-size-modal {
-  display: block;
-}
-
-.phone-size-modal {
-  display: none;
-}
-
 @media (max-width: 500px) {
   .phone-size-category {
     display: block !important;
@@ -980,12 +974,26 @@ footer {
     display: block;
   }
 
-  .pc-size-modal {
-    display: none;
+  .card-modal {
+    display: block;
   }
 
-  .phone-size-modal {
-    display: block;
+  .card-modal-left {
+    width: 100%;
+  }
+
+  .card-modal-image {
+    height: 350px;
+  }
+
+  .card-modal-right {
+    width: 100%;
+    padding-top: 10px;
+    height: 400px;
+  }
+
+  .card-details {
+    max-height: 250px;
   }
 }
 

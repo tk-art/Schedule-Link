@@ -70,110 +70,110 @@ def top(request):
     return render(request, 'top.html', context)
 
 def signup(request):
-  if request.method == 'POST':
-    form = SignupForm(request.POST)
-    if form.is_valid():
-        username = form.cleaned_data.get('username')
-        email = form.cleaned_data.get('email')
-        hash_password = make_password(form.cleaned_data.get('password'))
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+            hash_password = make_password(form.cleaned_data.get('password'))
 
-        user = CustomUser.objects.create(username=username, email=email, password=hash_password)
+            user = CustomUser.objects.create(username=username, email=email, password=hash_password)
 
-        Profile.objects.create(user=user, username=username,
-                                       content='これはデフォルトのプロフィールです。好みに応じて編集してください')
+            Profile.objects.create(user=user, username=username,
+                                           content='これはデフォルトのプロフィールです。好みに応じて編集してください')
 
-        user.backend = 'django.contrib.auth.backends.ModelBackend'
-        login(request, user)
-        return redirect('profile', user_id=request.user.id)
+            user.backend = 'django.contrib.auth.backends.ModelBackend'
+            login(request, user)
+            return redirect('profile', user_id=request.user.id)
 
-  else:
-    form = SignupForm()
-  return render(request, 'signup.html', {'form': form})
+    else:
+        form = SignupForm()
+    return render(request, 'signup.html', {'form': form})
 
 def login_view(request):
-  error_message = ""
-  if request.method == 'POST':
-    username = request.POST.get('username')
-    password = request.POST.get('password')
+    error_message = ""
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
-    user = authenticate(request, username=username, password=password)
-    if user:
-      user.backend = 'django.contrib.auth.backends.ModelBackend'
-      login(request, user)
-      request.session['last_follow_count'] = user.profile.followed_by.count()
-      return redirect('profile', user_id=request.user.id)
-    else:
-      error_message = 'ユーザーネームかパスワードが違います、もう一度お試しください'
-  return render(request, 'login.html', {'error_message': error_message})
+        user = authenticate(request, username=username, password=password)
+        if user:
+            user.backend = 'django.contrib.auth.backends.ModelBackend'
+            login(request, user)
+            request.session['last_follow_count'] = user.profile.followed_by.count()
+            return redirect('profile', user_id=request.user.id)
+        else:
+            error_message = 'ユーザーネームかパスワードが違います、もう一度お試しください'
+    return render(request, 'login.html', {'error_message': error_message})
 
 def logout_view(request):
-  logout(request)
-  return redirect('top')
+    logout(request)
+    return redirect('top')
 
 @login_required
 def profile(request, user_id):
-  profile = Profile.objects.get(user_id=user_id)
+    profile = Profile.objects.get(user_id=user_id)
 
-  hobbies = profile.hobby.all()
-  interests = profile.interest.all()
-  follows = profile.follows.all()
-  followers = profile.followed_by.all()
-  calendars = Calendar.objects.filter(user=profile.user)
-  events = Event.objects.filter(user=profile.user).order_by('-timestamp')
+    hobbies = profile.hobby.all()
+    interests = profile.interest.all()
+    follows = profile.follows.all()
+    followers = profile.followed_by.all()
+    calendars = Calendar.objects.filter(user=profile.user)
+    events = Event.objects.filter(user=profile.user).order_by('-timestamp')
 
-  for event in events:
-    event.delta = human_readable_time_from_utc(event.timestamp)
+    for event in events:
+        event.delta = human_readable_time_from_utc(event.timestamp)
 
-  current_user = request.user == profile.user
+    current_user = request.user == profile.user
 
-  context = {
-    'profile': profile,
-    'hobbies': hobbies,
-    'interests': interests,
-    'follows': follows,
-    'followers': followers,
-    'current_user': current_user,
-    'events': events
-  }
-  return render(request, 'profile.html', context)
+    context = {
+        'profile': profile,
+        'hobbies': hobbies,
+        'interests': interests,
+        'follows': follows,
+        'followers': followers,
+        'current_user': current_user,
+        'events': events
+    }
+    return render(request, 'profile.html', context)
 
 def profile_edit(request):
-  ages = list(range(18, 51))
-  if request.method == 'POST':
-    profile = Profile.objects.filter(user=request.user).first()
-    form = ProfileForm(request.POST, request.FILES)
-    if form.is_valid():
-      profile_data = form.cleaned_data
+    ages = list(range(18, 51))
+    if request.method == 'POST':
+        profile = Profile.objects.filter(user=request.user).first()
+        form = ProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            profile_data = form.cleaned_data
 
-      if profile:
-          fields = ['username', 'image', 'residence', 'age', 'gender', 'content']
-          for field in fields:
-              if profile_data.get(field):
-                  setattr(profile, field, profile_data[field])
+            if profile:
+                fields = ['username', 'image', 'residence', 'age', 'gender', 'content']
+                for field in fields:
+                    if profile_data.get(field):
+                        setattr(profile, field, profile_data[field])
 
-          hobbies = profile_data.get('hobby')
-          interests = profile_data.get('interest')
-          if hobbies:
-              profile.hobby.set(hobbies)
-          if interests:
-              profile.interest.set(interests)
+                hobbies = profile_data.get('hobby')
+                interests = profile_data.get('interest')
+                if hobbies:
+                    profile.hobby.set(hobbies)
+                if interests:
+                    profile.interest.set(interests)
 
-          profile.save()
+                profile.save()
 
-      else:
-          profile = form.save(commit=False)
-          profile.user = request.user
-          profile.save()
-          form.save_m2m()
+            else:
+                profile = form.save(commit=False)
+                profile.user = request.user
+                profile.save()
+                form.save_m2m()
 
-      return redirect('profile', user_id=request.user.id)
-  else:
-      form = ProfileForm()
-  context = {
-      'form': form,
-      'ages': ages,
-      }
-  return render(request, 'profile_edit.html', context)
+            return redirect('profile', user_id=request.user.id)
+    else:
+        form = ProfileForm()
+    context = {
+        'form': form,
+        'ages': ages,
+    }
+    return render(request, 'profile_edit.html', context)
 
 def follow(request, user_id):
     try:
@@ -205,12 +205,12 @@ def get_follower_count(request):
     current_follow_count = request.user.profile.followed_by.count()
 
     if current_follow_count > last_follow_count:
-      new_follower = True
+        new_follower = True
     elif current_follow_count < last_follow_count:
-      new_follower = False
-      request.session['last_follow_count'] = current_follow_count
+        new_follower = False
+        request.session['last_follow_count'] = current_follow_count
     else:
-      new_follower = False
+        new_follower = False
 
     return JsonResponse({'new_follower': new_follower})
 
@@ -222,20 +222,19 @@ def confirm_followers_viewed(request):
 
 def calendar(request):
   if request.method == 'POST':
-    form = CalendarForm(request.POST)
-    if form.is_valid():
-      selected_date = form.cleaned_data.get('selectedDate')
-      calendar_entry = Calendar.objects.filter(user=request.user, selectedDate=selected_date).first()
+      form = CalendarForm(request.POST)
+      if form.is_valid():
+          selected_date = form.cleaned_data.get('selectedDate')
+          calendar_entry = Calendar.objects.filter(user=request.user, selectedDate=selected_date).first()
 
-      if calendar_entry:
-        for field in form.changed_data:
-          setattr(calendar_entry, field, form.cleaned_data[field])
-        calendar_entry.save()
-
-      else:
-        form.instance.user = request.user
-        form.save()
-      return redirect('profile', user_id=request.user.id)
+          if calendar_entry:
+              for field in form.changed_data:
+                  setattr(calendar_entry, field, form.cleaned_data[field])
+              calendar_entry.save()
+          else:
+              form.instance.user = request.user
+              form.save()
+          return redirect('profile', user_id=request.user.id)
   else:
       form = CalendarForm()
   return render(request, 'profile.html', {'form': form})
@@ -244,8 +243,8 @@ def calendar(request):
 def get_calendar_events(request, user_id):
     events = Calendar.objects.filter(user=user_id)
     json_data = [{
-      'title': event.free,
-      'start': event.selectedDate,
+        'title': event.free,
+        'start': event.selectedDate,
     } for event in events]
     return JsonResponse(json_data, safe=False)
 
@@ -305,14 +304,11 @@ def request_list(request):
     current_user = request.user
     request_users = UserRequest.objects.filter(receiver_id=current_user.id).select_related('eventId').order_by('-created_at')
     response_users = UserResponse.objects.filter(receiver_id=current_user.id).select_related('eventId').order_by('-created_at')
-    users, user_first_match = automatic_request_list(request)
 
     context = {
-      'request_users': request_users,
-      'response_users': response_users,
-      'users': users,
-      'current_user': current_user,
-      'user_first_match': user_first_match
+        'request_users': request_users,
+        'response_users': response_users,
+        'current_user': current_user,
     }
     return render(request, 'request_list.html', context)
 
@@ -396,27 +392,30 @@ def recommendation_event_list(request):
 
 def process_button(request, user_id):
     if request.method == 'POST':
-      buttonType = request.POST.get('buttonType')
-      sender = request.user
-      receiver = CustomUser.objects.get(id=user_id)
-      userData = request.POST.get('userData')
-      event_id = int(request.POST.get('eventId'))
-      eventId = Event.objects.get(id=event_id)
+        buttonType = request.POST.get('buttonType')
+        sender = request.user
+        receiver = CustomUser.objects.get(id=user_id)
+        userData = request.POST.get('userData')
+        if request.POST.get('eventId'):
+            event_id = int(request.POST.get('eventId'))
+            eventId = Event.objects.get(id=event_id)
+        else:
+            eventId = None
 
-      UserResponse.objects.create(sender=sender, receiver=receiver, userData=userData, eventId=eventId, buttonType=buttonType)
+        UserResponse.objects.create(sender=sender, receiver=receiver, userData=userData, eventId=eventId, buttonType=buttonType)
 
-      if eventId:
-        user_request = UserRequest.objects.get(sender=receiver, receiver=sender, eventId=eventId)
-      else:
-        user_request = UserRequest.objects.get(sender=receiver, receiver=sender, userData=userData)
-      user_request.is_processed = True
-      user_request.save()
+        if eventId:
+            user_request = UserRequest.objects.get(sender=receiver, receiver=sender, eventId=eventId)
+        else:
+            user_request = UserRequest.objects.get(sender=receiver, receiver=sender, userData=userData)
+        user_request.is_processed = True
+        user_request.save()
 
-      messages.success(request, '正常にレスポンスが送信されました')
-      return redirect('request_list')
+        messages.success(request, '正常にレスポンスが送信されました')
+        return redirect('request_list')
 
-      messages.error(request, 'エラーが発生しました')
-    return render(request, 'request_list.html')
+        messages.error(request, 'エラーが発生しました')
+        return render(request, 'request_list.html')
 
 def check_new_requests(request):
     user = request.user
@@ -424,8 +423,8 @@ def check_new_requests(request):
     responses_unread = UserResponse.objects.filter(receiver=user, read=False).exists()
 
     response = {
-      'requests_unread': requests_unread,
-      'responses_unread': responses_unread
+        'requests_unread': requests_unread,
+        'responses_unread': responses_unread
     }
     return JsonResponse(response)
 
@@ -476,13 +475,13 @@ def chat_room(request, user_id):
     chat_messages = ChatMessage.objects.filter(room_name=room_name)
 
     for chat in chat_messages:
-      chat.delta = human_readable_time_from_utc(chat.timestamp)
+        chat.delta = human_readable_time_from_utc(chat.timestamp)
 
     context = {
-      'current_user': current_user,
-      'other_user': other_user,
-      'room_name': room_name,
-      'chat_messages': chat_messages
+        'current_user': current_user,
+        'other_user': other_user,
+        'room_name': room_name,
+        'chat_messages': chat_messages
     }
 
     return render(request, 'chat.html', context)
@@ -493,7 +492,7 @@ def check_unread_messages(request, user_id):
     chat_unread = ChatMessage.objects.filter(sender=other_user, receiver=current_user, read=False).exists()
 
     response = {
-      'chat_unread': chat_unread
+        'chat_unread': chat_unread
     }
     return JsonResponse(response)
 
@@ -502,7 +501,7 @@ def mark_chat_as_read(request, user_id):
     other_user = CustomUser.objects.get(id=user_id)
 
     chat_room = ChatMessage.objects.filter(
-      Q(sender=user, receiver=other_user) | Q(sender=other_user, receiver=user)
+        Q(sender=user, receiver=other_user) | Q(sender=other_user, receiver=user)
     ).first()
     room_name = chat_room.room_name
     ChatMessage.objects.filter(room_name=room_name, read=False).update(read=True)
@@ -513,58 +512,60 @@ def mark_chat_as_read(request, user_id):
 def search(request):
     ages = list(range(18, 51))
     if request.method == 'POST':
-      form = SearchForm(request.POST)
-      if form.is_valid():
-          residence = form.cleaned_data.get('residence')
-          gender = form.cleaned_data.get('gender')
-          min_age = form.cleaned_data.get('min_age')
-          max_age = form.cleaned_data.get('max_age')
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            residence = form.cleaned_data.get('residence')
+            gender = form.cleaned_data.get('gender')
+            min_age = form.cleaned_data.get('min_age')
+            max_age = form.cleaned_data.get('max_age')
 
-          hobby = form.cleaned_data.get('hobby')
-          interest = form.cleaned_data.get('interest')
+            hobby = form.cleaned_data.get('hobby')
+            interest = form.cleaned_data.get('interest')
 
-          my_profile = Profile.objects.get(user=request.user)
+            my_profile = Profile.objects.get(user=request.user)
 
-          profiles = Profile.objects.all().exclude(id=my_profile.id)
-          if residence:
-              profiles = profiles.filter(residence=residence)
-          if min_age:
-              profiles = profiles.filter(age__gte=min_age)
-          if max_age:
-              profiles = profiles.filter(age__lte=max_age)
-          if gender:
-              profiles = profiles.filter(gender=gender)
-          if hobby:
-              profiles = profiles.filter(hobby__in=hobby).distinct()
-          if interest:
-              profiles = profiles.filter(interest__in=interest).distinct()
+            profiles = Profile.objects.all().exclude(id=my_profile.id)
+            if residence:
+                profiles = profiles.filter(residence=residence)
+            if min_age:
+                profiles = profiles.filter(age__gte=min_age)
+            if max_age:
+                profiles = profiles.filter(age__lte=max_age)
+            if gender:
+                profiles = profiles.filter(gender=gender)
+            if hobby:
+                profiles = profiles.filter(hobby__in=hobby).distinct()
+            if interest:
+                profiles = profiles.filter(interest__in=interest).distinct()
 
 
-          today = date.today()
-          for profile in profiles:
-            calendar = Calendar.objects.filter(
-              user_id=profile.user.id,
-              selectedDate__gt=today).order_by('selectedDate').first()
-            if calendar:
-              profile.calendar = calendar.selectedDate
+            today = date.today()
+            for profile in profiles:
+                calendar = Calendar.objects.filter(
+                    user_id=profile.user.id,
+                    selectedDate__gt=today).order_by('selectedDate').first()
+                if calendar:
+                    profile.calendar = calendar.selectedDate
+                else:
+                    profile.calendar = None
+
+            sorted_profiles = sorted(profiles, key=lambda p: p.calendar or date.max)
+
+            if profiles:
+                return render(request, 'search_results.html', {'profiles' : sorted_profiles})
             else:
-              profile.calendar = None
-
-          sorted_profiles = sorted(profiles, key=lambda p: p.calendar or date.max)
-
-          if profiles:
-              return render(request, 'search_results.html', {'profiles' : sorted_profiles})
-          else:
-              not_profiles = "現在検索された内容に合致するユーザーが見つかりませんでした。"
-              return render(request, 'search.html', {'not_profiles': not_profiles})
+                not_profiles = "現在検索された内容に合致するユーザーが見つかりませんでした。"
+                return render(request, 'search.html', {'not_profiles': not_profiles})
     else:
-      form = SearchForm()
+        form = SearchForm()
 
     context = {
-      'ages':ages,
-      'form': form
+        'ages':ages,
+        'form': form
     }
     return render(request, 'search.html', context)
+
+# イベント作成
 
 def event(request):
     if request.method == 'POST':
@@ -573,7 +574,7 @@ def event(request):
             title = form.cleaned_data.get('title')
             image = form.cleaned_data.get('image')
             if image == None:
-              image = 'item_images/フリー女.jpeg'
+                image = 'item_images/フリー女.jpeg'
             detail = form.cleaned_data.get('detail')
             place = form.cleaned_data.get('place')
             datetime = form.cleaned_data.get('datetime')
@@ -589,7 +590,7 @@ def event(request):
             return redirect('profile', user_id=request.user.id)
 
     else:
-      form = EventForm()
+        form = EventForm()
     return render(request, 'event.html', {'form': form})
 
 def get_event_details(request):
@@ -601,16 +602,16 @@ def get_event_details(request):
     event.current_user = (request.user == event.user)
 
     data = {
-      'title': event.title,
-      'place': event.place,
-      'date': event.date,
-      'time': event.time,
-      'detail': event.detail,
-      'image_url': event.image.url,
-      'delta': event.delta,
-      'profile_url': event.user.profile.image.url,
-      'username': event.user.profile.username,
-      'current_user': event.current_user
+        'title': event.title,
+        'place': event.place,
+        'date': event.date,
+        'time': event.time,
+        'detail': event.detail,
+        'image_url': event.image.url,
+        'delta': event.delta,
+        'profile_url': event.user.profile.image.url,
+        'username': event.user.profile.username,
+        'current_user': event.current_user
     }
     return JsonResponse(data)
 
