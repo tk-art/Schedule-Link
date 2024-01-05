@@ -272,6 +272,8 @@ def delete_calendar(request):
         calendar_entry.delete()
         return redirect('profile', user_id=user_id)
 
+# リクエスト
+
 def intentional_request(request, user_id):
     if request.method == "POST":
         sender = request.user
@@ -390,6 +392,8 @@ def recommendation_event_list(request):
 
     return matched_events
 
+# レスポンス
+
 def process_button(request, user_id):
     if request.method == 'POST':
         buttonType = request.POST.get('buttonType')
@@ -442,6 +446,8 @@ def mark_tab_as_read(request):
     queryset.update(read=True)
 
     return JsonResponse({'status': 'success'})
+
+#　チャット
 
 def chat_list(request):
     current_user = request.user
@@ -507,6 +513,8 @@ def mark_chat_as_read(request, user_id):
     ChatMessage.objects.filter(room_name=room_name, read=False).update(read=True)
 
     return JsonResponse({'status': 'success'})
+
+# イベント
 
 @login_required
 def search(request):

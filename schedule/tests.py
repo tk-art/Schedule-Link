@@ -385,7 +385,6 @@ class EventTestCase(TestCase):
             'detail': '詳細情報'
         }
         form_files = {'image': image}
-        print(form_files)
 
         response = self.client.post(reverse('event'), form_data, **form_files)
         self.assertEqual(response.status_code, 302)
@@ -396,7 +395,6 @@ class EventTestCase(TestCase):
         response_data = json.loads(response.content.decode('utf-8'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response_data['title'], 'イベント')
-
 
     def test_event_edit(self):
         form_data = {

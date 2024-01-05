@@ -634,7 +634,6 @@ $(function() {
 
   $('#chat-message-submit').on('click', function() {
     var message = $('#chat-message-input').val();
-    console.log(message);
     if (message.trim() !== '') {
       chatSocket.send(JSON.stringify({
         'message': message,

@@ -102,10 +102,6 @@ class EventForm(forms.ModelForm):
         model = Event
         fields = ['title','place', 'category', 'image', 'detail']
 
-    def clean_datetime(self):
-        datetime = self.cleaned_data.get('datetime')
-        return datetime
-
 class EventEditForm(forms.ModelForm):
     image = forms.ImageField(required=False)
     title = forms.CharField(required=False)
@@ -117,7 +113,3 @@ class EventEditForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = ['title', 'place', 'image', 'category', 'detail']
-
-    def clean_datetime(self):
-        datetime = self.cleaned_data.get('datetime')
-        return datetime
