@@ -55,6 +55,22 @@ function followButtonClicked() {
   });
 }
 
+/* 赤丸　indicator */
+
+function showHamburgerIndicator(hamburgerId) {
+  var indicator = $('<span class="hamburger-indicator">🔴</span>');
+  $(hamburgerId).append(indicator);
+}
+
+function showTabIndicator(tabId) {
+  var indicator = $('<span class="follower-indicator">🔴</span>');
+  $(tabId).append(indicator);
+}
+
+function hideTabIndicator(tabId) {
+  $(tabId).find('.follower-indicator').remove();
+}
+
 $(document).ready(function() {
   $.ajax({
     type: "GET",
@@ -64,6 +80,8 @@ $(document).ready(function() {
     },
     success: function(response) {
       if (response.new_follower) {
+        showHamburgerIndicator('#js-hamburger');
+        showTabIndicator('#nav-profile-link');
         showTabIndicator("#profile-link");
         showTabIndicator("#followed_by");
       }
@@ -84,6 +102,8 @@ $(document).ready(function() {
     url: "/get_follower_count/",
     success: function(response) {
       if (response.new_follower) {
+        showHamburgerIndicator('#js-hamburger');
+        showTabIndicator('#nav-profile-link');
         showTabIndicator("#profile-link");
         showTabIndicator("#followed-by");
       }
@@ -92,11 +112,6 @@ $(document).ready(function() {
       console.log(error);
     }
   });
-
-  function showTabIndicator(tabId) {
-    var indicator = $('<span class="follower-indicator">🔴</span>');
-    $(tabId).append(indicator);
-  }
 });
 
 $('#followed-by').on('click', function() {
@@ -104,14 +119,12 @@ $('#followed-by').on('click', function() {
     type: "GET",
     url: "/confirm_followers_viewed/",
     success: function(response) {
+      hideTabIndicator('#js-hamburger');
+      hideTabIndicator('#nav-profile-link');
       hideTabIndicator('#profile-link');
       hideTabIndicator('#followed-by');
     }
   });
-
-  function hideTabIndicator(tabId) {
-    $(tabId).find('.follower-indicator').remove();
-  }
 });
 
 
@@ -458,7 +471,7 @@ $(".request-btn button").click(function() {
   $(this).closest('.request-btn').hide();
 });
 
-/*リクエストチェック*/
+/* リクエストチェック */
 
 $(document).ready(function() {
   function checkNewRequests() {
@@ -474,10 +487,13 @@ $(document).ready(function() {
         }
 
         if (response.requests_unread || response.responses_unread) {
-          console.log('link' + response.requests_unread);
+          showHamburgerIndicator('#js-hamburger');
+          showTabIndicator('#requests-link');
           showTabIndicator('#nav-requests-link');
         } else {
-          hideTabIndicator('#nev-requests-link');
+          hideTabIndicator('#js-hamburger');
+          hideTabIndicator('#requests-link');
+          hideTabIndicator('#nav-requests-link');
         }
       },
       error: function(error) {
@@ -519,55 +535,46 @@ $(document).ready(function() {
       });
     }
   });
-
-  function showTabIndicator(tabId) {
-    var indicator = $('<span class="follower-indicator">🔴</span>');
-    $(tabId).append(indicator);
-  }
-
-  function hideTabIndicator(tabId) {
-    $(tabId).find('.follower-indicator').remove();
-  }
 });
 
-/*　チャットチェック　*/
-
+/*　チャットチェック　赤丸 */
+/*
 $(document).ready(function() {
-  var unread_messages = false;
-  var unread = [];
+  $.ajax({
+    url: '/check_unread_full_messages/',
+    method: 'GET',
+    success: function(data) {
+      if (data.chat_unread) {
+        showHamburgerIndicator('#js-hamburger');
+        showTabIndicator('#chat-link');
+        showTabIndicator('#nav-chat-link');
+      }
+    },
+    error: function(error) {
+      console.log('チャットのマークに失敗しました。', error);
+    }
+  });
 
   $('.chat-list').each(function() {
     var chatLink = $(this);
     var userId = chatLink.data('user-id');
 
-    var request = $.ajax({
+    $.ajax({
       url: '/check_unread_messages/' + userId + '/',
       method: 'GET',
       success: function(data) {
         if (data.chat_unread) {
           showTabIndicator(chatLink);
-          unread_messages = true;
         }
+      },
+      error: function(error) {
+        console.log('チャットのマークに失敗しました。', error);
       }
     });
-
-    unread.push(request);
-  });
-
-  /* ヘッダーの赤丸制御 */
-
-  $.when.apply($, unread).then(function() {
-    if (unread_messages) {
-      var headerChatLink = $('a[href="/chat_list"]');
-      if (headerChatLink.find('.follower-indicator').length === 0) {
-          showTabIndicator(headerChatLink);
-      }
-    }
   });
 
   $('.chat-list').click(function() {
     var userId = $(this).data('user-id');
-    console.log('userId: ' + userId);
 
     $.ajax({
       url: '/mark_chat_as_read/' + userId + '/',
@@ -580,19 +587,10 @@ $(document).ready(function() {
       }
     });
   });
-
-  function showTabIndicator(chatList) {
-    var indicator = $('<span class="follower-indicator">🔴</span>');
-    $(chatList).append(indicator);
-  }
-
-  function hideTabIndicator(chatList) {
-    $(chatList).find('.follower-indicator').remove();
-  }
-
 });
+*/
 
-/*チャット*/
+/* チャット */
 
 $(function() {
   var chatSocket = new WebSocket(
@@ -620,6 +618,12 @@ $(function() {
     newChatContent.append(messsageDelta);
 
     $('.chat-container').append(newChatContent);
+
+    if (sender_id && sender_id !== currentUserId) {
+      showHamburgerIndicator('#js-hamburger');
+      showTabIndicator('#chat-link');
+      showTabIndicator('#nav-chat-link');
+    }
   };
 
   chatSocket.onclose = function(e) {

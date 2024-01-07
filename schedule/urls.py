@@ -26,6 +26,7 @@ urlpatterns = [
     path('chat_list/', views.chat_list, name='chat_list'),
     path('chat/<int:user_id>/', views.chat_room, name='chat_room'),
     path('check_unread_messages/<int:user_id>/', views.check_unread_messages, name='check_unread_messages'),
+    path('check_unread_full_messages/', views.check_unread_full_messages, name='check_unread_full_messages'),
     path('mark_chat_as_read/<int:user_id>/', views.mark_chat_as_read, name='mark_chat_as_read'),
     path('search/', views.search, name='search'),
     path('get_follower_count/', views.get_follower_count, name='get_follower_count'),

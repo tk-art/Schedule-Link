@@ -492,6 +492,14 @@ def chat_room(request, user_id):
 
     return render(request, 'chat.html', context)
 
+def check_unread_full_messages(request):
+    chat_unread = ChatMessage.objects.filter(receiver=request.user, read=False).exists()
+
+    response = {
+        'chat_unread': chat_unread
+    }
+    return JsonResponse(response)
+
 def check_unread_messages(request, user_id):
     current_user = request.user
     other_user = CustomUser.objects.get(id=user_id)

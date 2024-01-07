@@ -400,9 +400,18 @@ footer {
 }
 
 /* 赤丸 */
+
 .follower-indicator {
-  font-size: 12px;
+  font-size: 10px;
   margin-left: 5px;
+}
+
+.hamburger-indicator {
+  font-size: 10px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
 }
 
 .modal-title {
