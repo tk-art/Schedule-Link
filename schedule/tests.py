@@ -1,15 +1,15 @@
 from django.test import TestCase
 from django.urls import reverse
-from .models import CustomUser, Calendar, UserRequest, UserResponse, ChatMessage, Profile, Event
+from .models import CustomUser, Calendar, UserRequest, UserResponse, ChatMessage, Profile, Event, Hobby, Interest
 from allauth.socialaccount.models import SocialApp
 from django.contrib.sites.models import Site
 from datetime import datetime, date, timedelta
 from django.core.files.uploadedfile import SimpleUploadedFile
 import json
 from .forms import EventForm
+from .views import recommendation_user_list, recommendation_event_list
 
 class SignUpTest(TestCase):
-
     def setUp(self):
         app = SocialApp.objects.create(
             provider='google',
@@ -411,3 +411,68 @@ class EventTestCase(TestCase):
         response = self.client.post(reverse('delete_card', args=(self.event.id,)), {'buttonType': '削除'})
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Event.objects.count(), 0)
+
+class AutoTest(TestCase):
+    def setUp(self):
+        self.user1 = CustomUser.objects.create_user('user_a', password='password')
+        self.user2 = CustomUser.objects.create_user('user_b', password='password')
+        self.user3 = CustomUser.objects.create_user('user_c', password='password')
+        self.client.login(username='user_a', password='password')
+
+        image = SimpleUploadedFile(name='test_image.jpeg', content=b'', content_type='image/jpeg')
+
+        hobby1 = Hobby.objects.create(name='趣味1')
+        hobby2 = Hobby.objects.create(name='趣味2')
+
+        self.profile1 = Profile.objects.create(
+            user=self.user1, username='user_a', age=20, gender="男性", residence="宮崎県", image=image
+        )
+
+        self.profile2 = Profile.objects.create(
+            user=self.user2, username='user_b', age=20, gender="男性", residence="宮崎県", image=image
+        )
+
+        self.profile1.hobby.set([hobby1, hobby2])
+        self.profile2.hobby.set([hobby2])
+
+        self.profile1.follows.add(self.profile2)
+
+        today_date = datetime.now().date()
+        self.calendar1 = Calendar.objects.create(user=self.user1, selectedDate=today_date)
+        self.calendar2 = Calendar.objects.create(user=self.user2, selectedDate=today_date)
+        self.calendar3 = Calendar.objects.create(user=self.user3, selectedDate=today_date)
+
+        self.event1 = Event.objects.create(
+            user=self.user2,
+            title='イベント',
+            place='場所',
+            date=today_date,
+            time='10:00~11:00',
+            category='その他',
+            image=image,
+            detail='詳細情報'
+        )
+
+        self.event2 = Event.objects.create(
+            user=self.user3,
+            title='イベント',
+            place='場所',
+            date=today_date,
+            time='10:00~11:00',
+            category='その他',
+            image=image,
+            detail='詳細情報'
+        )
+
+    def test_get_recommendation_user_list(self):
+        response = self.client.get(reverse('top') + '?recommend_user=おすすめユーザー')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.user2, response.context['users'])
+        self.assertNotIn(self.user3, response.context['users'])
+        self.assertIn(self.calendar2.selectedDate, response.context['user_first_match'].values())
+
+    def test_get_recommendation_event_list(self):
+        response = self.client.get(reverse('top') + '?recommend_event=おすすめイベント')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.event1, response.context['matched_events'])
+        self.assertNotIn(self.event2, response.context['matched_events'])

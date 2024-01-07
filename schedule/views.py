@@ -343,10 +343,10 @@ def recommendation_user_list(request):
     today_date = datetime.now().date()
     user_free_times = Calendar.objects.filter(user=current_user, selectedDate__gte=today_date)
 
-    #mathing_users = 同じ県でフォローしているユーザ　＋　同じ県で趣味、興味に共通点があるユーザ
+    #　mathing_users = 同じ県でフォローしているユーザ　＋　同じ県で趣味、興味に共通点があるユーザ
     matching_users = get_matching_profiles(current_user)
 
-    #暇な時間が被っているユーザを取得
+    #　暇な時間が被っているユーザを取得
     user_first_match = {}
     for user_free_time in user_free_times:
         matched_users = Calendar.objects.filter(
@@ -358,13 +358,13 @@ def recommendation_user_list(request):
             if user_id not in user_first_match:
                 user_first_match[user_id] = matched_user.selectedDate
 
-    #暇な時間がマッチしたユーザーのidだけをリスト化
+    #　暇な時間がマッチしたユーザーのidだけをリスト化
     first_matched_users = list(user_first_match.keys())
 
     # = 暇な時間が一致しているユーザかつmathing_usersをリスト化
     final_matched_users = list(set(first_matched_users) & set(matching_users))
 
-    #final_matched_users リストにリストされている順番と同じ順序でユーザーオブジェクトを並べ替え
+    #　final_matched_users リストにリストされている順番と同じ順序でユーザーオブジェクトを並べ替え
     users = sorted(CustomUser.objects.filter(id__in=final_matched_users), key=lambda u: final_matched_users.index(u.id))
     return users, user_first_match
 
@@ -373,7 +373,7 @@ def recommendation_event_list(request):
     today_date = datetime.now().date()
     user_free_times = Calendar.objects.filter(user=current_user, selectedDate__gte=today_date)
 
-    #mathing_users = 同じ県でフォローしているユーザ　＋　同じ県で趣味、興味に共通点があるユーザ
+    #　mathing_users = 同じ県でフォローしているユーザ　＋　同じ県で趣味、興味に共通点があるユーザ
     matching_users = get_matching_profiles(current_user)
 
     matched_events = []
@@ -514,7 +514,7 @@ def mark_chat_as_read(request, user_id):
 
     return JsonResponse({'status': 'success'})
 
-# イベント
+# 検索
 
 @login_required
 def search(request):
