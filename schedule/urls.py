@@ -40,5 +40,6 @@ urlpatterns = [
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 websocket_urlpatterns = [
-    path('ws/chat/<str:room_name>/', ChatConsumer.as_asgi()),
+    path('ws/chat/<int:user_id>/', ChatConsumer.as_asgi()),
+    #path('ws/chat/<str:room_name>/', ChatConsumer.as_asgi()),
 ]

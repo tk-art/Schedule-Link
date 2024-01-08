@@ -24,7 +24,10 @@
   </div>
 </div>
 
+{{ send.delta }}
 <script>
+    var image = "{{ request.user.profile.image.url }}";
+    var delta = "{{ send.delta }}";
     var roomName = "{{ room_name }}";
     var sender_id = "{{ current_user.id }}";
     var receiver_id = "{{ other_user.id }}";

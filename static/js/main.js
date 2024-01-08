@@ -58,13 +58,17 @@ function followButtonClicked() {
 /* 赤丸　indicator */
 
 function showHamburgerIndicator(hamburgerId) {
-  var indicator = $('<span class="hamburger-indicator">🔴</span>');
-  $(hamburgerId).append(indicator);
+  if ($(hamburgerId).find('.hamburger-indicator').length === 0) {
+    var indicator = $('<span class="hamburger-indicator">🔴</span>');
+    $(hamburgerId).append(indicator);
+  }
 }
 
 function showTabIndicator(tabId) {
-  var indicator = $('<span class="follower-indicator">🔴</span>');
-  $(tabId).append(indicator);
+  if ($(tabId).find('.follower-indicator').length === 0) {
+    var indicator = $('<span class="follower-indicator">🔴</span>');
+    $(tabId).append(indicator);
+  }
 }
 
 function hideTabIndicator(tabId) {
@@ -594,7 +598,7 @@ $(document).ready(function() {
 
 $(function() {
   var chatSocket = new WebSocket(
-    'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
+    'ws://' + window.location.host + '/ws/chat/' + currentUserId + '/'
   );
 
   chatSocket.onmessage = function(e) {
@@ -603,6 +607,7 @@ $(function() {
     var delta = data.chat;
     var image = data.image;
     var sender_id = data.sender_id;
+    var receiver_id = data.receiver_id;
     var newChatContent = $('<div>').addClass('chat-content');
 
     if (image) {
@@ -619,7 +624,7 @@ $(function() {
 
     $('.chat-container').append(newChatContent);
 
-    if (sender_id && sender_id !== currentUserId) {
+    if (receiver_id === currentUserId) {
       showHamburgerIndicator('#js-hamburger');
       showTabIndicator('#chat-link');
       showTabIndicator('#nav-chat-link');
@@ -639,6 +644,22 @@ $(function() {
   $('#chat-message-submit').on('click', function() {
     var message = $('#chat-message-input').val();
     if (message.trim() !== '') {
+      var newChatContent = $('<div>').addClass('chat-content');
+
+      if (image) {
+        var imageElement = $('<img>').attr('src', image).attr('class', 'request-image-size');
+        var linkElement = $('<a>').attr('href', '/profile/' + sender_id).append(imageElement);
+        var imageContainer = $('<div>').addClass('chat-image').append(linkElement);
+        newChatContent.append(imageContainer);
+      }
+
+      var messageElement = $('<p>').addClass('chat-log').text(message);
+      var messsageDelta = $('<p>').addClass('chat-delta').text(delta);
+      newChatContent.append(messageElement);
+      newChatContent.append(messsageDelta);
+
+    $('.chat-container').append(newChatContent);
+
       chatSocket.send(JSON.stringify({
         'message': message,
         'sender_id': sender_id,

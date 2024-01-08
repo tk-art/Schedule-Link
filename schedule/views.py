@@ -479,6 +479,9 @@ def chat_room(request, user_id):
     current_user = request.user
     room_name = f'{min(current_user.id, other_user.id)}_{max(current_user.id, other_user.id)}'
     chat_messages = ChatMessage.objects.filter(room_name=room_name)
+    send = ChatMessage.objects.filter(room_name=room_name).last()
+
+    send.delta = human_readable_time_from_utc(send.timestamp)
 
     for chat in chat_messages:
         chat.delta = human_readable_time_from_utc(chat.timestamp)
@@ -487,7 +490,8 @@ def chat_room(request, user_id):
         'current_user': current_user,
         'other_user': other_user,
         'room_name': room_name,
-        'chat_messages': chat_messages
+        'chat_messages': chat_messages,
+        'send': send
     }
 
     return render(request, 'chat.html', context)
