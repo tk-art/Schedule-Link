@@ -542,23 +542,8 @@ $(document).ready(function() {
 });
 
 /*　チャットチェック　赤丸 */
-/*
-$(document).ready(function() {
-  $.ajax({
-    url: '/check_unread_full_messages/',
-    method: 'GET',
-    success: function(data) {
-      if (data.chat_unread) {
-        showHamburgerIndicator('#js-hamburger');
-        showTabIndicator('#chat-link');
-        showTabIndicator('#nav-chat-link');
-      }
-    },
-    error: function(error) {
-      console.log('チャットのマークに失敗しました。', error);
-    }
-  });
 
+function RedCircleDisplay() {
   $('.chat-list').each(function() {
     var chatLink = $(this);
     var userId = chatLink.data('user-id');
@@ -591,8 +576,26 @@ $(document).ready(function() {
       }
     });
   });
+}
+
+$(document).ready(function() {
+  $.ajax({
+    url: '/check_unread_full_messages/',
+    method: 'GET',
+    success: function(data) {
+      if (data.chat_unread) {
+        showHamburgerIndicator('#js-hamburger');
+        showTabIndicator('#chat-link');
+        showTabIndicator('#nav-chat-link');
+      }
+    },
+    error: function(error) {
+      console.log('チャットのマークに失敗しました。', error);
+    }
+  });
+  RedCircleDisplay();
 });
-*/
+
 
 /* チャット */
 
@@ -608,7 +611,23 @@ $(function() {
     var image = data.image;
     var sender_id = data.sender_id;
     var receiver_id = data.receiver_id;
+    var chatContainer = $('.chat-full-container');
     var newChatContent = $('<div>').addClass('chat-content');
+    var path = window.location.pathname;
+
+    if (receiver_id === currentUserId) {
+      if (path.includes('/chat_list')) {
+        RedCircleDisplay();
+      } else if (path.includes('/chat/' + sender_id)){
+        RedCircleDisplay();
+      } else {
+        showHamburgerIndicator('#js-hamburger');
+        showTabIndicator('#chat-link');
+        showTabIndicator('#nav-chat-link');
+      }
+    }
+
+    $('.list-message').html(message);
 
     if (image) {
       var imageElement = $('<img>').attr('src', image).attr('class', 'request-image-size');
@@ -624,11 +643,7 @@ $(function() {
 
     $('.chat-container').append(newChatContent);
 
-    if (receiver_id === currentUserId) {
-      showHamburgerIndicator('#js-hamburger');
-      showTabIndicator('#chat-link');
-      showTabIndicator('#nav-chat-link');
-    }
+    chatContainer.scrollTop(chatContainer.prop('scrollHeight'));
   };
 
   chatSocket.onclose = function(e) {
@@ -645,6 +660,7 @@ $(function() {
     var message = $('#chat-message-input').val();
     if (message.trim() !== '') {
       var newChatContent = $('<div>').addClass('chat-content');
+      var chatContainer = $('.chat-full-container');
 
       if (image) {
         var imageElement = $('<img>').attr('src', image).attr('class', 'request-image-size');
@@ -654,11 +670,13 @@ $(function() {
       }
 
       var messageElement = $('<p>').addClass('chat-log').text(message);
-      var messsageDelta = $('<p>').addClass('chat-delta').text(delta);
+      var messsageDelta = $('<p>').addClass('chat-delta').text('たった今');
       newChatContent.append(messageElement);
       newChatContent.append(messsageDelta);
 
     $('.chat-container').append(newChatContent);
+
+    chatContainer.scrollTop(chatContainer.prop('scrollHeight'));
 
       chatSocket.send(JSON.stringify({
         'message': message,

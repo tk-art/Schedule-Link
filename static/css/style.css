@@ -760,6 +760,10 @@ footer {
   max-height: 400px;
 }
 
+.chat-full-container::-webkit-scrollbar {
+  display: none;
+}
+
 .chat-delta {
   font-size: 12px;
   letter-spacing: 1.2px;
