@@ -604,6 +604,36 @@ $(function() {
     'ws://' + window.location.host + '/ws/chat/' + currentUserId + '/'
   );
 
+  function displayChatMessage(senderId, message, image, delta) {
+    var newChatContent = $('<div>').addClass('chat-content');
+    var chatContainer = $('.chat-full-container');
+
+    if (senderId !== currentUserId) {
+      if (image) {
+        var imageElement = $('<img>').attr('src', image).attr('class', 'chat-room-image');
+        var linkElement = $('<a>').attr('href', '/profile/' + senderId).append(imageElement);
+        var imageContainer = $('<div>').append(linkElement);
+        newChatContent.append(imageContainer);
+      }
+
+      var messageElement = $('<p>').addClass('receiver-chat').text(message);
+      var messsageDelta = $('<p>').addClass('chat-other-delta').text(delta);
+      newChatContent.append(messageElement);
+      newChatContent.append(messsageDelta);
+
+      $('.chat-container').append(newChatContent);
+    } else {
+      var messsageDelta = $('<p>').addClass('chat-current-delta').text('たった今');
+      var messageElement = $('<p>').addClass('sender-chat').text(message);
+      newChatContent.append(messsageDelta);
+      newChatContent.append(messageElement);
+
+      $('.chat-container').append(newChatContent);
+    }
+
+    chatContainer.scrollTop(chatContainer.prop('scrollHeight'));
+  }
+
   chatSocket.onmessage = function(e) {
     var data = JSON.parse(e.data);
     var message = data.message;
@@ -611,8 +641,7 @@ $(function() {
     var image = data.image;
     var sender_id = data.sender_id;
     var receiver_id = data.receiver_id;
-    var chatContainer = $('.chat-full-container');
-    var newChatContent = $('<div>').addClass('chat-content');
+
     var path = window.location.pathname;
 
     if (receiver_id === currentUserId) {
@@ -620,6 +649,10 @@ $(function() {
         RedCircleDisplay();
       } else if (path.includes('/chat/' + sender_id)){
         RedCircleDisplay();
+        $.ajax({
+          url: '/mark_chat_as_read/' + sender_id + '/',
+          method: 'GET'
+        });
       } else {
         showHamburgerIndicator('#js-hamburger');
         showTabIndicator('#chat-link');
@@ -629,21 +662,7 @@ $(function() {
 
     $('.list-message').html(message);
 
-    if (image) {
-      var imageElement = $('<img>').attr('src', image).attr('class', 'request-image-size');
-      var linkElement = $('<a>').attr('href', '/profile/' + sender_id).append(imageElement);
-      var imageContainer = $('<div>').addClass('chat-image').append(linkElement);
-      newChatContent.append(imageContainer);
-    }
-
-    var messageElement = $('<p>').addClass('chat-log').text(message);
-    var messsageDelta = $('<p>').addClass('chat-delta').text(delta);
-    newChatContent.append(messageElement);
-    newChatContent.append(messsageDelta);
-
-    $('.chat-container').append(newChatContent);
-
-    chatContainer.scrollTop(chatContainer.prop('scrollHeight'));
+    displayChatMessage(sender_id, message, image, delta);
   };
 
   chatSocket.onclose = function(e) {
@@ -659,25 +678,7 @@ $(function() {
   $('#chat-message-submit').on('click', function() {
     var message = $('#chat-message-input').val();
     if (message.trim() !== '') {
-      var newChatContent = $('<div>').addClass('chat-content');
-      var chatContainer = $('.chat-full-container');
-
-      if (image) {
-        var imageElement = $('<img>').attr('src', image).attr('class', 'request-image-size');
-        var linkElement = $('<a>').attr('href', '/profile/' + sender_id).append(imageElement);
-        var imageContainer = $('<div>').addClass('chat-image').append(linkElement);
-        newChatContent.append(imageContainer);
-      }
-
-      var messageElement = $('<p>').addClass('chat-log').text(message);
-      var messsageDelta = $('<p>').addClass('chat-delta').text('たった今');
-      newChatContent.append(messageElement);
-      newChatContent.append(messsageDelta);
-
-    $('.chat-container').append(newChatContent);
-
-    chatContainer.scrollTop(chatContainer.prop('scrollHeight'));
-
+      displayChatMessage(sender_id, message, null, null);
       chatSocket.send(JSON.stringify({
         'message': message,
         'sender_id': sender_id,

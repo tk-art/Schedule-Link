@@ -2,26 +2,33 @@
 {% block title %}チャット{% endblock %}
 {% block content %}
 <div class="container col-md-6">
+
   <div class="chat-wrapper">
     <div class="chat-full-container">
       {% if chat_messages %}
         {% for chat in chat_messages %}
         <div class="chat-content">
-          <a href="/profile/{{ chat.sender.id }}">
-            <img src="{{ chat.sender.profile.image.url }}" alt="{{ chat.sender.profile.username }}" class="request-image-size">
-          </a>
-          <p class="chat-page">{{ chat.message }}</p>
-          <p class="chat-delta">{{ chat.delta }}</p>
+          {% if chat.sender == request.user %}
+            <p class="chat-current-delta">{{ chat.delta }}</p>
+            <p class="sender-chat">{{ chat.message }}</p>
+          {% else %}
+            <a href="/profile/{{ chat.sender.id }}">
+              <img src="{{ chat.sender.profile.image.url }}" alt="{{ chat.sender.profile.username }}" class="chat-room-image">
+            </a>
+            <p class="receiver-chat">{{ chat.message }}</p>
+            <p class="chat-other-delta">{{ chat.delta }}</p>
+          {% endif %}
         </div>
         {% endfor %}
       {% endif %}
       <div class="chat-container"></div>
     </div>
     <div class="chat-input">
-      <input id="chat-message-input" type="text" size="50"><br>
-      <button id="chat-message-submit" class="chat-btn">送信</button>
+      <input id="chat-message-input" class="chat-message-input" type="text" placeholder="チャット...">
+      <i id="chat-message-submit" class="fa-solid fa-arrow-up-from-bracket send-awesome"></i>
     </div>
   </div>
+
 </div>
 
 <script>

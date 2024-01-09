@@ -195,11 +195,6 @@ header {
   padding-top: 100px;
 }
 
-footer {
-  text-align: center;
-  margin-top: 20px;
-}
-
 .header-link {
   color: white;
   text-decoration: none;
@@ -714,22 +709,38 @@ footer {
 
 .chat-content {
   display: flex;
-  margin-bottom: 15px;
+  margin-bottom: 40px;
 }
 
-.chat-page {
+.receiver-chat {
   margin: auto 0;
   letter-spacing: 1.2px;
+  border-radius: 15px;
+  background-color: #262626;
+  padding: 7px 14px;
+  max-width: 60%;
+  word-wrap: break-word;
 }
 
-.chat-log {
+.sender-chat {
   margin: auto 0;
   letter-spacing: 1.2px;
+  border-radius: 15px;
+  background-color: #3897F0;
+  padding: 7px 14px;
+  margin-right: 30px;
+  max-width: 60%;
+  word-wrap: break-word;
 }
 
-#chat-message-input {
-  margin-left: 20px;
-  margin-top: 20px;
+.send-awesome {
+  font-size: 20px;
+  margin: auto 0;
+  margin-right: 30px;
+}
+
+.send-awesome:hover {
+  cursor: pointer;
 }
 
 .chat-list {
@@ -755,9 +766,37 @@ footer {
   margin: auto;
 }
 
+.chat-input {
+  display: flex;
+  align-items: center;
+  border: 1px solid #363636;
+  width: 100%;
+  border-radius: 20px;
+  margin-top: 20px;
+}
+
+#chat-message-input {
+  flex-grow: 1;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 30px;
+}
+
+#chat-message-input:focus {
+  outline: none;
+}
+
 .chat-full-container {
   overflow-y: auto;
-  max-height: 400px;
+  max-height: 750px;
+}
+
+@media (max-height: 850px) {
+  .chat-full-container {
+    max-height: 600px;
+  }
 }
 
 .chat-full-container::-webkit-scrollbar {
@@ -772,6 +811,40 @@ footer {
   margin-left: auto;
   margin-right: 20px;
   flex-shrink: 0;
+}
+
+.chat-current-delta {
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  color: rgb(115, 117, 123);
+  margin-left: auto;
+  margin-right: 8px;
+  margin-bottom: 0;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.chat-other-delta {
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  color: rgb(115, 117, 123);
+  margin-right: 10px;
+  margin-left: 8px;
+  margin-bottom: 0;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.chat-room-image {
+  width: 35px;
+  height: 35px;
+  border: 1.5px solid rgb(74, 74, 79);
+  border-radius: 50%;
+  object-fit: cover;
+  margin-left: 20px;
+  margin-right: 20px;
+  cursor: pointer;
+  border: none;
 }
 
 /* 検索 */
