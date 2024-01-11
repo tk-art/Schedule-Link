@@ -9,7 +9,14 @@
         {% for chat in chat_messages %}
         <div class="chat-content">
           {% if chat.sender == request.user %}
-            <p class="chat-current-delta">{{ chat.delta }}</p>
+
+            <div id="message-{{ chat.id }}" class="sender-last-message">
+              {% if sender_last_message.id == chat.id %}
+                <span class="chat-current-delta read-mark"{% if not chat.read %} style="display:none;"{% endif %}>既読</span>
+              {% endif %}
+              <p class="chat-current-delta">{{ chat.delta }}</p>
+            </div>
+
             <p class="sender-chat">{{ chat.message }}</p>
           {% else %}
             <a href="/profile/{{ chat.sender.id }}">

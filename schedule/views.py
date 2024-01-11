@@ -480,6 +480,10 @@ def chat_room(request, user_id):
     room_name = f'{min(current_user.id, other_user.id)}_{max(current_user.id, other_user.id)}'
     chat_messages = ChatMessage.objects.filter(room_name=room_name)
 
+    sender_last_message = None
+    if chat_messages.last().sender == current_user:
+        sender_last_message = chat_messages.last()
+
     for chat in chat_messages:
         chat.delta = human_readable_time_from_utc(chat.timestamp)
 
@@ -487,16 +491,20 @@ def chat_room(request, user_id):
         'current_user': current_user,
         'other_user': other_user,
         'room_name': room_name,
-        'chat_messages': chat_messages
+        'chat_messages': chat_messages,
+        'sender_last_message': sender_last_message
     }
 
     return render(request, 'chat.html', context)
 
 def check_unread_full_messages(request):
-    chat_unread = ChatMessage.objects.filter(receiver=request.user, read=False).exists()
+    chat_unread = ChatMessage.objects.filter(receiver=request.user, read=False)
+    sender_ids = chat_unread.values_list('sender_id', flat=True).distinct()
+
 
     response = {
-        'chat_unread': chat_unread
+        'chat_unread': chat_unread.exists(),
+        'sender_ids': sender_ids
     }
     return JsonResponse(response)
 

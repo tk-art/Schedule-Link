@@ -813,15 +813,19 @@ header {
   flex-shrink: 0;
 }
 
+.sender-last-message {
+  margin-left: auto;
+  margin-bottom: 0;
+  margin-top: auto;
+}
+
 .chat-current-delta {
   font-size: 12px;
   letter-spacing: 1.2px;
   color: rgb(115, 117, 123);
-  margin-left: auto;
   margin-right: 8px;
   margin-bottom: 0;
   margin-top: auto;
-  flex-shrink: 0;
 }
 
 .chat-other-delta {
@@ -832,7 +836,6 @@ header {
   margin-left: 8px;
   margin-bottom: 0;
   margin-top: auto;
-  flex-shrink: 0;
 }
 
 .chat-room-image {
