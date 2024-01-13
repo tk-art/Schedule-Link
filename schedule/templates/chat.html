@@ -2,21 +2,18 @@
 {% block title %}チャット{% endblock %}
 {% block content %}
 <div class="container col-md-6">
-
   <div class="chat-wrapper">
     <div class="chat-full-container">
       {% if chat_messages %}
         {% for chat in chat_messages %}
         <div class="chat-content">
           {% if chat.sender == request.user %}
-
             <div id="message-{{ chat.id }}" class="sender-last-message">
               {% if sender_last_message.id == chat.id %}
                 <span class="chat-current-delta read-mark"{% if not chat.read %} style="display:none;"{% endif %}>既読</span>
               {% endif %}
               <p class="chat-current-delta">{{ chat.delta }}</p>
             </div>
-
             <p class="sender-chat">{{ chat.message }}</p>
           {% else %}
             <a href="/profile/{{ chat.sender.id }}">
@@ -35,7 +32,6 @@
       <i id="chat-message-submit" class="fa-solid fa-arrow-up-from-bracket send-awesome"></i>
     </div>
   </div>
-
 </div>
 
 <script>

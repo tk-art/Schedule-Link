@@ -28,10 +28,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
         sender_id = text_data_json['sender_id']
         receiver_id = text_data_json['receiver_id']
         room_name = text_data_json['room_name']
+        temporary_id = text_data_json['temporaryId']
 
         image_url = await self.image(sender_id)
-        await self.save_message(sender_id, receiver_id, message, room_name)
+        save_message = await self.save_message(sender_id, receiver_id, message, room_name)
+        message_id = save_message.id
         chat = await self.delta(sender_id, message)
+
+        await self.channel_layer.group_send(
+            f'user_{sender_id}',
+            {
+                'type': 'sender_chat_message',
+                'message_id': message_id,
+                'temporary_id': temporary_id
+            }
+        )
 
         await self.channel_layer.group_send(
             f'user_{receiver_id}',
@@ -41,9 +52,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'image': image_url,
                 'sender_id': sender_id,
                 'receiver_id': receiver_id,
-                'chat': chat
+                'chat': chat,
+                'message_id': message_id
             }
         )
+
+    async def sender_chat_message(self, event):
+        await self.send(text_data=json.dumps({
+            'message_id': event['message_id'],
+            'temporary_id': event['temporary_id']
+        }))
 
     async def chat_message(self, event):
         await self.send(text_data=json.dumps({
@@ -51,7 +69,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'image': event['image'],
             'sender_id': event['sender_id'],
             'receiver_id': event['receiver_id'],
-            'chat': event['chat']
+            'chat': event['chat'],
+            'message_id': event['message_id']
+        }))
+
+    async def send_read_receipt(self, event):
+        await self.send(text_data=json.dumps({
+            'action': 'readReceipt',
+            'message_id': event['message_id']
         }))
 
     @database_sync_to_async
@@ -63,7 +88,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def save_message(self, sender_id, receiver_id, message, room_name):
         sender = CustomUser.objects.get(id=sender_id)
         receiver = CustomUser.objects.get(id=receiver_id)
-        ChatMessage.objects.create(
+
+        return ChatMessage.objects.create(
             sender=sender,
             receiver=receiver,
             message=message,

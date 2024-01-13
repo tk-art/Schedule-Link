@@ -569,6 +569,7 @@ function RedCircleDisplay() {
       url: '/mark_chat_as_read/' + userId + '/',
       method: 'GET',
       success: function(response) {
+        console.log(response);
         hideTabIndicator(userId);
       },
       error: function(error) {
@@ -600,10 +601,10 @@ $(document).ready(function() {
   RedCircleDisplay();
 });
 
-function displayChatMessage(senderId, message, image, delta) {
+function displayChatMessage(senderId, message, message_id, image, delta) {
   var newChatContent = $('<div>').addClass('chat-content');
   var chatContainer = $('.chat-full-container');
-  var senderLastMessage = $('<div>').addClass('sender-last-message');
+  var senderLastMessage = $('<div>').addClass('sender-last-message').attr('id', 'message-' + message_id);
 
   if (senderId !== currentUserId) {
     if (image) {
@@ -620,15 +621,16 @@ function displayChatMessage(senderId, message, image, delta) {
 
     $('.chat-container').append(newChatContent);
   } else {
+    var readMark = $('<span>').addClass('chat-current-delta read-mark').text('既読').hide();
     var messsageDelta = $('<p>').addClass('chat-current-delta').text('たった今');
     var messageElement = $('<p>').addClass('sender-chat').text(message);
+    senderLastMessage.append(readMark);
     senderLastMessage.append(messsageDelta);
     newChatContent.append(senderLastMessage);
     newChatContent.append(messageElement);
 
     $('.chat-container').append(newChatContent);
   }
-
   chatContainer.scrollTop(chatContainer.prop('scrollHeight'));
 }
 
@@ -641,34 +643,39 @@ $(function() {
 
   chatSocket.onmessage = function(e) {
     var data = JSON.parse(e.data);
-    var message = data.message.id;
+    var message = data.message;
     var delta = data.chat;
     var image = data.image;
     var sender_id = data.sender_id;
     var receiver_id = data.receiver_id;
+    var message_id = data.message_id;
     var path = window.location.pathname;
 
-    if (path.includes('/chat_list')) {
-      RedCircleDisplay();
-    } else if (path.includes('/chat/' + sender_id)){
-      RedCircleDisplay();
-      $.ajax({
-        url: '/mark_chat_as_read/' + sender_id + '/',
-        method: 'GET',
-        success: function(data) {
-          console.log(message.id);
-          $('#message-' + message.id + ' .read-mark').show();
-        }
-      });
-    } else {
-      showHamburgerIndicator('#js-hamburger');
-      showTabIndicator('#chat-link');
-      showTabIndicator('#nav-chat-link');
+    if (data.temporary_id) {
+      $('#message-' + data.temporary_id).attr('id', 'message-' + data.message_id);
     }
 
-    $('.list-message').html(message);
+    if (data.action === 'readReceipt') {
+        $('#message-' + data.message_id + ' .read-mark').show();
+    }
 
-    displayChatMessage(sender_id, message, image, delta);
+    if (receiver_id　=== currentUserId) {
+      $('.read-mark').hide();
+      displayChatMessage(sender_id, message, message_id, image, delta);
+      if (path.includes('/chat_list')) {
+        RedCircleDisplay();
+      } else if (path.includes('/chat/' + sender_id)){
+        $.ajax({
+          url: '/mark_chat_as_read/' + sender_id + '/',
+          method: 'GET',
+        });
+      } else {
+        showHamburgerIndicator('#js-hamburger');
+        showTabIndicator('#chat-link');
+        showTabIndicator('#nav-chat-link');
+      }
+    }
+    $('#room-' + sender_id).html(message);
   };
 
   chatSocket.onclose = function(e) {
@@ -682,16 +689,19 @@ $(function() {
   });
 
   $('#chat-message-submit').on('click', function() {
+    var temporaryId = Date.now();
     var message = $('#chat-message-input').val();
     if (message.trim() !== '') {
       chatSocket.send(JSON.stringify({
         'message': message,
         'sender_id': sender_id,
         'receiver_id': receiver_id,
-        'room_name': roomName
+        'room_name': roomName,
+        'temporaryId': temporaryId,
       }));
 
-      displayChatMessage(sender_id, message, null, null);
+      displayChatMessage(sender_id, message, temporaryId, null, null);
+      $('.read-mark').hide();
       $('#chat-message-input').val('');
     }
   });

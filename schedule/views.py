@@ -14,6 +14,8 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 def human_readable_time_from_utc(timestamp, timezone='Asia/Tokyo'):
     local_tz = pytz.timezone(timezone)
@@ -466,6 +468,7 @@ def chat_list(request):
         room_info['timestamp'] = last_room.timestamp
         if last_room.sender == current_user:
             room_info['receiver'] = last_room.receiver
+            print(last_room.receiver)
         else:
             room_info['receiver'] = last_room.sender
         rooms_receiver.append(room_info)
@@ -527,6 +530,16 @@ def mark_chat_as_read(request, user_id):
     ).first()
     room_name = chat_room.room_name
     ChatMessage.objects.filter(room_name=room_name, read=False).update(read=True)
+    last_message = ChatMessage.objects.filter(room_name=room_name).last()
+
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f'user_{last_message.sender_id}',
+        {
+            'type': 'send_read_receipt',
+            'message_id': last_message.id
+        }
+    )
 
     return JsonResponse({'status': 'success'})
 

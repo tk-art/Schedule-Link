@@ -6,7 +6,7 @@
     {% for room in rooms %}
       <a href="/chat/{{ room.receiver.id }}" class="chat-list" data-user-id="{{ room.receiver.id }}">
         <img src="{{ room.receiver.profile.image.url }}" alt="{{ room.receiver.profile.username }}" class="request-image-size chat-list-image">
-        <p class="list-message">{{ room.message }}</p>
+        <p id="room-{{ room.receiver.id }}" class="list-message">{{ room.message }}</p>
         <p class="chat-delta">{{ room.delta }}</p>
       </a>
     {% endfor %}
