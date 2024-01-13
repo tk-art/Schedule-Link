@@ -75,6 +75,17 @@ function hideTabIndicator(tabId) {
   $(tabId).find('.follower-indicator').remove();
 }
 
+function showListIndicator(tabId) {
+  if ($(tabId).find('.unread-indicator').length === 0) {
+    var indicator = $('<span class="unread-indicator">🔴</span>');
+    $(tabId).append(indicator);
+  }
+}
+
+function hideListIndicator(tabId) {
+  $(tabId).find('.unread-indicator').remove();
+}
+
 $(document).ready(function() {
   $.ajax({
     type: "GET",
@@ -553,7 +564,8 @@ function RedCircleDisplay() {
       method: 'GET',
       success: function(data) {
         if (data.chat_unread) {
-          showTabIndicator(chatLink);
+          var chatListIndicator = chatLink.find('.list-indicator');
+          showListIndicator(chatListIndicator);
         }
       },
       error: function(error) {
@@ -569,8 +581,7 @@ function RedCircleDisplay() {
       url: '/mark_chat_as_read/' + userId + '/',
       method: 'GET',
       success: function(response) {
-        console.log(response);
-        hideTabIndicator(userId);
+        hideListIndicator(userId);
       },
       error: function(error) {
         console.log('チャットのマークに失敗しました。', error);

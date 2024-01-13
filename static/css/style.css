@@ -401,6 +401,10 @@ header {
   margin-left: 5px;
 }
 
+.unread-indicator {
+  font-size: 10px;
+}
+
 .hamburger-indicator {
   font-size: 10px;
   position: absolute;
@@ -743,6 +747,9 @@ header {
   cursor: pointer;
 }
 
+.chat-list-indicator {
+  margin-left: auto;
+}
 .chat-list {
   display: flex;
   align-items: center;
@@ -756,9 +763,19 @@ header {
   flex-shrink: 0;
 }
 
+.list-indicator {
+  text-align: center;
+  margin-bottom: 5px;
+  margin-right: 10px;
+}
+
 .list-message {
   color: rgb(115, 117, 123) !important;
   margin-left: 10px;
+  max-width: 70%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .chat-wrapper {
@@ -793,12 +810,6 @@ header {
   max-height: 750px;
 }
 
-@media (max-height: 850px) {
-  .chat-full-container {
-    max-height: 600px;
-  }
-}
-
 .chat-full-container::-webkit-scrollbar {
   display: none;
 }
@@ -809,7 +820,7 @@ header {
   color: rgb(115, 117, 123);
   margin: auto 0;
   margin-left: auto;
-  margin-right: 20px;
+  margin-right: 10px;
   flex-shrink: 0;
 }
 
@@ -848,6 +859,29 @@ header {
   margin-right: 20px;
   cursor: pointer;
   border: none;
+}
+
+@media (max-height: 850px) {
+  .chat-full-container {
+    max-height: 600px;
+  }
+}
+
+@media (max-height: 730px) {
+  .chat-full-container {
+    max-height: 500px;
+  }
+}
+
+@media (max-width: 450px) {
+  .chat-delta {
+    font-size: 10px;
+  }
+
+  .list-message {
+    margin-left: -5px;
+    max-width: 55%;
+  }
 }
 
 /* 検索 */
