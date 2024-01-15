@@ -400,6 +400,42 @@ $(document).ready(function() {
   calendar.render();
 });
 
+/* 検索ページカレンダー */
+
+$('#datesearch').on('click', function() {
+  var calendarEl = $('#date-calendar')[0];
+
+  var dateCalendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    fixedWeekCount: false,
+    selectable: true,
+    selectMirror: true,
+
+    datesSet: function() {
+      var customTitle = customTitleGenerator();
+      $('#fc-dom-1').text(customTitle);
+    },
+
+    select: function(info) {
+      var startDate = info.startStr;
+      var endDate = moment(info.endStr).subtract(1, 'days').format('YYYY-MM-DD');
+
+      if (startDate === endDate) {
+        $('#datesearch').val(startDate);
+      } else {
+        $('#datesearch').val(startDate + ' ~ ' + endDate);
+      }
+      $('#datesearchmodal').modal('hide');
+    },
+  });
+
+  $('#datesearchmodal').modal('show');
+
+  $('#datesearchmodal').on('shown.bs.modal', function() {
+    dateCalendar.render();
+  });
+});
+
 /* イベントページカレンダー */
 
 $('#datetime').on('click', function() {

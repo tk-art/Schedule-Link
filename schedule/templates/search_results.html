@@ -1,17 +1,135 @@
 {% extends "base.html" %}
 {% block title %}検索結果{% endblock %}
 {% block content %}
-<div class="container col-md-6">
-  {% if profiles %}
+<div class="container col-md-9">
+  {% if events %}
+    <div id="search_content_tab">
+      <ul class="nav request-nav" id="myTabs" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link header-right active" id="tab1-tab" data-bs-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">
+            ユーザー
+          </a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link header-right" id="tab2-tab" data-bs-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">
+            イベント
+          </a>
+        </li>
+      </ul>
+
+      <div class="tab-content" id="myTabContent">
+        <!--　ユーザー　-->
+        <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
+          {% for profile in profiles %}
+            <div class="search-results">
+              <a href="/profile/{{ profile.user.id }}" class="search-results-list">
+                <img src="{{ profile.image.url }}" alt="{{ profile.username }}" class="request-image-size">
+                <p class="search-list">{{ profile.username }}</p>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+
+        <!--　イベント　-->
+        <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+          <div class="row row-cols-2 row-cols-md-3 g-4">
+            {% for event in events %}
+              <div class="col">
+                <div class="card event-card event-modal" data-event-id="{{ event.id }}" data-key="{{ event.user.id }}">
+                  <img src="{{ event.image.url }}" alt="{{ profile.username }}" class="event-card-size">
+                  <div class="card-body card-b">
+                    <p class="card-text black">{{ event.title }}</p>
+                    <p class="card-text"><small class="text-muted">{{ event.place }}</small></p>
+                  </div>
+                  <div class="card-f">
+                    <img src="{{ event.user.profile.image.url }}" alt="{{ event.user.profile.username }}" class="event-image-size">
+                    <p class="card-name">{{ event.user.profile.username }}</p>
+                    <p class="chat-delta">{{ event.delta }}</p>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="search-content" class="row">
+      <div class="search-content-left col-md-8">
+        <div class="row row-cols-2 row-cols-md-3 g-4">
+          {% for event in events %}
+            <div class="col">
+              <div class="card event-card event-modal" data-event-id="{{ event.id }}" data-key="{{ event.user.id }}">
+                <img src="{{ event.image.url }}" alt="{{ profile.username }}" class="event-card-size">
+                <div class="card-body card-b">
+                  <p class="card-text black">{{ event.title }}</p>
+                  <p class="card-text"><small class="text-muted">{{ event.place }}</small></p>
+                </div>
+                <div class="card-f">
+                  <img src="{{ event.user.profile.image.url }}" alt="{{ event.user.profile.username }}" class="event-image-size">
+                  <p class="card-name">{{ event.user.profile.username }}</p>
+                  <p class="chat-delta">{{ event.delta }}</p>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="search-content-right col-md-4">
+        {% if profiles %}
+          {% for profile in profiles %}
+            <div class="search-results">
+              <a href="/profile/{{ profile.user.id }}" class="search-results-list">
+                <img src="{{ profile.image.url }}" alt="{{ profile.username }}" class="request-image-size">
+                <p class="search-list">{{ profile.username }}</p>
+              </a>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  {% else %}
     {% for profile in profiles %}
       <div class="search-results">
         <a href="/profile/{{ profile.user.id }}" class="search-results-list">
           <img src="{{ profile.image.url }}" alt="{{ profile.username }}" class="request-image-size">
           <p class="search-list">{{ profile.username }}</p>
-          <p class="last-calendar">直近の暇な時間：{{ profile.calendar|date:"Y-m-d" }}</p>
         </a>
       </div>
     {% endfor %}
   {% endif %}
+
+  <!--提案詳細モーダル-->
+  <div class="modal fade" id="eventmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="card-modal">
+          <div class="card-modal-left">
+            <img src="" alt="イベント画像" class="card-modal-image">
+          </div>
+          <div class="card-modal-right">
+            <div class="card-modal-profile">
+              <a href="" class="top-card-modal">
+                <img src="" alt="プロフィール画像" class="card-modal-image-size">
+                <p class="card-modal-name"></p>
+              </a>
+              <p class="chat-delta"></p>
+            </div>
+            <div class="card-details">
+              <p class="title"></p>
+              <p class="place"></p>
+              <p class="date"></p>
+              <p class="time"></p>
+              <p class="detail"></p>
+            </div>
+            <div class="card-btn" style="display: none;">
+              <a id="intentionalBtn" class="intentional-btn" onclick="requestClicked()">ヒマリク</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

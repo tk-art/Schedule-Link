@@ -5,6 +5,15 @@ body {
   padding: 0;
 }
 
+.checkbox-pointer {
+  cursor: pointer;
+}
+
+.checkbox-pointer input[type="checkbox"],
+.checkbox-pointer label {
+  cursor: pointer;
+}
+
 .navigation-menu {
   display: flex;
 }
@@ -134,7 +143,7 @@ black-bg(ハンバーガーメニュー解除用bg)
   visibility: visible;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 810px) {
   .nav-wrapper {
     display: block;
   }
@@ -909,6 +918,21 @@ header {
   margin-bottom: 10px;
 }
 
+#search_content_tab {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  #search-content {
+    display: none;
+  }
+
+  #search_content_tab {
+    display: block;
+  }
+}
+
+
 /* イベントページ 作成 */
 
 .event-page {
@@ -1081,7 +1105,7 @@ header {
   margin-right: 10px;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 768px) {
   .phone-size-category {
     display: block !important;
   }

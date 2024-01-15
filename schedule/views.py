@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.core.serializers import serialize
 from django.contrib import messages
 import pytz
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from django.db import models
 from django.db.models import Q
 from django.core.paginator import Paginator
@@ -551,6 +551,8 @@ def search(request):
     if request.method == 'POST':
         form = SearchForm(request.POST)
         if form.is_valid():
+            date_search = form.cleaned_data.get('date_search')
+            print(date_search)
             residence = form.cleaned_data.get('residence')
             gender = form.cleaned_data.get('gender')
             min_age = form.cleaned_data.get('min_age')
@@ -560,8 +562,8 @@ def search(request):
             interest = form.cleaned_data.get('interest')
 
             my_profile = Profile.objects.get(user=request.user)
-
             profiles = Profile.objects.all().exclude(id=my_profile.id)
+
             if residence:
                 profiles = profiles.filter(residence=residence)
             if min_age:
@@ -575,21 +577,35 @@ def search(request):
             if interest:
                 profiles = profiles.filter(interest__in=interest).distinct()
 
+            matching_profiles = []
+            matching_events = []
+            if date_search:
+                if '~' in date_search:
+                    start_str, end_str = date_search.split(' ~ ')
+                    start_date = datetime.strptime(start_str, "%Y-%m-%d").date()
+                    end_date = datetime.strptime(end_str, "%Y-%m-%d").date()
+                    end_date += timedelta(days=1)
+                    for profile in profiles:
+                        if Calendar.objects.filter(user_id=profile.user.id, selectedDate__range=(start_date, end_date)).exists():
+                            matching_profiles.append(profile)
 
-            today = date.today()
-            for profile in profiles:
-                calendar = Calendar.objects.filter(
-                    user_id=profile.user.id,
-                    selectedDate__gt=today).order_by('selectedDate').first()
-                if calendar:
-                    profile.calendar = calendar.selectedDate
+                        events = Event.objects.filter(user_id=profile.user.id, date__range=(start_date, end_date))
+                        for event in events:
+                            matching_events.append(event)
                 else:
-                    profile.calendar = None
+                    for profile in profiles:
+                        if Calendar.objects.filter(user_id=profile.user.id, selectedDate=date_search).exists():
+                            matching_profiles.append(profile)
 
-            sorted_profiles = sorted(profiles, key=lambda p: p.calendar or date.max)
+                        events = Event.objects.filter(user_id=profile.user.id, date=date_search)
+                        for event in events:
+                            matching_events.append(event)
 
-            if profiles:
-                return render(request, 'search_results.html', {'profiles' : sorted_profiles})
+
+            if matching_profiles or matching_events:
+                return render(request, 'search_results.html', {'profiles' : matching_profiles, 'events': matching_events})
+            elif profiles:
+                return render(request, 'search_results.html', {'profiles' : profiles})
             else:
                 not_profiles = "現在検索された内容に合致するユーザーが見つかりませんでした。"
                 return render(request, 'search.html', {'not_profiles': not_profiles})

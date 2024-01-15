@@ -65,6 +65,7 @@ class SearchForm(forms.ModelForm):
     gender = forms.CharField(required=False)
     min_age = forms.IntegerField(required=False)
     max_age = forms.IntegerField(required=False)
+    date_search = forms.CharField(required=False)
 
     hobby = forms.ModelMultipleChoiceField(
         queryset=Hobby.objects.all(),
