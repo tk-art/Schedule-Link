@@ -581,7 +581,7 @@ def search(request):
             matching_events = []
             if date_search:
                 if '~' in date_search:
-                    start_str, end_str = date_search.split(' ~ ')
+                    start_str, end_str = date_search.split('~')
                     start_date = datetime.strptime(start_str, "%Y-%m-%d").date()
                     end_date = datetime.strptime(end_str, "%Y-%m-%d").date()
                     end_date += timedelta(days=1)

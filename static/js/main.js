@@ -423,7 +423,7 @@ $('#datesearch').on('click', function() {
       if (startDate === endDate) {
         $('#datesearch').val(startDate);
       } else {
-        $('#datesearch').val(startDate + ' ~ ' + endDate);
+        $('#datesearch').val(startDate + '~' + endDate);
       }
       $('#datesearchmodal').modal('hide');
     },

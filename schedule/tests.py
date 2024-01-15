@@ -269,9 +269,29 @@ class SearchTestCase(TestCase):
             user=self.user3, username='test3', age=25, gender="女性", residence="宮崎県", image=image
             )
 
-        Calendar.objects.create(user=self.user2, selectedDate=date.today() + timedelta(days=1), free="全日")
+        Calendar.objects.create(user=self.user2, selectedDate=date.today(), free="全日")
 
+        self.event1 = Event.objects.create(
+            user=self.user2,
+            title='イベント',
+            place='場所',
+            date=date.today(),
+            time='10:00~11:00',
+            category='その他',
+            image=image,
+            detail='詳細情報'
+        )
 
+        self.event2 = Event.objects.create(
+            user=self.user3,
+            title='イベント',
+            place='場所',
+            date=date.today() + timedelta(days=1),
+            time='10:00~11:00',
+            category='その他',
+            image=image,
+            detail='詳細情報'
+        )
 
     def test_search_view_GET(self):
        response = self.client.get(self.search_url)
@@ -310,13 +330,34 @@ class SearchTestCase(TestCase):
 
     def test_recent_free_time(self):
         form_data = {'residence': '宮崎県'}
-        tomorrow = date.today() + timedelta(days=1)
         response = self.client.post(self.search_url, form_data)
         profiles = response.context['profiles']
 
         for profile in profiles:
             if profile.user == self.user2:
-                self.assertEqual(profile.calendar, tomorrow)
+                calendar = Calendar.objects.get(user=profile.user)
+                self.assertEqual(calendar.selectedDate, date.today())
+
+    def test_specific_date(self):
+        form_data = {'date_search': date.today()}
+        response = self.client.post(self.search_url, form_data)
+        profiles = response.context['profiles']
+        events = response.context['events']
+
+        self.assertIn(self.user2.profile, profiles)
+        self.assertIn(self.event1, events)
+
+    def test_multiple_date(self):
+        date_string = date.today().strftime('%Y-%m-%d')
+        next_day_string = (date.today() + timedelta(days=1)).strftime('%Y-%m-%d')
+        form_data = {'date_search': date_string + '~' + next_day_string}
+        response = self.client.post(self.search_url, form_data)
+        profiles = response.context['profiles']
+        events = response.context['events']
+
+        self.assertIn(self.user2.profile, profiles)
+        self.assertIn(self.event1, events)
+        self.assertIn(self.event2, events)
 
 class FollowerCountTest(TestCase):
     def setUp(self):
