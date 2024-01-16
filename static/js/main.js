@@ -534,7 +534,7 @@ $(document).ready(function() {
           showTabIndicator('#tab1-tab');
         }
         if (response.responses_unread) {
-          showTabIndicator('#tab3-tab');
+          showTabIndicator('#tab2-tab');
         }
 
         if (response.requests_unread || response.responses_unread) {
@@ -563,7 +563,7 @@ $(document).ready(function() {
       case 'tab1-tab':
         requestType = 'request';
         break;
-      case 'tab3-tab':
+      case 'tab2-tab':
         requestType = 'response';
         break;
       default:

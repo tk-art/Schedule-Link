@@ -9,7 +9,7 @@
       </a>
     </li>
     <li class="nav-item" role="presentation">
-      <a class="nav-link header-right" id="tab3-tab" data-bs-toggle="tab" href="#tab3" role="tab" aria-controls="tab3" aria-selected="false">
+      <a class="nav-link header-right" id="tab2-tab" data-bs-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false">
         レスポンス
       </a>
     </li>
@@ -62,7 +62,7 @@
     </div>
 
     <!--レスポンス-->
-    <div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="tab3-tab">
+    <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
       {% for user in response_users %}
         <div class="response-list">
           <a href="/profile/{{ user.sender.id }}" class="request-profile-link">
