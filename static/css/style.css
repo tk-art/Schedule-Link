@@ -352,6 +352,19 @@ header {
   margin-bottom: 10px;
 }
 
+.event-edit-form {
+  margin: 40px;
+}
+
+.close-btn {
+  margin: auto 0;
+  text-decoration: none;
+}
+
+.close-btn:hover {
+  cursor: pointer;
+}
+
 @media (max-width: 550px) {
   .hobby-list {
     font-size: 12px;
@@ -383,6 +396,10 @@ header {
     margin-left: 20px;
   }
 
+  .follow {
+    margin-left: 20px;
+  }
+
   .profile-image-size {
     width: 80px;
     height: 80px;
@@ -400,9 +417,14 @@ header {
   .hobby-interest {
     margin-left: 60px;
   }
+
+  .event-edit-form {
+    margin: 20px;
+  }
 }
 
 /* フォロー */
+
 .follow {
   text-align: center;
   font-size: 12px;
@@ -1022,7 +1044,6 @@ header {
     display: block;
   }
 }
-
 
 /* イベントページ 作成 */
 

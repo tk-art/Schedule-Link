@@ -264,7 +264,6 @@ function customTitleGenerator(date) {
   var monthNames = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
   var year = date.getFullYear();
   var monthIndex = date.getMonth();
-  console.log(monthIndex);
   if (monthIndex === 11) {
     monthIndex = 0;
     year = year + 1;
@@ -520,9 +519,13 @@ $('.profile-image-modal').click(function() {
   modal.show();
 });
 
-$('#close-modal').click(function() {
-  $('#modal').hide();
+$('#modal').click(function(event) {
+if (!$(event.target).is('#modal-image')) {
+    $('#modal').fadeOut();
+  }
 });
+
+/* ヒマリクボタンを消す */
 
 $(".request-btn button").click(function() {
   $(this).closest('.request-btn').hide();
@@ -821,3 +824,8 @@ function searchRecom(recommendationType) {
     window.location.href = `?recommend_event=${selectedRecom}`;
   }
 }
+
+$('#close_modal_btn').click(function() {
+  $('#card_editing_modal').hide();
+  $('#eventmodal').hide();
+});
