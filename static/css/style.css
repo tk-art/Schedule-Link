@@ -83,7 +83,7 @@ sp-nav(ナビ)
   right: -100%;
   /*ハンバーガーがクリックされる前はWindow右側に隠す*/
   top: 0;
-  width: 50%;
+  width: 70%;
   /* 出てくるスライドメニューの幅 */
   height: 100vh;
   background-color: #ffffff;
@@ -310,6 +310,10 @@ header {
   display: flex;
 }
 
+.phone-profile-info {
+  display: none;
+}
+
 .profile-image-link {
   display: flex;
   flex-direction: column;
@@ -346,6 +350,56 @@ header {
   color: rgb(156, 158, 161);
   padding: 6px 12px;
   margin-bottom: 10px;
+}
+
+@media (max-width: 550px) {
+  .hobby-list {
+    font-size: 12px;
+  }
+
+  .interest-list {
+    font-size: 12px;
+  }
+
+  .profile-info {
+    display: none;
+  }
+
+  .phone-profile-info {
+    display: block;
+    display: flex;
+  }
+
+  .profile-username {
+    font-size: 20px;
+    margin-top: 5px;
+  }
+
+  .phone-profile-info-content {
+    max-width: 80%;
+  }
+
+  .profile-edit {
+    margin-left: 20px;
+  }
+
+  .profile-image-size {
+    width: 80px;
+    height: 80px;
+  }
+
+  .profile-image-link {
+    display: block;
+  }
+
+  .profile-top {
+    margin-top: 20px;
+    margin-left: 60px;
+  }
+
+  .hobby-interest {
+    margin-left: 60px;
+  }
 }
 
 /* フォロー */
@@ -486,13 +540,15 @@ header {
 
 /* カレンダー */
 #calendar {
-  max-width: 600px;
+  max-width: 80%;
+  padding-top: 10px;
   margin: 0 auto;
   cursor: pointer;
 }
 
 .fc .fc-toolbar-title {
   font-size: 18px;
+
 }
 
 .fc .fc-daygrid-day, .fc .fc-daygrid-day-number, .fc .fc-col-header-cell-cushion {
@@ -503,6 +559,11 @@ header {
 .fc .fc-daygrid-day:hover, .fc .fc-daygrid-day-number:hover, .fc .fc-col-header-cell-cushion:hover {
   text-decoration: none;
   color: inherit;
+}
+
+.fc .fc-daygrid-day-events .fc-event-title {
+  font-size: 18px;
+  letter-spacing: 1.2px;
 }
 
 .calendar-label {
@@ -532,6 +593,36 @@ header {
 
 .calendar-tab {
   margin-left: 20px;
+
+}
+
+@media (max-width: 950px) {
+  #calendar {
+    max-width: 100%;
+  }
+
+  .calendar-tab {
+    margin-left: 5px;
+    font-size: 16px;
+  }
+
+  .fc .fc-toolbar-title {
+    font-size: 16px;
+    letter-spacing: 1.2px;
+  }
+}
+
+@media (max-width: 900px) {
+  .fc .fc-daygrid-day-events .fc-event-title {
+    font-size: 12px;
+    letter-spacing: 1.2px;
+  }
+}
+
+@media (max-width: 460px) {
+  #calendar {
+    height: 450px;
+  }
 }
 
 /* 部分的な時間 */

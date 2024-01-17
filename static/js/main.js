@@ -260,14 +260,20 @@ $(document).ready(function() {
 
 /* カレンダー */
 
-function customTitleGenerator() {
+function customTitleGenerator(date) {
   var monthNames = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
-  var now = new Date();
-  var year = now.getFullYear();
-  var monthIndex = now.getMonth();
+  var year = date.getFullYear();
+  var monthIndex = date.getMonth();
+  console.log(monthIndex);
+  if (monthIndex === 11) {
+    monthIndex = 0;
+    year = year + 1;
+  } else {
+    monthIndex = monthIndex + 1;
+  }
   var monthName = monthNames[monthIndex];
 
-  return year + ' ' + monthName;
+  return year + '年 ' + monthName;
 }
 
 function formatTime(data) {
@@ -290,10 +296,10 @@ $(document).ready(function() {
       selectable: true,
       events: '/api/calendar_events/' + userId + '/',
 
-    datesSet: function() {
-      var customTitle = customTitleGenerator();
-      $('#fc-dom-1').text(customTitle);
-    },
+      datesSet: function(dateInfo) {
+        var customTitle = customTitleGenerator(dateInfo.start);
+        $('#fc-dom-1').text(customTitle);
+      },
 
     select: function(info) {
       if (currentUser == 'true') {
@@ -411,8 +417,8 @@ $('#datesearch').on('click', function() {
     selectable: true,
     selectMirror: true,
 
-    datesSet: function() {
-      var customTitle = customTitleGenerator();
+    datesSet: function(dateInfo) {
+      var customTitle = customTitleGenerator(dateInfo.start);
       $('#fc-dom-1').text(customTitle);
     },
 
@@ -447,8 +453,8 @@ $('#datetime').on('click', function() {
       fixedWeekCount: false,
       selectable: true,
 
-      datesSet: function() {
-        var customTitle = customTitleGenerator();
+      datesSet: function(dateInfo) {
+        var customTitle = customTitleGenerator(dateInfo.start);
         $('#fc-dom-1').text(customTitle);
         $('#fc-dom-72').text(customTitle);
       },
