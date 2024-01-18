@@ -18,41 +18,63 @@
       <div class="col-md-9 col-sm-6 col-3">
         <div class="d-flex justify-content-end head">
           {% if request.user.is_authenticated %}
-          <div id="nav-wrapper" class="nav-wrapper">
-            <div class="hamburger" id="js-hamburger">
-              <span class="hamburger__line hamburger__line--1"></span>
-              <span class="hamburger__line hamburger__line--2"></span>
-              <span class="hamburger__line hamburger__line--3"></span>
+            <div id="nav-wrapper" class="nav-wrapper">
+              <div class="hamburger" id="js-hamburger">
+                <span class="hamburger__line hamburger__line--1"></span>
+                <span class="hamburger__line hamburger__line--2"></span>
+                <span class="hamburger__line hamburger__line--3"></span>
+              </div>
+              <nav class="sp-nav">
+                <ul>
+                  <li><a href="/event" class="header-right header-link cursor">作成</a></li>
+                  <li><a href="/chat_list" class="header-right header-link cursor" id="chat-link">チャット</a></li>
+                  <li><a href="/request_list" class="header-right header-link cursor" id="requests-link">リスト</a></li>
+                  <li><a href="/search" class="header-right header-link">検索</a></li>
+                  <li><a href="/profile/{{ request.user.id }}" id="profile-link" class="header-right header-link">プロフィール</a></li>
+                  <li>
+                    <form method="post" action="/logout_view/">
+                      {% csrf_token %}
+                      <button type="submit" class="btn">ログアウト</button>
+                    </form>
+                  </li>
+                </ul>
+              </nav>
+              <div class="black-bg" id="js-black-bg"></div>
             </div>
-            <nav class="sp-nav">
-              <ul>
-                <li><a href="/event" class="header-right header-link cursor">作成</a></li>
-                <li><a href="/chat_list" class="header-right header-link cursor" id="chat-link">チャット</a></li>
-                <li><a href="/request_list" class="header-right header-link cursor" id="requests-link">リスト</a></li>
-                <li><a href="/search" class="header-right header-link">検索</a></li>
-                <li><a href="/profile/{{ request.user.id }}" id="profile-link" class="header-right header-link">プロフィール</a></li>
-                <li><form method="post" action="/logout_view/">
-                  {% csrf_token %}
-                  <button type="submit" class="btn">ログアウト</button>
-                </form></li>
-              <ul></ul>
+
+            <nav class="navigation-menu">
+              <a href="/event" class="header-right header-link cursor">作成</a>
+              <a href="/chat_list" class="header-right header-link cursor" id="nav-chat-link">チャット</a>
+              <a href="/request_list" class="header-right header-link cursor" id="nav-requests-link">リスト</a>
+              <a href="/search" class="header-right header-link">検索</a>
+              <a href="/profile/{{ request.user.id }}" id="nav-profile-link" class="header-right header-link">プロフィール</a>
+              <form method="post" action="/logout_view/">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-light">ログアウト</button>
+              </form>
             </nav>
-            <div class="black-bg" id="js-black-bg"></div>
-          </div>
-          <nav class="navigation-menu">
-            <a href="/event" class="header-right header-link cursor">作成</a>
-            <a href="/chat_list" class="header-right header-link cursor" id="nav-chat-link">チャット</a>
-            <a href="/request_list" class="header-right header-link cursor" id="nav-requests-link">リスト</a>
-            <a href="/search" class="header-right header-link">検索</a>
-            <a href="/profile/{{ request.user.id }}" id="nav-profile-link" class="header-right header-link">プロフィール</a>
-            <form method="post" action="/logout_view/">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-light">ログアウト</button>
-            </form>
-          </nav>
           {% else %}
-            <a href="/signup" class="header-right header-link">新規登録</a>
-            <a href="/login_view" class="header-right header-link">ログイン</a>
+            <div id="nav-wrapper" class="nav-wrapper">
+              <div class="hamburger" id="js-hamburger">
+                <span class="hamburger__line hamburger__line--1"></span>
+                <span class="hamburger__line hamburger__line--2"></span>
+                <span class="hamburger__line hamburger__line--3"></span>
+              </div>
+              <nav class="sp-nav">
+                <ul>
+                  <li><a href="" class="header-right header-link">ゲスト</a></li>
+                  <li><a href="/signup" class="header-right header-link">新規登録</a></li>
+                  <li><a href="/login_view" class="header-right header-link">ログイン</a></li>
+                </ul>
+              </nav>
+              <div class="black-bg" id="js-black-bg"></div>
+            </div>
+
+            <nav class="navigation-menu">
+              <a href="" class="header-right header-link">ゲスト</a>
+              <a href="/signup" class="header-right header-link">新規登録</a>
+              <a href="/login_view" class="header-right header-link">ログイン</a>
+            </nav>
           {% endif %}
         </div>
       </div>

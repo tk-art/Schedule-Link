@@ -826,6 +826,6 @@ function searchRecom(recommendationType) {
 }
 
 $('#close_modal_btn').click(function() {
-  $('#card_editing_modal').hide();
-  $('#eventmodal').hide();
+  $('#card_editing_modal').modal('hide');
+  $('#eventmodal').modal('hide');
 });

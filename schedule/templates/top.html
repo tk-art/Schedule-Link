@@ -3,14 +3,16 @@
 {% block content %}
 <div class="container col-md-9">
   <div class="top-content">
-    <div class="phone-size-recommendation" style="display: none;">
-      <label for="recommendation" class="event-label">おすすめ</label>
-      <select class="form-control" id="phone-size-recommendation" name="recommendation" onchange="searchRecom('phone')">
-        <option value="" selected>選択してください</option>
-        <option value="おすすめユーザー">おすすめユーザー</option>
-        <option value="おすすめイベント">おすすめイベント</option>
-      </select>
-    </div>
+    {% if request.user.is_authenticated %}
+      <div class="phone-size-recommendation" style="display: none;">
+        <label for="recommendation" class="event-label">おすすめ</label>
+        <select class="form-control" id="phone-size-recommendation" name="recommendation" onchange="searchRecom('phone')">
+          <option value="" selected>選択してください</option>
+          <option value="おすすめユーザー">おすすめユーザー</option>
+          <option value="おすすめイベント">おすすめイベント</option>
+        </select>
+      </div>
+    {% endif %}
     <div class="phone-size-category" style="display: none;">
       <div class="phone-size-category-list">
         <label for="category" class="event-label">カテゴリー</label>
@@ -132,10 +134,12 @@
                   <p class="detail"></p>
                 </div>
 
-                <div class="card-btn" style="display: none;">
-                  <a id="intentionalBtn" class="intentional-btn" onclick="requestClicked()">ヒマリク</a>
-                </div>
-                <a id="close_modal_btn" class="close-btn">✖️</a>
+                {% if request.user.is_authenticated %}
+                  <div class="card-btn" style="display: none;">
+                    <a id="intentionalBtn" class="intentional-btn" onclick="requestClicked()">ヒマリク</a>
+                  </div>
+                {% endif %}
+                <span id="close_modal_btn" class="close-card-btn">x</span>
 
               </div>
             </div>
@@ -145,14 +149,16 @@
     </div>
 
     <div class="top-right col-md-3">
-      <div class="recommendation">
-        <label for="recommendation" class="event-label">おすすめ</label>
-        <select class="form-control" id="recommendation" name="recommendation" onchange="searchRecom()">
-          <option value="" selected>選択してください</option>
-          <option value="おすすめユーザー">おすすめユーザー</option>
-          <option value="おすすめイベント">おすすめイベント</option>
-        </select>
-      </div>
+      {% if request.user.is_authenticated %}
+        <div class="recommendation">
+          <label for="recommendation" class="event-label">おすすめ</label>
+          <select class="form-control" id="recommendation" name="recommendation" onchange="searchRecom()">
+            <option value="" selected>選択してください</option>
+            <option value="おすすめユーザー">おすすめユーザー</option>
+            <option value="おすすめイベント">おすすめイベント</option>
+          </select>
+        </div>
+      {% endif %}
 
       <div class="category-list">
         <label for="category" class="event-label">カテゴリー</label>
