@@ -267,6 +267,7 @@ header {
 }
 
 /* 新規登録 */
+
 .signup-card {
   border: 1px solid #777373;
   border-radius: 10px;
@@ -278,11 +279,22 @@ header {
 }
 
 /* ソーシャルログイン */
+
 .google-login {
   margin-top: 10px;
 }
 
+/* ログイン */
+
+.login-card {
+  border: 1px solid #777373;
+  border-radius: 10px;
+  padding: 20px 20px;
+  margin-top: 20vh;
+}
+
 /* プロフィール */
+
 .profile-image-size {
   width: 100px;
   height: 100px;
@@ -396,6 +408,12 @@ header {
 
 .close-card-btn:hover {
   cursor: pointer;
+}
+
+.modal-image {
+  width: 500px;
+  height: 500px;
+  object-fit: contain;
 }
 
 @media (max-width: 550px) {
@@ -966,7 +984,8 @@ header {
 
 .chat-full-container {
   overflow-y: auto;
-  max-height: 750px;
+  height: 750px;
+
 }
 
 .chat-full-container::-webkit-scrollbar {
@@ -1020,15 +1039,23 @@ header {
   border: none;
 }
 
+.chat-none {
+  position: absolute;
+  top: 50%;
+  margin-left: 200px;
+  font-size: 20px;
+  letter-spacing: 1.2px;
+}
+
 @media (max-height: 850px) {
   .chat-full-container {
-    max-height: 600px;
+    height: 600px;
   }
 }
 
 @media (max-height: 730px) {
   .chat-full-container {
-    max-height: 500px;
+    height: 500px;
   }
 }
 

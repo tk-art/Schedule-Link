@@ -759,6 +759,7 @@ $(function() {
       displayChatMessage(sender_id, message, temporaryId, null, null);
       $('.read-mark').hide();
       $('#chat-message-input').val('');
+      $('.chat-none').hide();
     }
   });
 });

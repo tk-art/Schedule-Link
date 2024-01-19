@@ -16,6 +16,7 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
+from django.db.models import Count
 
 def human_readable_time_from_utc(timestamp, timezone='Asia/Tokyo'):
     local_tz = pytz.timezone(timezone)
@@ -110,6 +111,9 @@ def login_view(request):
 
 def guest_login(request):
     guest_user = CustomUser.objects.create_user(username='ゲストユーザー{}'.format(CustomUser.objects.count()), is_guest=True)
+    large_number_of_events_user = CustomUser.objects.annotate(num_events=Count('event')).order_by('-num_events').first()
+    sender_last_event = Event.objects.filter(user=large_number_of_events_user).last()
+    room_name = f'{min(guest_user.id, large_number_of_events_user.id)}_{max(guest_user.id, large_number_of_events_user.id)}'
 
     Profile.objects.create(user=guest_user, username=guest_user.username,
         content='これはデフォルトのプロフィールです。好みに応じて編集してください'
@@ -122,8 +126,17 @@ def guest_login(request):
     )
 
     UserRequest.objects.create(
-        sender=11, receiver=guest_user, userData=None, eventId_id=event.id, situation=True
+        sender=large_number_of_events_user, receiver=guest_user, userData=None, eventId_id=event.id, situation=True
     )
+
+    UserResponse.objects.create(
+        sender=large_number_of_events_user, receiver=guest_user, userData=None, eventId=sender_last_event, buttonType='承認する'
+    )
+
+    ChatMessage.objects.create(
+        sender=guest_user, receiver=large_number_of_events_user, message='初めまして！', room_name=room_name, read=True
+    )
+
 
     guest_user.backend = 'django.contrib.auth.backends.ModelBackend'
     login(request, guest_user)
@@ -492,7 +505,6 @@ def chat_list(request):
         room_info['timestamp'] = last_room.timestamp
         if last_room.sender == current_user:
             room_info['receiver'] = last_room.receiver
-            print(last_room.receiver)
         else:
             room_info['receiver'] = last_room.sender
         rooms_receiver.append(room_info)
@@ -508,7 +520,7 @@ def chat_room(request, user_id):
     chat_messages = ChatMessage.objects.filter(room_name=room_name)
 
     sender_last_message = None
-    if chat_messages.last().sender == current_user:
+    if chat_messages and chat_messages.last().sender == current_user:
         sender_last_message = chat_messages.last()
 
     for chat in chat_messages:

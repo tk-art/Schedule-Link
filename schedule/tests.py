@@ -517,3 +517,31 @@ class AutoTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.event1, response.context['matched_events'])
         self.assertNotIn(self.event2, response.context['matched_events'])
+
+class GuestLoginTest(TestCase):
+    def setUp(self):
+        self.user = CustomUser.objects.create_user('testuser', password='password')
+        image = SimpleUploadedFile(name='test_image.jpeg', content=b'', content_type='image/jpeg')
+        Profile.objects.create(
+            user=self.user, username='user_a', age=20, gender="男性", residence="宮崎県", image=image
+        )
+        Event.objects.create(
+            user=self.user,
+            title='イベント',
+            place='場所',
+            date=date.today(),
+            time='10:00~11:00',
+            category='その他',
+            image=image,
+            detail='詳細情報'
+        )
+
+    def test_guest_user_created(self):
+        response = self.client.post(reverse('guest_login'))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(CustomUser.objects.count(), 2)
+        self.assertEqual(Profile.objects.count(), 2)
+        self.assertEqual(Event.objects.count(), 2)
+        self.assertEqual(UserRequest.objects.count(), 1)
+        self.assertEqual(UserResponse.objects.count(), 1)
+        self.assertEqual(ChatMessage.objects.count(), 1)

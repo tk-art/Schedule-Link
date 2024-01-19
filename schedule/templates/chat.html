@@ -24,6 +24,11 @@
           {% endif %}
         </div>
         {% endfor %}
+      {% else %}
+        <p class="chat-none">
+          まだチャットが存在していません<br>
+          何か送ってみましょう
+        </p>
       {% endif %}
       <div class="chat-container"></div>
     </div>
