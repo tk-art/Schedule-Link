@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from datetime import datetime
 
 class CustomUser(AbstractUser):
-  pass
+  is_guest = models.BooleanField(default=False)
 
 class Hobby(models.Model):
     name = models.CharField(max_length=255)

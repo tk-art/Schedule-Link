@@ -108,7 +108,31 @@ def login_view(request):
             error_message = 'ユーザーネームかパスワードが違います、もう一度お試しください'
     return render(request, 'login.html', {'error_message': error_message})
 
+def guest_login(request):
+    guest_user = CustomUser.objects.create_user(username='ゲストユーザー{}'.format(CustomUser.objects.count()), is_guest=True)
+
+    Profile.objects.create(user=guest_user, username=guest_user.username,
+        content='これはデフォルトのプロフィールです。好みに応じて編集してください'
+    )
+
+    event = Event.objects.create(
+        user=guest_user, title='テスト', place='テスト', category='その他',
+        date=date.today() + timedelta(days=1),
+        time='10:00~10:30', image='item_images/フリー女.jpeg', detail='テスト'
+    )
+
+    UserRequest.objects.create(
+        sender=11, receiver=guest_user, userData=None, eventId_id=event.id, situation=True
+    )
+
+    guest_user.backend = 'django.contrib.auth.backends.ModelBackend'
+    login(request, guest_user)
+    return redirect('profile', user_id=guest_user.id)
+
 def logout_view(request):
+    user = request.user
+    if user.is_guest:
+        user.delete()
     logout(request)
     return redirect('top')
 
@@ -552,7 +576,6 @@ def search(request):
         form = SearchForm(request.POST)
         if form.is_valid():
             date_search = form.cleaned_data.get('date_search')
-            print(date_search)
             residence = form.cleaned_data.get('residence')
             gender = form.cleaned_data.get('gender')
             min_age = form.cleaned_data.get('min_age')

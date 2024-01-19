@@ -14,6 +14,28 @@ body {
   cursor: pointer;
 }
 
+.logout-btn {
+  position: relative;
+}
+
+.logout-popup {
+  visibility: hidden;
+  width: 200px;
+  background-color: #fff;
+  color: black;
+  border-radius: 20px;
+  padding: 8px 16px;
+  position: absolute;
+  z-index: 1;
+  top: 115%;
+  margin-left: -200px;
+  letter-spacing: 1.2px;
+}
+
+.logout-btn:hover .logout-popup {
+  visibility: visible;
+}
+
 .navigation-menu {
   display: flex;
 }

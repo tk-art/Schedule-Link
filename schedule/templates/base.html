@@ -48,9 +48,12 @@
               <a href="/request_list" class="header-right header-link cursor" id="nav-requests-link">リスト</a>
               <a href="/search" class="header-right header-link">検索</a>
               <a href="/profile/{{ request.user.id }}" id="nav-profile-link" class="header-right header-link">プロフィール</a>
-              <form method="post" action="/logout_view/">
+              <form method="post" action="/logout_view/" class="logout-btn">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-light">ログアウト</button>
+                {% if request.user.is_guest %}
+                  <span class="logout-popup">ログアウトするとゲストユーザーは削除されます</span>
+                {% endif %}
               </form>
             </nav>
           {% else %}
@@ -62,7 +65,7 @@
               </div>
               <nav class="sp-nav">
                 <ul>
-                  <li><a href="" class="header-right header-link">ゲスト</a></li>
+                  <li><a href="/guest_login" class="header-right header-link">ゲスト</a></li>
                   <li><a href="/signup" class="header-right header-link">新規登録</a></li>
                   <li><a href="/login_view" class="header-right header-link">ログイン</a></li>
                 </ul>
@@ -71,7 +74,7 @@
             </div>
 
             <nav class="navigation-menu">
-              <a href="" class="header-right header-link">ゲスト</a>
+              <a href="/guest_login" class="header-right header-link">ゲスト</a>
               <a href="/signup" class="header-right header-link">新規登録</a>
               <a href="/login_view" class="header-right header-link">ログイン</a>
             </nav>

@@ -35,6 +35,7 @@ urlpatterns = [
     path('get_event_details/', views.get_event_details, name='get_event_details'),
     path('card_editing/<int:event_id>/', views.card_editing, name='card_editing'),
     path('delete_card/<int:event_id>/', views.delete_card, name='delete_card'),
+    path('guest_login/', views.guest_login, name='guest_login'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
