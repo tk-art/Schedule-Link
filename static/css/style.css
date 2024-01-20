@@ -16,6 +16,7 @@ body {
 
 .logout-btn {
   position: relative;
+  margin: auto 0;
 }
 
 .logout-popup {
@@ -27,7 +28,7 @@ body {
   padding: 8px 16px;
   position: absolute;
   z-index: 1;
-  top: 115%;
+  top: 200%;
   margin-left: -200px;
   letter-spacing: 1.2px;
 }

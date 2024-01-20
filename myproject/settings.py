@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.google'
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -181,3 +181,5 @@ MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
 SITE_ID = 3
+
+LOGIN_REDIRECT_URL = '/search'

@@ -66,7 +66,10 @@
               <nav class="sp-nav">
                 <ul>
                   <li><a href="/guest_login" class="header-right header-link">ゲスト</a></li>
-                  <li><a href="/signup" class="header-right header-link">新規登録</a></li>
+                  <div class="logout-btn">
+                    <li><a href="/signup" class="header-right header-link">新規登録</a></li>
+                    <span class="phone-logout-popup">ログイン画面ではGoogleからのログインもできます</span>
+                  </div>
                   <li><a href="/login_view" class="header-right header-link">ログイン</a></li>
                 </ul>
               </nav>
@@ -75,7 +78,10 @@
 
             <nav class="navigation-menu">
               <a href="/guest_login" class="header-right header-link">ゲスト</a>
-              <a href="/signup" class="header-right header-link">新規登録</a>
+              <div class="logout-btn">
+                <a href="/signup" class="header-right header-link">新規登録</a>
+                <span class="logout-popup">ログイン画面ではGoogleからのログインもできます</span>
+              </div>
               <a href="/login_view" class="header-right header-link">ログイン</a>
             </nav>
           {% endif %}

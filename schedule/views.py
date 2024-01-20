@@ -39,6 +39,13 @@ def human_readable_time_from_utc(timestamp, timezone='Asia/Tokyo'):
         return "たった今"
 
 def top(request):
+
+    user = CustomUser.objects.filter(username='user')
+
+    if user:
+        user.delete()
+
+
     category = request.GET.get('category', '')
     recommend_user = request.GET.get('recommend_user', '')
     recommend_event = request.GET.get('recommend_event', '')
@@ -82,8 +89,9 @@ def signup(request):
 
             user = CustomUser.objects.create(username=username, email=email, password=hash_password)
 
-            Profile.objects.create(user=user, username=username,
-                                           content='これはデフォルトのプロフィールです。好みに応じて編集してください')
+            Profile.objects.create(
+                user=user, username=username, content='これはデフォルトのプロフィールです。好みに応じて編集してください'
+            )
 
             user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request, user)
