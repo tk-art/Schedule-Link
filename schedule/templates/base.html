@@ -31,12 +31,12 @@
                   <li><a href="/request_list" class="header-right header-link cursor" id="requests-link">リスト</a></li>
                   <li><a href="/search" class="header-right header-link">検索</a></li>
                   <li><a href="/profile/{{ request.user.id }}" id="profile-link" class="header-right header-link">プロフィール</a></li>
-                  <li>
-                    <form method="post" action="/logout_view/">
-                      {% csrf_token %}
-                      <button type="submit" class="btn">ログアウト</button>
-                    </form>
-                  </li>
+                  <div class="phone-logout-btn">
+                    <li><a href="/logout_view" class="header-right header-link">ログアウト</a></li>
+                    {% if request.user.is_guest %}
+                      <span class="phone-logout-popup">ログアウトするとゲストユーザーは削除されます</span>
+                    {% endif %}
+                  </div>
                 </ul>
               </nav>
               <div class="black-bg" id="js-black-bg"></div>
@@ -66,7 +66,7 @@
               <nav class="sp-nav">
                 <ul>
                   <li><a href="/guest_login" class="header-right header-link">ゲスト</a></li>
-                  <div class="logout-btn">
+                  <div class="phone-logout-btn">
                     <li><a href="/signup" class="header-right header-link">新規登録</a></li>
                     <span class="phone-logout-popup">ログイン画面ではGoogleからのログインもできます</span>
                   </div>
