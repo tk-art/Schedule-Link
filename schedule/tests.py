@@ -9,6 +9,11 @@ import json
 from .forms import EventForm
 from .views import recommendation_user_list, recommendation_event_list
 
+from unittest.mock import patch
+from allauth.socialaccount.models import SocialAccount
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+
 class SignUpTest(TestCase):
     def setUp(self):
         app = SocialApp.objects.create(
@@ -95,6 +100,33 @@ class LoginTest(TestCase):
 
       self.assertFalse(logged_in)
       self.assertContains(response, 'ユーザーネームかパスワードが違います、もう一度お試しください')
+
+# Google OAuth2 ログインフローをモックする
+@patch.object(GoogleOAuth2Adapter, 'complete_login')
+@patch.object(OAuth2Client, 'get_access_token')
+@patch.object(OAuth2Client, 'get_redirect_url')
+class SocialLoginTestCase(TestCase):
+    def setUp(self):
+        # テスト用ユーザーのSocialAccountを設定する
+        test_user = CustomUser.objects.create_user(username='testuser', password='12345')
+
+        self.social_account = SocialAccount(user=user, provider='google', uid='12345')
+        self.social_account.save()
+
+    def test_google_login(self, mock_get_redirect_url, mock_get_access_token, mock_complete_login):
+        # モックのレスポンスを設定する
+        mock_get_redirect_url.return_value = '/accounts/google/login/callback/'
+        mock_get_access_token.return_value = 'test_token'
+        mock_complete_login.return_value = self.social_account
+
+        # ソーシャルログインURLにアクセスする
+        response = self.client.get(reverse('socialaccount_login', args=['google']))
+
+        # リダイレクトを検証する
+        self.assertRedirects(response, '/accounts/google/login/callback/', fetch_redirect_response=False)
+
+
+
 
 class LogoutTest(TestCase):
     def setUp(self):

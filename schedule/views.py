@@ -39,13 +39,6 @@ def human_readable_time_from_utc(timestamp, timezone='Asia/Tokyo'):
         return "たった今"
 
 def top(request):
-
-    user = CustomUser.objects.filter(username='user')
-
-    if user:
-        user.delete()
-
-
     category = request.GET.get('category', '')
     recommend_user = request.GET.get('recommend_user', '')
     recommend_event = request.GET.get('recommend_event', '')

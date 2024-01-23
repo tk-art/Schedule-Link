@@ -303,6 +303,25 @@ header {
   margin-top: 10px;
 }
 
+.social-login {
+  margin-top: 100px;
+  padding: 30px 60px;
+  border: 1px solid #fff;
+  border-radius: 20px;
+  letter-spacing: 1.2px;
+}
+
+.social-login-btn {
+  padding: 5px 10px;
+  border: 1px solid #fff;
+  margin-bottom: 0;
+  letter-spacing: 1.2px;
+}
+
+.social-content {
+  line-height: 40px;
+}
+
 /* ログイン */
 
 .login-card {

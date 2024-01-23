@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'schedule.middleware.CustomRedirectMiddleware',
 ]
 
 ROOT_URLCONF = 'myproject.urls'
@@ -181,6 +182,3 @@ MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
 SITE_ID = 3
-
-LOGIN_REDIRECT_URL = '/search'
-#SOCIALACCOUNT_QUERY_EMAIL = True
