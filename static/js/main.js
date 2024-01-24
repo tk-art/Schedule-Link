@@ -188,7 +188,6 @@ function requestClicked(element) {
   });
 }
 
-
 $('#otherUserModal').on('shown.bs.modal', function () {
   var btn = $("#intentionalBtn");
   var userId = btn.data('key');
@@ -207,7 +206,6 @@ $('#otherUserModal').on('shown.bs.modal', function () {
     }
   });
 });
-
 
 /* リクエストが存在する場合ヒマリクボタンを消す */
 
@@ -369,6 +367,8 @@ $(document).ready(function() {
     eventClick: function(info) {
       var localDate = new Date(info.event.start - info.event.start.getTimezoneOffset() * 60000);
       var selectedDateStr = localDate.toISOString().split('T')[0];
+      var today = new Date();
+      var formattedToday = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
 
       if (currentUser == "true") {
         $('#selectedDate').val(info.startStr);
@@ -395,6 +395,12 @@ $(document).ready(function() {
           $('#otherUserData').text(info.event.title);
           $('#timeData').text(data.time);
           $('#messageData').text(data.message);
+
+  　　　　　if (formattedToday <= selectedDateStr) {
+  　　　　　  $('#intentionalBtn').show();
+          } else {
+            $('#intentionalBtn').hide();
+          }
 
           $('#otherUserModal').modal('show');
         });
@@ -773,6 +779,8 @@ $(document).ready(function() {
 $('.event-modal').on('click', function() {
   var eventId = $(this).data('event-id');
   var userId = $(this).data('key');
+  var today = new Date();
+  var formattedToday = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
 
   $.ajax({
     url: '/get_event_details/',
@@ -797,7 +805,7 @@ $('.event-modal').on('click', function() {
       $('#card_editing_modal .modal-body form').attr('action', '/card_editing/' + eventId + '/');
       $('#eventmodal .card-edit-btn form').attr('action', '/delete_card/' + eventId + '/');
 
-      if (!data.current_user) {
+      if (!data.current_user && formattedToday <= data.date) {
         $('#eventmodal .card-btn').show();
         $('#eventmodal .card-btn').attr('id', 'cardBtn-' + eventId );
       } else {
