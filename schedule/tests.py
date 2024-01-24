@@ -1,4 +1,7 @@
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
+from django.contrib.sessions.middleware import SessionMiddleware
+from django.http import HttpResponse
+from schedule.middleware import CustomRedirectMiddleware
 from django.urls import reverse
 from .models import CustomUser, Calendar, UserRequest, UserResponse, ChatMessage, Profile, Event, Hobby, Interest
 from allauth.socialaccount.models import SocialApp
@@ -8,23 +11,13 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 import json
 from .forms import EventForm
 from .views import recommendation_user_list, recommendation_event_list
-
 from unittest.mock import patch
 from allauth.socialaccount.models import SocialAccount
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from allauth.account.signals import user_signed_up, user_logged_in
 
 class SignUpTest(TestCase):
-    def setUp(self):
-        app = SocialApp.objects.create(
-            provider='google',
-            name='Google',
-            client_id='test_client_id',
-            secret='test_secret'
-        )
-        site = Site.objects.get_current()
-        app.sites.add(site)
-
     def test_valid_registration(self):
         response = self.client.post(reverse('signup'), {
             'username': 'testuser',
@@ -64,69 +57,86 @@ class SignUpTest(TestCase):
         self.assertContains(response, 'パスワードが一致しません')
         self.assertEqual(CustomUser.objects.count(), 0)
 
+def dummy_view(request):
+    return HttpResponse("Dummy response")
+
 class LoginTest(TestCase):
-  def setUp(self):
+    def setUp(self):
       app = SocialApp.objects.create(
-              provider='google',
-              name='Google',
-              client_id='test_client_id',
-              secret='test_secret'
-          )
+          provider='google',
+          name='Google',
+          client_id='dummy_client_id',
+          secret='dummy_secret'
+      )
       site = Site.objects.get_current()
       app.sites.add(site)
 
       self.user = CustomUser.objects.create_user(username='testuser', password='testpassword')
-
       image = SimpleUploadedFile(name='test_image.jpeg', content=b'', content_type='image/jpeg')
 
       Profile.objects.create(
           user=self.user, username='test1', age=20, gender="男性", residence="宮崎県", image=image
-          )
+      )
 
-  def test_login_success(self):
-      response = self.client.post(reverse('login_view'), {
-        'username': 'testuser',
-        'password': 'testpassword'
-      })
-      user = CustomUser.objects.get(username='testuser')
-      self.assertRedirects(response, reverse('profile', args=[user.id]))
+    def test_login_success(self):
+        response = self.client.post(reverse('login_view'), {
+          'username': 'testuser',
+          'password': 'testpassword'
+        })
+        user = CustomUser.objects.get(username='testuser')
+        self.assertRedirects(response, reverse('profile', args=[user.id]))
 
-  def test_login_fail(self):
-      logged_in = self.client.login(username='testuser', password='tactpassword')
-      response = self.client.post(reverse('login_view'), {
-        'username': 'testuser',
-        'password': 'tactpassword',
-      })
+    def test_login_fail(self):
+        logged_in = self.client.login(username='testuser', password='tactpassword')
+        response = self.client.post(reverse('login_view'), {
+          'username': 'testuser',
+          'password': 'tactpassword',
+        })
 
-      self.assertFalse(logged_in)
-      self.assertContains(response, 'ユーザーネームかパスワードが違います、もう一度お試しください')
+        self.assertFalse(logged_in)
+        self.assertContains(response, 'ユーザーネームかパスワードが違います、もう一度お試しください')
 
-# Google OAuth2 ログインフローをモックする
-@patch.object(GoogleOAuth2Adapter, 'complete_login')
-@patch.object(OAuth2Client, 'get_access_token')
-@patch.object(OAuth2Client, 'get_redirect_url')
-class SocialLoginTestCase(TestCase):
-    def setUp(self):
-        # テスト用ユーザーのSocialAccountを設定する
-        test_user = CustomUser.objects.create_user(username='testuser', password='12345')
-
-        self.social_account = SocialAccount(user=user, provider='google', uid='12345')
-        self.social_account.save()
-
+    @patch('allauth.socialaccount.providers.oauth2.views.OAuth2Adapter.complete_login')
+    @patch('allauth.socialaccount.providers.oauth2.client.OAuth2Client.get_access_token')
+    @patch('allauth.socialaccount.providers.oauth2.client.OAuth2Client.get_redirect_url')
     def test_google_login(self, mock_get_redirect_url, mock_get_access_token, mock_complete_login):
-        # モックのレスポンスを設定する
+        user = CustomUser.objects.create_user(username='mockuser', email="dummy@gmail.com", password='testpassword')
+
         mock_get_redirect_url.return_value = '/accounts/google/login/callback/'
-        mock_get_access_token.return_value = 'test_token'
-        mock_complete_login.return_value = self.social_account
+        mock_get_access_token.return_value = 'dummy_access_token'
 
-        # ソーシャルログインURLにアクセスする
-        response = self.client.get(reverse('socialaccount_login', args=['google']))
+        mock_complete_login.return_value = user.socialaccount_set.create(provider='google', uid='12345')
 
-        # リダイレクトを検証する
+        response = self.client.get('/accounts/google/login/')
+        self.assertEqual(response.status_code, 200)
+
+        csrf_token = response.context['csrf_token']
+
+        response = self.client.post('/accounts/google/login/', {
+            'csrfmiddlewaretoken': csrf_token,
+        }, follow=True)
         self.assertRedirects(response, '/accounts/google/login/callback/', fetch_redirect_response=False)
+        self.assertTrue(SocialAccount.objects.filter(user=user, provider='google').exists())
 
+    def test_google_create_user(self):
+        user = CustomUser.objects.create_user(username='username', first_name='signal_user', password='password')
+        user_signed_up.send(sender=CustomUser, request=None, user=user)
 
+        self.assertTrue(Profile.objects.filter().exists())
+        signal_profile = Profile.objects.get(user=user)
+        self.assertEqual(signal_profile.username, 'signal_user')
 
+    def test_social_login_redirect(self):
+        user = CustomUser.objects.create_user(username='username', first_name='signal_user', password='password')
+        request = RequestFactory().get('/dummy_request')
+        SessionMiddleware().process_request(request)
+        request.session.save()
+        user_logged_in.send(sender=CustomUser, request=request, user=user)
+        self.assertEqual(request.session['custom_redirect_url'], f'/profile/{user.id}/')
+
+        middleware = CustomRedirectMiddleware(dummy_view)
+        response = middleware(request)
+        self.assertRedirects(response, f'/profile/{user.id}/', fetch_redirect_response=False)
 
 class LogoutTest(TestCase):
     def setUp(self):

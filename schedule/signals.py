@@ -10,6 +10,6 @@ def google_create_user(request, user, **kwargs):
     )
 
 @receiver(user_logged_in)
-def dynamic_redirect(request, user, **kwargs):
+def social_login_redirect(request, user, **kwargs):
     custom_redirect_url = f'/profile/{user.id}/'
     request.session['custom_redirect_url'] = custom_redirect_url
