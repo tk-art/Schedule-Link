@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from datetime import datetime
+import os
 
 class CustomUser(AbstractUser):
   is_guest = models.BooleanField(default=False)
