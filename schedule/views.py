@@ -17,6 +17,9 @@ from django.contrib.auth.decorators import login_required
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.db.models import Count
+from django.db import close_old_connections
+
+close_old_connections()
 
 def human_readable_time_from_utc(timestamp, timezone='Asia/Tokyo'):
     local_tz = pytz.timezone(timezone)
