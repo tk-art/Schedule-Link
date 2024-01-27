@@ -24,72 +24,80 @@
   <div class="tab-content" id="myTabContent">
     <!--リクエスト-->
     <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
-      {% for user in request_users %}
-        <div class="request-list">
-          <a href="/profile/{{ user.sender.id }}" class="request-profile-link">
-            <img src="{{ user.sender.profile.image.url }}" alt="{{ user.sender.profile.username }}" class="request-image-size">
-          </a>
+      {% if request_users %}
+        {% for user in request_users %}
+          <div class="request-list">
+            <a href="/profile/{{ user.sender.id }}" class="request-profile-link">
+              <img src="{{ user.sender.profile.image.url }}" alt="{{ user.sender.profile.username }}" class="request-image-size">
+            </a>
 
-          {% if user.eventId %}
-            {% with event=user.eventId %}
-              <div class="request-event-detail">
-                <p>「{{ user.sender.profile.username }}」から、あなたが作成した「{{ event.title }}」に対してヒマリクが送られてきています</p>
-                <a class="event-modal event-detail-link" data-key="{{ event.user.id }}" data-event-id="{{ event.id }}">イベント詳細</a>
-              </div>
-            {% endwith %}
-          {% else %}
-            <p>「{{ user.sender.profile.username }}」から「{{ user.userData|date:"Y-m-d" }}」に対してヒマリクが送られてきています</p>
-          {% endif %}
-        </div>
-
-        {% if not user.is_processed %}
-          <div class="request-btn">
-            <form action="/process_button/{{ user.sender.id }}/" method="post">
-              {% csrf_token %}
-              {% if user.eventId %}
-                <input type="hidden" name="eventId" value="{{ user.eventId.id }}">
-              {% else %}
-                <input type="hidden" name="userData" value="{{ user.userData|date:'Y-m-d' }}">
-              {% endif %}
-              <button type="submit" name="buttonType" class="approval-btn" value="承認する">承認する</button>
-              <button type="submit" name="buttonType" class="rejection-btn" value="拒否する">拒否する</button>
-            </form>
+            {% if user.eventId %}
+              {% with event=user.eventId %}
+                <div class="request-event-detail">
+                  <p>「{{ user.sender.profile.username }}」から、あなたが作成した「{{ event.title }}」に対してヒマリクが送られてきています</p>
+                  <a class="event-modal event-detail-link" data-key="{{ event.user.id }}" data-event-id="{{ event.id }}">イベント詳細</a>
+                </div>
+              {% endwith %}
+            {% else %}
+              <p>「{{ user.sender.profile.username }}」から「{{ user.userData|date:"Y-m-d" }}」に対してヒマリクが送られてきています</p>
+            {% endif %}
           </div>
-        {% endif %}
 
-        <div class="separator"></div>
-      {% endfor %}
+          {% if not user.is_processed %}
+            <div class="request-btn">
+              <form action="/process_button/{{ user.sender.id }}/" method="post">
+                {% csrf_token %}
+                {% if user.eventId %}
+                  <input type="hidden" name="eventId" value="{{ user.eventId.id }}">
+                {% else %}
+                  <input type="hidden" name="userData" value="{{ user.userData|date:'Y-m-d' }}">
+                {% endif %}
+                <button type="submit" name="buttonType" class="approval-btn" value="承認する">承認する</button>
+                <button type="submit" name="buttonType" class="rejection-btn" value="拒否する">拒否する</button>
+              </form>
+            </div>
+          {% endif %}
+
+          <div class="separator"></div>
+        {% endfor %}
+      {% else %}
+        <p class="chat-none">まだリクエストが存在していません</p>
+      {% endif %}
     </div>
 
     <!--レスポンス-->
     <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
-      {% for user in response_users %}
-        <div class="response-list">
-          <a href="/profile/{{ user.sender.id }}" class="request-profile-link">
-            <img src="{{ user.sender.profile.image.url }}" alt="{{ user.sender.profile.username }}" class="request-image-size">
-          </a>
-          {% if user.eventId %}
-            {% with event=user.eventId %}
-              <div class="request-event-detail">
-                <p>
-                  「{{ user.sender.profile.username }}」から「{{ event.title }}」に対するリクエストに関して,
-                  「{{ user.buttonType }}」とレスポンスがあります
-                </p>
-                <a class="event-modal event-detail-link" data-key="{{ event.user.id }}" data-event-id="{{ event.id }}">イベント詳細</a>
-              </div>
-            {% endwith %}
-          {% else %}
-            <p>
-              「{{ user.sender.profile.username }}」から「{{ user.userData|date:"Y-m-d" }}」に対するリクエストに関して
-              「{{ user.buttonType }}」とレスポンスがあります
-            </p>
+      {% if response_users %}
+        {% for user in response_users %}
+          <div class="response-list">
+            <a href="/profile/{{ user.sender.id }}" class="request-profile-link">
+              <img src="{{ user.sender.profile.image.url }}" alt="{{ user.sender.profile.username }}" class="request-image-size">
+            </a>
+            {% if user.eventId %}
+              {% with event=user.eventId %}
+                <div class="request-event-detail">
+                  <p>
+                    「{{ user.sender.profile.username }}」から「{{ event.title }}」に対するリクエストに関して,
+                    「{{ user.buttonType }}」とレスポンスがあります
+                  </p>
+                  <a class="event-modal event-detail-link" data-key="{{ event.user.id }}" data-event-id="{{ event.id }}">イベント詳細</a>
+                </div>
+              {% endwith %}
+            {% else %}
+              <p>
+                「{{ user.sender.profile.username }}」から「{{ user.userData|date:"Y-m-d" }}」に対するリクエストに関して
+                「{{ user.buttonType }}」とレスポンスがあります
+              </p>
+            {% endif %}
+          </div>
+          {% if user.buttonType == '承認する' %}
+            <a href="/chat/{{ user.sender.id }}" class="chat">個別チャットへ</a>
           {% endif %}
-        </div>
-        {% if user.buttonType == '承認する' %}
-          <a href="/chat/{{ user.sender.id }}" class="chat">個別チャットへ</a>
-        {% endif %}
-        <div class="separator"></div>
-      {% endfor %}
+          <div class="separator"></div>
+        {% endfor %}
+      {% else %}
+        <p class="chat-none">まだレスポンスが存在していません</p>
+      {% endif %}
     </div>
 
     <!--提案詳細モーダル-->

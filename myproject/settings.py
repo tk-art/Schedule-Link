@@ -2,6 +2,7 @@ from pathlib import Path
 import os
 import dj_database_url
 import dj_db_conn_pool
+import cloudinary
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +22,13 @@ DJANGO_ENV = os.getenv('DJANGO_ENV', 'development')
 if DJANGO_ENV == 'production':
     ALLOWED_HOSTS = ['schedule1213-7d61e308285e.herokuapp.com']
     SITE_ID = 4
+    cloudinary.config()
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 else:
     ALLOWED_HOSTS = ['*']
     SITE_ID = 3
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
-
-# Application definition
 
 INSTALLED_APPS = [
     'schedule',
