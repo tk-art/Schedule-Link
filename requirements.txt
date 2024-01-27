@@ -9,3 +9,4 @@ pillow
 channels
 channels-redis
 uvicorn[standard]
+django-db-connection-pool

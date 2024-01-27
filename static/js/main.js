@@ -838,3 +838,16 @@ $('#close_modal_btn').click(function() {
   $('#card_editing_modal').modal('hide');
   $('#eventmodal').modal('hide');
 });
+
+/* 新規登録のパスワード表示・非表示 */
+
+$('.eye-awesome').click(function() {
+  var passwordInput = $(this).prev('input');
+  if (passwordInput.attr('type') === 'password') {
+    passwordInput.attr('type', 'text');
+    $(this).removeClass('fa-eye').addClass('fa-eye-slash');
+  } else {
+    passwordInput.attr('type', 'password');
+    $(this).removeClass('fa-eye-slash').addClass('fa-eye');
+  }
+});

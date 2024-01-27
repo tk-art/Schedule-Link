@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 import dj_database_url
+import dj_db_conn_pool
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,8 +20,10 @@ DJANGO_ENV = os.getenv('DJANGO_ENV', 'development')
 
 if DJANGO_ENV == 'production':
     ALLOWED_HOSTS = ['schedule1213-7d61e308285e.herokuapp.com']
+    SITE_ID = 4
 else:
     ALLOWED_HOSTS = ['*']
+    SITE_ID = 3
 
 
 # Application definition
@@ -107,19 +110,27 @@ CACHES = {
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 if os.environ.get('USE_HEROKU_DB') == 'true':
-    db_config = dj_database_url.config(default=os.environ.get('JAWSDB_URL'))
+    db_production = dj_database_url.config(default=os.environ.get('JAWSDB_URL'))
+    db_production['POOL_OPTIONS'] = {
+        'pool_size': 10,
+        'timeout': 300,
+    }
     DATABASES = {
-        'default': db_config
+        'default': db_production
     }
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.mysql',
+            'ENGINE': 'dj_db_conn_pool.backends.mysql',
             'NAME': 'django_db',
             'USER': 'django',
             'PASSWORD': 'password',
             'HOST': 'db',
             'PORT': '3306',
+            'POOL_OPTIONS': {
+                'pool_size': 10,
+                'timeout': 300,
+            },
         }
     }
 
@@ -180,5 +191,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
-
-SITE_ID = 3

@@ -297,6 +297,20 @@ header {
   margin-bottom: 5px;
 }
 
+.password-input {
+  position: relative;
+}
+
+.eye-awesome {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: black;
+  font-size: 14px;
+}
+
 /* ソーシャルログイン */
 
 .google-login {
@@ -999,16 +1013,13 @@ header {
 }
 
 .chat-input {
-  display: flex;
-  align-items: center;
+  position: relative;
   border: 1px solid #363636;
-  width: 100%;
   border-radius: 20px;
   margin-top: 20px;
 }
 
 #chat-message-input {
-  flex-grow: 1;
   background-color: #000;
   color: #fff;
   border: none;
@@ -1016,14 +1027,19 @@ header {
   padding: 10px 30px;
 }
 
-#chat-message-input:focus {
-  outline: none;
+#chat-message-submit {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #fff;
+  font-size: 16px;
 }
 
 .chat-full-container {
   overflow-y: auto;
   height: 750px;
-
 }
 
 .chat-full-container::-webkit-scrollbar {
