@@ -14,9 +14,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-frm2#x_bnb!#93yw4=0_imf%c7kbkkrink09w33#)ieht#u-x$'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 DJANGO_ENV = os.getenv('DJANGO_ENV', 'development')
 
 if DJANGO_ENV == 'production':
@@ -24,7 +21,9 @@ if DJANGO_ENV == 'production':
     SITE_ID = 4
     cloudinary.config()
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    DEBUG = False
 else:
+    DEBUG = True
     ALLOWED_HOSTS = ['*']
     SITE_ID = 3
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'

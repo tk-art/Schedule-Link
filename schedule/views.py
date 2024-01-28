@@ -8,6 +8,8 @@ from django.http import JsonResponse
 from django.core.serializers import serialize
 from django.contrib import messages
 import pytz
+import os
+from django.conf import settings
 from datetime import datetime, date, timedelta
 from django.db import models
 from django.db.models import Q
@@ -176,7 +178,8 @@ def profile(request, user_id):
         'follows': follows,
         'followers': followers,
         'current_user': current_user,
-        'events': events
+        'events': events,
+        'debug': settings.DEBUG,
     }
     return render(request, 'profile.html', context)
 
