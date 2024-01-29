@@ -5,11 +5,14 @@
   <div class="profile-container">
     <div class="profile-info">
       <div class="profile-image-link">
+        <img src="{{ profile.image }}" alt="{{ profile.username }}" class="profile-image-size profile-image-modal">
+        <!--
         {% if debug %}
           <img src="{{ profile.image.url }}" alt="{{ profile.username }}" class="profile-image-size profile-image-modal">
         {% else %}
           <img src="{{ profile.image }}" alt="{{ profile.username }}" class="profile-image-size profile-image-modal">
         {% endif %}
+        -->
 
         {% if request.user == profile.user %}
           <a href="/profile_edit" class="profile-edit">プロフィール編集</a>

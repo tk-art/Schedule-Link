@@ -4,8 +4,6 @@ from django.conf.urls.static import static
 from django.conf import settings
 from schedule.consumers import ChatConsumer
 
-handler500 = views.my_customized_server_error
-
 urlpatterns = [
     path('', views.top, name='top'),
     path('signup/', views.signup, name='signup'),
