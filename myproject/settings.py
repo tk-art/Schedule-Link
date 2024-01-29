@@ -16,17 +16,17 @@ SECRET_KEY = 'django-insecure-frm2#x_bnb!#93yw4=0_imf%c7kbkkrink09w33#)ieht#u-x$
 
 DJANGO_ENV = os.getenv('DJANGO_ENV', 'development')
 
-DEBUG = True
-
 if DJANGO_ENV == 'production':
     ALLOWED_HOSTS = ['schedule1213-7d61e308285e.herokuapp.com']
     SITE_ID = 4
     cloudinary.config()
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    DEBUG = False
 else:
     ALLOWED_HOSTS = ['*']
     SITE_ID = 3
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+    DEBUG = True
 
 
 INSTALLED_APPS = [

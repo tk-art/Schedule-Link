@@ -23,7 +23,7 @@ class Profile(models.Model):
     username = models.CharField(max_length=100)
     image = models.ImageField(
         upload_to='item_images/',
-        default=os.getenv('CLOUDINARY_DEFAULT_IMAGE_URL','item_images/フリー女.jpeg'),
+        default=os.getenv('CLOUDINARY_DEFAULT_IMAGE','item_images/フリー女.jpeg'),
         null=True,
         blank=True
     )
