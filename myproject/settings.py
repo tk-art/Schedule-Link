@@ -115,7 +115,8 @@ if os.environ.get('USE_HEROKU_DB') == 'true':
     db_production = dj_database_url.config(default=os.environ.get('JAWSDB_URL'))
     db_production['POOL_OPTIONS'] = {
         'pool_size': 10,
-        'timeout': 300,
+        'max_overflow': -1,
+        'recycle': 60 * 5
     }
     DATABASES = {
         'default': db_production
@@ -131,7 +132,7 @@ else:
             'PORT': '3306',
             'POOL_OPTIONS': {
                 'pool_size': 10,
-                'timeout': 300,
+                'recycle': 60 * 5,
             },
         }
     }
