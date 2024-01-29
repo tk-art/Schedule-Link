@@ -21,6 +21,7 @@ if DJANGO_ENV == 'production':
     SITE_ID = 4
     cloudinary.config()
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
     DEBUG = False
 else:
     ALLOWED_HOSTS = ['*']
@@ -42,8 +43,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'django.contrib.staticfiles',
     'cloudinary_storage',
+    'django.contrib.staticfiles',
     'cloudinary',
 ]
 
@@ -106,8 +107,6 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
 }
-
-
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -184,8 +183,6 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
