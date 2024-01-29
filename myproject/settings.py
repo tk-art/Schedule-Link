@@ -23,10 +23,10 @@ if DJANGO_ENV == 'production':
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
     DEBUG = False
 else:
-    DEBUG = True
     ALLOWED_HOSTS = ['*']
     SITE_ID = 3
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+    DEBUG = True
 
 
 INSTALLED_APPS = [
