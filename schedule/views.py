@@ -19,9 +19,6 @@ from django.contrib.auth.decorators import login_required
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.db.models import Count
-from django.db import close_old_connections
-
-close_old_connections()
 
 def human_readable_time_from_utc(timestamp, timezone='Asia/Tokyo'):
     local_tz = pytz.timezone(timezone)
@@ -442,10 +439,11 @@ def recommendation_event_list(request):
 
 def process_button(request, user_id):
     if request.method == 'POST':
-        buttonType = request.POST.get('buttonType')
         sender = request.user
         receiver = CustomUser.objects.get(id=user_id)
         userData = request.POST.get('userData')
+        print(userData)
+        buttonType = request.POST.get('buttonType')
         if request.POST.get('eventId'):
             event_id = int(request.POST.get('eventId'))
             eventId = Event.objects.get(id=event_id)

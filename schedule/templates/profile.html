@@ -125,13 +125,15 @@
               <p class="detail"></p>
             </div>
 
-            <div class="card-edit-btn">
-              <button class="approval-btn" data-bs-toggle="modal" data-bs-target="#card_editing_modal">編集</button>
-              <form action="" method="post">
-                {% csrf_token %}
-                <button type="submit" name="buttonType" class="rejection-btn" value="削除">削除</button>
-              </form>
-            </div>
+            {% if request.user == profile.user %}
+              <div class="card-edit-btn">
+                <button class="approval-btn" data-bs-toggle="modal" data-bs-target="#card_editing_modal">編集</button>
+                <form action="" method="post">
+                  {% csrf_token %}
+                  <button type="submit" name="buttonType" class="rejection-btn" value="削除">削除</button>
+                </form>
+              </div>
+            {% endif %}
 
           </div>
         </div>
