@@ -1039,35 +1039,6 @@ header {
   font-size: 16px;
 }
 
-
-/*
-.chat-input {
-  position: relative;
-  border: 1px solid #363636;
-  border-radius: 20px;
-  margin-top: 20px;
-}
-
-.chat-message-input {
-  background-color: #000;
-  color: #fff;
-  border: none;
-  border-radius: 20px;
-  padding: 10px 30px;
-}
-
-#chat-message-submit {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: #fff;
-  font-size: 16px;
-}
-
-*/
-
 .chat-full-container {
   overflow-y: auto;
   height: 750px;
@@ -1164,7 +1135,10 @@ header {
 }
 
 .search-list {
-  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+  margin-left: 8px;
   color: #fff;
 }
 

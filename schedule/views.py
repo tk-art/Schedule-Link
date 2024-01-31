@@ -632,6 +632,7 @@ def search(request):
                         events = Event.objects.filter(user_id=profile.user.id, date__range=(start_date, end_date))
                         for event in events:
                             matching_events.append(event)
+                    profiles = None
                 else:
                     for profile in profiles:
                         if Calendar.objects.filter(user_id=profile.user.id, selectedDate=date_search).exists():
@@ -640,6 +641,7 @@ def search(request):
                         events = Event.objects.filter(user_id=profile.user.id, date=date_search)
                         for event in events:
                             matching_events.append(event)
+                    profiles = None
 
 
             if matching_profiles or matching_events:
