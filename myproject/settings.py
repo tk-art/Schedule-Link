@@ -23,6 +23,7 @@ if DJANGO_ENV == 'production':
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
     STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
     DEBUG = False
+    SECURE_SSL_REDIRECT = True
 else:
     ALLOWED_HOSTS = ['*']
     SITE_ID = 3
@@ -124,23 +125,16 @@ if os.environ.get('USE_HEROKU_DB') == 'true':
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'dj_db_conn_pool.backends.mysql',
+            'ENGINE': 'django.db.backends.mysql',
             'NAME': 'django_db',
             'USER': 'django',
             'PASSWORD': 'password',
             'HOST': 'db',
             'PORT': '3306',
-            'POOL_OPTIONS': {
-                'POOL_SIZE': 10,
-                'MAX_OVERFLOW': -1,
-                'RECYCLE': 60 * 5
-            }
         }
     }
 
 AUTH_USER_MODEL = 'schedule.CustomUser'
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
