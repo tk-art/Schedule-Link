@@ -713,8 +713,9 @@ function displayChatMessage(senderId, message, message_id, image, delta) {
 /* チャット */
 
 $(function() {
+  var ws_scheme = window.location.protocol === "https:" ? "wss://" : "ws://";
   var chatSocket = new WebSocket(
-    'ws://' + window.location.host + '/ws/chat/' + currentUserId + '/'
+    ws_scheme + window.location.host + '/ws/chat/' + currentUserId + '/'
   );
 
   chatSocket.onmessage = function(e) {

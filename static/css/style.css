@@ -1042,6 +1042,7 @@ header {
 .chat-full-container {
   overflow-y: auto;
   height: 750px;
+  position: relative;
 }
 
 .chat-full-container::-webkit-scrollbar {
@@ -1115,7 +1116,9 @@ header {
   }
 }
 
-@media (max-width: 450px) {
+
+
+@media (max-width: 500px) {
   .chat-delta {
     font-size: 10px;
   }
@@ -1123,6 +1126,10 @@ header {
   .list-message {
     margin-left: -5px;
     max-width: 55%;
+  }
+
+  .chat-none {
+    margin-left: 50px;
   }
 }
 
