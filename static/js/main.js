@@ -145,7 +145,17 @@ $('#followed-by').on('click', function() {
 
 /* リクエストクリック */
 
-function requestClicked(element) {
+$(function() {
+  $('.calendar-intentional-btn').on('click', function() {
+    requestClicked(this, 'calendar');
+  });
+
+  $('.event-intentional-btn').on('click', function() {
+    requestClicked(this, 'event');
+  });
+});
+
+function requestClicked(element, type) {
   var userId, userData, eventId;
 
   if (element) {
@@ -153,11 +163,7 @@ function requestClicked(element) {
     userData = $("#selectedData-" + userId).text();
   } else {
     userId = $('#intentionalBtn').data('key');
-    if ($('.profile-page-container').length) {
-      userData = $("#selectedData").text();
-    } else {
-      eventId = $('#intentionalBtn').data('event-id');
-    }
+    eventId = $('#intentionalBtn').data('event-id');
   }
 
   var dataToSend = {
@@ -165,11 +171,19 @@ function requestClicked(element) {
     csrfmiddlewaretoken: csrfToken
   };
 
-  if (userData) {
-    dataToSend.userData = userData;
-  }
-  if (eventId) {
-    dataToSend.eventId = eventId;
+  if (type) {
+    if (type === 'calendar') {
+      dataToSend.userData = $("#selectedData").text();
+    } else if (type === 'event') {
+      dataToSend.eventId = $('#intentionalBtn').data('event-id');
+    }
+  } else {
+    if (userData) {
+      dataToSend.userData = userData;
+    }
+    if (eventId) {
+      dataToSend.eventId = eventId;
+    }
   }
 
   $.ajax({

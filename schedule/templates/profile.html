@@ -85,7 +85,7 @@
       <div class="row row-cols-2 row-cols-md-4 g-4">
         {% for event in events %}
           <div class="col">
-            <div class="card event-card event-modal" data-event-id="{{ event.id }}">
+            <div class="card event-card event-modal" data-event-id="{{ event.id }}" data-key="{{ event.user.id }}">
               <img src="{{ event.image.url }}" alt="イベント画像" class="event-card-size">
               <div class="card-body card-b">
                 <p class="card-text black">{{ event.title }}</p>
@@ -132,6 +132,10 @@
                   {% csrf_token %}
                   <button type="submit" name="buttonType" class="rejection-btn" value="削除">削除</button>
                 </form>
+              </div>
+            {% else %}
+              <div class="card-btn" style="display: none;">
+                <a id="intentionalBtn" class="intentional-btn event-intentional-btn">ヒマリク</a>
               </div>
             {% endif %}
 
@@ -359,7 +363,7 @@
           <span>予定：</span><p id="otherUserData" class="otheruser-data"></p>
           <span>時間：</span><p id="timeData" class="otheruser-data"></p>
           <span>メッセージ：</span><p id="messageData" class="otheruser-data"></p>
-          <a id="intentionalBtn" class="intentional-btn" data-key="{{ profile.user.id }}" onclick="requestClicked()">ヒマリク</a>
+          <a id="intentionalBtn" class="intentional-btn calendar-intentional-btn" data-key="{{ profile.user.id }}">ヒマリク</a>
         </div>
       </div>
     </div>
