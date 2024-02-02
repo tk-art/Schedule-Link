@@ -115,11 +115,13 @@ CACHES = {
 
 if os.environ.get('USE_HEROKU_DB') == 'true':
     db_production = dj_database_url.config(default=os.environ.get('JAWSDB_URL'))
+    """
     db_production['POOL_OPTIONS'] = {
         'POOL_SIZE': 10,
         'MAX_OVERFLOW': -1,
         'RECYCLE': 60 * 5
     }
+    """
     DATABASES = {
         'default': db_production
     }
@@ -132,6 +134,11 @@ else:
             'PASSWORD': 'password',
             'HOST': 'db',
             'PORT': '3306',
+            'POOL_OPTIONS': {
+                'POOL_SIZE': 10,
+                'MAX_OVERFLOW': -1,
+                'RECYCLE': 60 * 5
+            }
         }
     }
 
