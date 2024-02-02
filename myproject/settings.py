@@ -114,21 +114,21 @@ CACHES = {
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 if os.environ.get('USE_HEROKU_DB') == 'true':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'dj_db_conn_pool.backends.mysql',
+        }
+    }
     db_production = dj_database_url.config(default=os.environ.get('JAWSDB_URL'))
-    """
     db_production['POOL_OPTIONS'] = {
         'POOL_SIZE': 10,
-        'MAX_OVERFLOW': -1,
-        'RECYCLE': 60 * 5
+        'MAX_OVERFLOW': 0,
     }
-    """
-    DATABASES = {
-        'default': db_production
-    }
+    DATABASES['default'].update(db_production)
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.mysql',
+            'ENGINE': 'dj_db_conn_pool.backends.mysql',
             'NAME': 'django_db',
             'USER': 'django',
             'PASSWORD': 'password',
@@ -136,8 +136,7 @@ else:
             'PORT': '3306',
             'POOL_OPTIONS': {
                 'POOL_SIZE': 10,
-                'MAX_OVERFLOW': -1,
-                'RECYCLE': 60 * 5
+                'MAX_OVERFLOW': 0,
             }
         }
     }
