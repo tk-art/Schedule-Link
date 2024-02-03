@@ -641,17 +641,21 @@ function RedCircleDisplay() {
 
   $('.chat-list').click(function() {
     var userId = $(this).data('user-id');
+    var senderId = $(this).data('sender-id');
+    if (String(senderId) !== currentUserId) {
+      console.log('success');
+      $.ajax({
+        url: '/mark_chat_as_read/' + userId + '/',
+        method: 'GET',
+        success: function(response) {
+          hideListIndicator(userId);
+        },
+        error: function(error) {
+          console.log('チャットのマークに失敗しました。', error);
+        }
+      });
+    }
 
-    $.ajax({
-      url: '/mark_chat_as_read/' + userId + '/',
-      method: 'GET',
-      success: function(response) {
-        hideListIndicator(userId);
-      },
-      error: function(error) {
-        console.log('チャットのマークに失敗しました。', error);
-      }
-    });
   });
 }
 

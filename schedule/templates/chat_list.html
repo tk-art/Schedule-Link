@@ -4,7 +4,7 @@
 <div class="container col-md-6">
   {% if rooms %}
     {% for room in rooms %}
-      <a href="/chat/{{ room.receiver.id }}" class="chat-list" data-user-id="{{ room.receiver.id }}">
+      <a href="/chat/{{ room.receiver.id }}" class="chat-list" data-user-id="{{ room.receiver.id }}" data-sender-id="{{ room.sender.id }}">
         <img src="{{ room.receiver.profile.image.url }}" alt="{{ room.receiver.profile.username }}" class="request-image-size chat-list-image">
         <p id="room-{{ room.receiver.id }}" class="list-message">{{ room.message }}</p>
         <div class="chat-list-indicator">
@@ -19,6 +19,7 @@
 </div>
 
 <script>
+  var currentUserId = '{{ request.user.id }}';
   var csrfToken = '{{ csrf_token }}';
 </script>
 {% endblock %}

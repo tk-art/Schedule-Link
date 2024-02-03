@@ -510,8 +510,10 @@ def chat_list(request):
         room_info['timestamp'] = last_room.timestamp
         if last_room.sender == current_user:
             room_info['receiver'] = last_room.receiver
+            room_info['sender'] = last_room.sender
         else:
             room_info['receiver'] = last_room.sender
+            room_info['sender'] = last_room.sender
         rooms_receiver.append(room_info)
 
     rooms_receiver_sorted = sorted(rooms_receiver, key=lambda x: x['timestamp'], reverse=True)

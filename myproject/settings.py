@@ -136,7 +136,7 @@ else:
             'PORT': '3306',
             'POOL_OPTIONS': {
                 'POOL_SIZE': 10,
-                'MAX_OVERFLOW': 0,
+                'RECYCLE': 60,
             }
         }
     }
