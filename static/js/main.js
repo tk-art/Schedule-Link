@@ -23,6 +23,7 @@ $(document).ready(function() {
 
   hamburger.on('click touchstart', (function(e) {
     e.preventDefault();
+    e.stopPropagation()
     nav.toggleClass('open');
   }));
   blackBg.click(function() {
@@ -540,9 +541,8 @@ $('.profile-image-modal').click(function() {
   modal.show();
 });
 
-$('#modal').on('click touchstart', (function(e) {
+$('#modal').on('click', (function(e) {
   if (!$(e.target).is('#modal-image')) {
-      e.preventDefault();
       $('#modal').fadeOut();
     }
   }));
