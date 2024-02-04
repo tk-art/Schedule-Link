@@ -1327,6 +1327,10 @@ header {
   right: 20px;
 }
 
+.content {
+  padding-top: 80px;
+}
+
 .phone-size-category-list {
   margin-left: 10px;
   margin-right: 10px;
