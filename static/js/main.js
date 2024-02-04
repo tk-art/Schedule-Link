@@ -23,7 +23,7 @@ $(document).ready(function() {
 
   hamburger.on('click touchstart', (function(e) {
     e.preventDefault();
-    e.stopPropagation()
+    e.stopPropagation();
     nav.toggleClass('open');
   }));
   blackBg.click(function() {
