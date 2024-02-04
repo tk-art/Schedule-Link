@@ -540,8 +540,9 @@ $('.profile-image-modal').click(function() {
   modal.show();
 });
 
-$('#modal').on('click touchstart', (function(event) {
-  if (!$(event.target).is('#modal-image')) {
+$('#modal').on('click touchstart', (function(e) {
+  if (!$(e.target).is('#modal-image')) {
+      e.preventDefault();
       $('#modal').fadeOut();
     }
   }));
