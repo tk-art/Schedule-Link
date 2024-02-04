@@ -528,6 +528,18 @@ header {
   .close-card-btn {
     display: block;
   }
+
+  .edit-form {
+    margin: 30px !important;
+  }
+
+  .hobby-info label {
+    font-size: 12px;
+  }
+
+  .interest-info label {
+    font-size: 12px;
+  }
 }
 
 /* フォロー */

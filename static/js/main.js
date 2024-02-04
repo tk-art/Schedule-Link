@@ -540,11 +540,11 @@ $('.profile-image-modal').click(function() {
   modal.show();
 });
 
-$('#modal').click(function(event) {
-if (!$(event.target).is('#modal-image')) {
-    $('#modal').fadeOut();
-  }
-});
+$('#modal').on('click touchstart', (function(event) {
+  if (!$(event.target).is('#modal-image')) {
+      $('#modal').fadeOut();
+    }
+  }));
 
 /* ヒマリクボタンを消す */
 

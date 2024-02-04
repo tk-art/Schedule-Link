@@ -122,11 +122,18 @@ def guest_login(request):
         content='これはデフォルトのプロフィールです。好みに応じて編集してください'
     )
 
-    event = Event.objects.create(
-        user=guest_user, title='テスト', place='テスト', category='その他',
-        date=date.today() + timedelta(days=1),
-        time='10:00~10:30', image='item_images/フリー女.jpeg', detail='テスト'
-    )
+    if settings.DEBUG:
+        event = Event.objects.create(
+            user=guest_user, title='テスト', place='テスト', category='その他',
+            date=date.today() + timedelta(days=1), time='10:00~10:30',
+            image='item_images/フリー女.jpeg', detail='テスト'
+        )
+    else:
+        event = Event.objects.create(
+            user=guest_user, title='テスト', place='テスト', category='その他',
+            date=date.today() + timedelta(days=1), time='10:00~10:30',
+            image='media/item_images/neko', detail='テスト'
+        )
 
     UserRequest.objects.create(
         sender=large_number_of_events_user, receiver=guest_user, userData=None, eventId_id=event.id, situation=True
