@@ -306,7 +306,6 @@ $(document).ready(function() {
       initialView: 'dayGridMonth',
       fixedWeekCount: false,
       selectable: true,
-      longPressDelay: 500,
       events: '/api/calendar_events/' + userId + '/',
 
       datesSet: function(dateInfo) {
