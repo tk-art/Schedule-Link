@@ -1096,12 +1096,13 @@ header {
   border: none;
 }
 
-.chat-none {
-  position: absolute;
-  top: 50%;
-  margin-left: 200px;
+.centered-container {
   font-size: 20px;
-  letter-spacing: 1.2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  text-align: center;
 }
 
 @media (max-height: 850px) {
@@ -1128,8 +1129,8 @@ header {
     max-width: 55%;
   }
 
-  .chat-none {
-    margin-left: 50px;
+  .centered-container {
+    font-size: 18px;
   }
 }
 
