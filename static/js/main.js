@@ -23,7 +23,6 @@ $(document).ready(function() {
 
   hamburger.on('click touchstart', (function(e) {
     e.preventDefault();
-    e.stopPropagation();
     nav.toggleClass('open');
   }));
   blackBg.click(function() {
@@ -545,7 +544,7 @@ $('#modal').on('click', (function(e) {
   if (!$(e.target).is('#modal-image')) {
       $('#modal').fadeOut();
     }
-  }));
+}));
 
 /* ヒマリクボタンを消す */
 
