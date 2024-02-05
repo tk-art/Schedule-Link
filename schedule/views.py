@@ -640,6 +640,7 @@ def search(request):
 
                         events = Event.objects.filter(user_id=profile.user.id, date__range=(start_date, end_date))
                         for event in events:
+                            event.delta = human_readable_time_from_utc(event.timestamp)
                             matching_events.append(event)
                     profiles = None
                 else:
@@ -649,6 +650,7 @@ def search(request):
 
                         events = Event.objects.filter(user_id=profile.user.id, date=date_search)
                         for event in events:
+                            event.delta = human_readable_time_from_utc(event.timestamp)
                             matching_events.append(event)
                     profiles = None
 

@@ -6,12 +6,11 @@
     <div class="profile-info">
       <div class="profile-image-link">
         <img src="{{ profile.image.url }}" alt="{{ profile.username }}" class="profile-image-size profile-image-modal">
-
         {% if request.user == profile.user %}
           <a href="/profile_edit" class="profile-edit">プロフィール編集</a>
         {% endif %}
         {% if request.user != profile.user %}
-          <a class="follow" id="follow-button" data-following="{{ is_following }}" onclick="followButtonClicked()">フォロー</a>
+          <a class="follow follow-button" id="follow-button" data-following="{{ is_following }}" onclick="followButtonClicked()">フォロー</a>
         {% endif %}
       </div>
       <p class="profile-username">{{ profile.username }}</p>
@@ -25,7 +24,7 @@
           <a href="/profile_edit" class="profile-edit">プロフィール編集</a>
         {% endif %}
         {% if request.user != profile.user %}
-          <a class="follow" id="follow-button" data-following="{{ is_following }}" onclick="followButtonClicked()">フォロー</a>
+          <a class="follow follow-button" id="follow-button" data-following="{{ is_following }}" onclick="followButtonClicked()">フォロー</a>
         {% endif %}
       </div>
     </div>
@@ -42,13 +41,13 @@
     </div>
 
     <div class="hobby-interest">
-      <p>趣味</p>
+      <p>趣味：</p>
       <ul>
         {% for hobby in hobbies %}
           <li class="hobby-list">{{ hobby.name }}</li>
         {% endfor %}
       </ul>
-      <p>興味</p>
+      <p>興味：</p>
       <ul>
         {% for interest in interests %}
           <li class="interest-list">{{ interest.name }}</li>
@@ -59,7 +58,7 @@
 
   <div class="separator"></div>
 
-  <ul class="nav request-nav calendar-tab" id="myTabs" role="tablist">
+  <ul class="nav request-nav profile-tab" id="myTabs" role="tablist">
     <li class="nav-item">
       <a class="nav-link header-right active" data-bs-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true">
         カレンダー
@@ -82,24 +81,30 @@
 
     <!--作成済みの提案タブ-->
     <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
-      <div class="row row-cols-2 row-cols-md-4 g-4">
-        {% for event in events %}
-          <div class="col">
-            <div class="card event-card event-modal" data-event-id="{{ event.id }}" data-key="{{ event.user.id }}">
-              <img src="{{ event.image.url }}" alt="イベント画像" class="event-card-size">
-              <div class="card-body card-b">
-                <p class="card-text black">{{ event.title }}</p>
-                <p class="card-text"><small class="text-muted">{{ event.place }}</small></p>
-              </div>
-              <div class="card-f">
-                <img src="{{ profile.image.url }}" alt="{{ profile.username }}" class="event-image-size">
-                <p class="card-name">{{ profile.username }}</p>
-                <p class="chat-delta">{{ event.delta }}</p>
+      {% if events %}
+        <div class="row row-cols-2 row-cols-md-4 g-4">
+          {% for event in events %}
+            <div class="col">
+              <div class="card event-card event-modal" data-event-id="{{ event.id }}" data-key="{{ event.user.id }}">
+                <img src="{{ event.image.url }}" alt="イベント画像" class="event-card-size">
+                <div class="card-body card-b">
+                  <p class="card-text black">{{ event.title }}</p>
+                  <p class="card-text"><small class="text-muted">{{ event.place }}</small></p>
+                </div>
+                <div class="card-f">
+                  <img src="{{ profile.image.url }}" alt="{{ profile.username }}" class="event-image-size">
+                  <p class="card-name">{{ profile.username }}</p>
+                  <p class="chat-delta">{{ event.delta }}</p>
+                </div>
               </div>
             </div>
-          </div>
-        {% endfor %}
-      </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="suggestion-container">
+          <p>まだ提案が存在していません。</p>
+        </div>
+      {% endif %}
     </div>
   </div>
 
@@ -125,6 +130,7 @@
               <p class="detail"></p>
             </div>
 
+            <span id="close_modal_btn" class="close-card-btn close-modal-btn">x</span>
             {% if request.user == profile.user %}
               <div class="card-edit-btn">
                 <button class="approval-btn" data-bs-toggle="modal" data-bs-target="#card_editing_modal">編集</button>
@@ -151,7 +157,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <p class="modal-title">イベント編集</p>
-          <span id="close_modal_btn" class="close-btn">✖️</span>
+          <span id="close_modal_btn" class="close-btn close-modal-btn">✖️</span>
         </div>
         <div class="modal-body">
           <form action="" class="event-edit-form" method="post" enctype="multipart/form-data">
