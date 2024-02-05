@@ -21,7 +21,8 @@ $(document).ready(function() {
   var hamburger = $('#js-hamburger');
   var blackBg = $('#js-black-bg');
 
-  hamburger.on('click touchstart', (function(e) {
+  hamburger.on('pointerdown', (function(e) {
+    e.preventDefault();
     nav.toggleClass('open');
   }));
   blackBg.click(function() {
