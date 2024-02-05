@@ -23,6 +23,7 @@ $(document).ready(function() {
 
   hamburger.on('click touchstart', (function(e) {
     e.preventDefault();
+    e.stopPropagation();
     nav.toggleClass('open');
   }));
   blackBg.click(function() {
@@ -45,7 +46,6 @@ function followButtonClicked() {
         console.log("isFollowing value is: ", isFollowing);
 
         if (isFollowing === true) {
-          console.log("true")
           $(".follow-button").addClass("follow-btn");
           $(".follow-button").text("フォロー中");
         } else {
@@ -309,6 +309,7 @@ $(document).ready(function() {
       initialView: 'dayGridMonth',
       fixedWeekCount: false,
       selectable: true,
+      longPressDelay: 0,
       events: '/api/calendar_events/' + userId + '/',
 
       datesSet: function(dateInfo) {
@@ -415,9 +416,11 @@ $(document).ready(function() {
           $('#messageData').text(data.message);
 
   　　　　　if (formattedToday <= selectedDateStr) {
-  　　　　　  $('#intentionalBtn').show();
+            console.log(formattedToday);
+            console.log(selectedDateStr);
+  　　　　　  $('.calendar-intentional-btn').show();
           } else {
-            $('#intentionalBtn').hide();
+            $('.calendar-intentional-btn').hide();
           }
 
           $('#otherUserModal').modal('show');
@@ -544,10 +547,8 @@ $('.profile-image-modal').click(function() {
 });
 
 $('#modal').click(function(e) {
-  if (!$(e.target).is('#modal-image')) {
-      $('#modal').fadeOut();
-    }
-  });
+  $('#modal').fadeOut();
+});
 
 /* ヒマリクボタンを消す */
 
