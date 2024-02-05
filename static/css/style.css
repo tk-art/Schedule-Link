@@ -420,7 +420,7 @@ header {
 }
 
 .hobby-list {
-  margin-right: 20px;
+  margin-right: 15px;
   border: 1.5px solid rgb(156, 158, 161);
   color: rgb(156, 158, 161) !important;
   border-radius: 20px;
@@ -430,7 +430,7 @@ header {
 
 
 .interest-list {
-  margin-right: 20px;
+  margin-right: 15px;
   border: 1.5px solid rgb(156, 158, 161);
   border-radius: 20px;
   color: rgb(156, 158, 161);
@@ -482,7 +482,6 @@ header {
   }
 
   .phone-profile-info {
-    display: block;
     display: flex;
   }
 
@@ -519,6 +518,10 @@ header {
 
   .hobby-interest {
     margin-left: 60px;
+  }
+
+  .hobby-interest ul {
+    padding: 0;
   }
 
   .event-edit-form {
@@ -596,6 +599,10 @@ header {
 
 .profile-follower:hover {
   color: #fff;
+}
+
+.profile-tab {
+  margin-bottom: 20px !important;
 }
 
 /* 赤丸 */
@@ -812,6 +819,7 @@ header {
 }
 
 /* リスト */
+
 .request-list {
   display: flex;
   margin-top: 20px;
@@ -1024,7 +1032,6 @@ header {
   margin: auto;
 }
 
-
 .chat-input {
   display: flex;
   align-items: center;
@@ -1063,7 +1070,7 @@ header {
 
 .chat-delta {
   font-size: 12px;
-  letter-spacing: 1.2px;
+  letter-spacing: 1.1px;
   color: rgb(115, 117, 123);
   margin: auto 0;
   margin-left: auto;
@@ -1108,12 +1115,23 @@ header {
   border: none;
 }
 
+/* centerd-container */
+
 .centered-container {
   font-size: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 80vh;
+  text-align: center;
+}
+
+.suggestion-container {
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
   text-align: center;
 }
 
@@ -1129,8 +1147,6 @@ header {
   }
 }
 
-
-
 @media (max-width: 500px) {
   .chat-delta {
     font-size: 10px;
@@ -1142,7 +1158,11 @@ header {
   }
 
   .centered-container {
-    font-size: 18px;
+    font-size: 16px;
+  }
+
+  .suggestion-container {
+    font-size: 16px;
   }
 }
 

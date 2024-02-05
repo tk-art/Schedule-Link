@@ -23,6 +23,7 @@ $(document).ready(function() {
 
   hamburger.on('pointerdown', (function(e) {
     e.preventDefault();
+    e.stopPropagation();
     nav.toggleClass('open');
   }));
   blackBg.click(function() {
@@ -45,12 +46,14 @@ function followButtonClicked() {
         console.log("isFollowing value is: ", isFollowing);
 
         if (isFollowing === true) {
-          $("#follow-button").addClass("follow-btn");
+          $(".follow-button").addClass("follow-btn");
+          $(".follow-button").text("フォロー中");
         } else {
-          $("#follow-button").removeClass("follow-btn");
+
+          $(".follow-button").removeClass("follow-btn");
+          $(".follow-button").text("フォロー");
         }
-        $("#follow-button").text(isFollowing ? "フォロー中" : "フォロー");
-        $("#follow-button").attr("data-following", isFollowing);
+        $(".follow-button").attr("data-following", isFollowing);
       }
     }
   });
@@ -102,8 +105,8 @@ $(document).ready(function() {
         showTabIndicator("#followed_by");
       }
       if (response.success) {
-        $("#follow-button").addClass("follow-btn");
-        $("#follow-button").text("フォロー中");
+        $(".follow-button").addClass("follow-btn");
+        $(".follow-button").text("フォロー中");
       }
     },
     error: function(xhr, status, error) {
@@ -306,6 +309,7 @@ $(document).ready(function() {
       initialView: 'dayGridMonth',
       fixedWeekCount: false,
       selectable: true,
+      longPressDelay: 0,
       events: '/api/calendar_events/' + userId + '/',
 
       datesSet: function(dateInfo) {
@@ -412,9 +416,11 @@ $(document).ready(function() {
           $('#messageData').text(data.message);
 
   　　　　　if (formattedToday <= selectedDateStr) {
-  　　　　　  $('#intentionalBtn').show();
+            console.log(formattedToday);
+            console.log(selectedDateStr);
+  　　　　　  $('.calendar-intentional-btn').show();
           } else {
-            $('#intentionalBtn').hide();
+            $('.calendar-intentional-btn').hide();
           }
 
           $('#otherUserModal').modal('show');
@@ -540,11 +546,9 @@ $('.profile-image-modal').click(function() {
   modal.show();
 });
 
-$('#modal').on('click', (function(e) {
-  if (!$(e.target).is('#modal-image')) {
-      $('#modal').fadeOut();
-    }
-}));
+$('#modal').click(function(e) {
+  $('#modal').fadeOut();
+});
 
 /* ヒマリクボタンを消す */
 
@@ -796,7 +800,7 @@ $(document).ready(function() {
 });
 
 /* イベントクリック時のモーダル動作 */
-$('.event-modal').on('click', function() {
+$('.event-modal').click(function() {
   var eventId = $(this).data('event-id');
   var userId = $(this).data('key');
   var today = new Date();
@@ -835,7 +839,7 @@ $('.event-modal').on('click', function() {
       $('#eventmodal').modal('show');
     }
   })
-})
+});
 
 /* トップページカテゴリー検索 */
 function searchCategory(categoryType) {
@@ -854,7 +858,7 @@ function searchRecom(recommendationType) {
   }
 }
 
-$('#close_modal_btn').click(function() {
+$('.close-modal-btn').click(function() {
   $('#card_editing_modal').modal('hide');
   $('#eventmodal').modal('hide');
 });
