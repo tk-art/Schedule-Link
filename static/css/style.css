@@ -543,6 +543,10 @@ header {
   .interest-info label {
     font-size: 12px;
   }
+
+  #partial-modal-content {
+    height: 400px;
+  }
 }
 
 /* フォロー */
@@ -1277,6 +1281,16 @@ header {
   margin-left: 5px;
   font-size: 12px;
   color: #817e7e;
+}
+
+@media (max-width: 500px) {
+  #date-calendar {
+    height: 400px;
+  }
+
+  #time-calendar {
+    height: 400px;
+  }
 }
 
 /* カードモーダル */

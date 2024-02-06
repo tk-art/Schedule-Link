@@ -346,6 +346,7 @@ $(document).ready(function() {
                         allDaySlot: false,
                         locale: 'ja',
                         selectable: true,
+                        longPressDelay: 0,
                         select: function(info) {
                           var start = formatTime(info.start);
                           var end = formatTime(info.end);
@@ -416,8 +417,6 @@ $(document).ready(function() {
           $('#messageData').text(data.message);
 
   　　　　　if (formattedToday <= selectedDateStr) {
-            console.log(formattedToday);
-            console.log(selectedDateStr);
   　　　　　  $('.calendar-intentional-btn').show();
           } else {
             $('.calendar-intentional-btn').hide();
@@ -441,6 +440,7 @@ $('#datesearch').on('click', function() {
     initialView: 'dayGridMonth',
     fixedWeekCount: false,
     selectable: true,
+    longPressDelay: 0,
     selectMirror: true,
 
     datesSet: function(dateInfo) {
@@ -478,6 +478,7 @@ $('#datetime').on('click', function() {
       initialView: 'dayGridMonth',
       fixedWeekCount: false,
       selectable: true,
+      longPressDelay: 0,
 
       datesSet: function(dateInfo) {
         var customTitle = customTitleGenerator(dateInfo.start);
@@ -500,6 +501,7 @@ $('#datetime').on('click', function() {
               allDaySlot: false,
               locale: 'ja',
               selectable: true,
+              longPressDelay: 0,
               select: function(info) {
                 var start = formatTime(info.start);
                 var end = formatTime(info.end);
