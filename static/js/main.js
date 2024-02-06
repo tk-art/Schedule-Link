@@ -829,7 +829,7 @@ $('.event-modal').click(function() {
       $('#eventmodal .card-btn .intentional-btn').attr('data-event-id', eventId);
 
       $('#card_editing_modal .modal-body form').attr('action', '/card_editing/' + eventId + '/');
-      $('#eventmodal .card-edit-btn form').attr('action', '/delete_card/' + eventId + '/');
+      $('#card_delete_modal .modal-body form').attr('action', '/delete_card/' + eventId + '/');
 
       if (!data.current_user && formattedToday <= data.date) {
         $('#eventmodal .card-btn').show();
@@ -841,6 +841,23 @@ $('.event-modal').click(function() {
       $('#eventmodal').modal('show');
     }
   })
+});
+
+/* 削除モーダル内でのボタンの分岐処理 */
+$(function() {
+  $('.delete-trigger').click(function() {
+    console.log('click');
+    var branch = $(this).data('delete-branch');
+
+    $('.rejection-btn-calendar-container').hide();
+    $('.rejection-btn-event-container').hide();
+
+    if (branch === 'calendar') {
+      $('.rejection-btn-calendar-container').show();
+    } else {
+      $('.rejection-btn-event-container').show();
+    }
+  });
 });
 
 /* トップページカテゴリー検索 */

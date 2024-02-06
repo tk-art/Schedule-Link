@@ -134,17 +134,13 @@
             {% if request.user == profile.user %}
               <div class="card-edit-btn">
                 <button class="approval-btn" data-bs-toggle="modal" data-bs-target="#card_editing_modal">編集</button>
-                <form action="" method="post">
-                  {% csrf_token %}
-                  <button type="submit" name="buttonType" class="rejection-btn" value="削除">削除</button>
-                </form>
+                <button class="rejection-btn delete-trigger" data-bs-toggle="modal" data-bs-target="#card_delete_modal" data-delete-brancht="event">削除</button>
               </div>
             {% else %}
               <div class="card-btn" style="display: none;">
                 <a id="intentionalBtn" class="intentional-btn event-intentional-btn">ヒマリク</a>
               </div>
             {% endif %}
-
           </div>
         </div>
       </div>
@@ -305,12 +301,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="eventModalLabel">暇な時間を入力してください</h5>
-          <form action="/delete_calendar/" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="user_id" value="{{ profile.user.id }}">
-            <input type="hidden" id="deleteDate" name="deleteDate" value="">
-            <button type ="submit" class="btn btn-danger" id="deleteEvent">削除</button>
-          </form>
+          <button type="submit" class="btn btn-danger delete-trigger" data-bs-toggle="modal" data-bs-target="#card_delete_modal" data-delete-branch="calendar">削除</button>
         </div>
         <div class="modal-body">
           <form action="/calendar/" method="post">
@@ -353,6 +344,37 @@
         </div>
         <div class="modal-body">
           <div id="partial-modal-content"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 削除モーダル　-->
+  <div class="modal fade" id="card_delete_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <p class="modal-title">イベント削除</p>
+        </div>
+        <div class="modal-body">
+          <p class="card-delete-modal">本当に削除しますか？</p>
+
+          <form action="" method="post">
+            {% csrf_token %}
+            <div class="rejection-btn-event-container">
+              <button type="submit" name="buttonType" class="rejection-btn" value="削除">削除</button>
+            </div>
+          </form>
+
+          <form action="/delete_calendar/" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="user_id" value="{{ profile.user.id }}">
+            <input type="hidden" id="deleteDate" name="deleteDate" value="">
+            <div class="rejection-btn-calendar-container">
+              <button type="submit" class="rejection-btn" id="deleteEvent">削除</button>
+            </div>
+          </form>
+
         </div>
       </div>
     </div>

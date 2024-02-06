@@ -468,6 +468,12 @@ header {
   object-fit: contain;
 }
 
+.card-delete-modal {
+  color: black;
+  letter-spacing: 1.2px;
+  font-weight: lighter;
+}
+
 @media (max-width: 550px) {
   .hobby-list {
     font-size: 12px;
@@ -884,6 +890,14 @@ header {
 
 .rejection-btn:hover {
   opacity: 0.8;
+}
+
+.rejection-btn-calendar-container {
+  text-align: right;
+}
+
+.rejection-btn-event-container {
+  text-align: right;
 }
 
 .request-nav .nav-link {
