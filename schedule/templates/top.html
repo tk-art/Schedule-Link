@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}トップページ{% endblock %}
 {% block content %}
+{% load custom_filters %}
 <div class="container col-md-9">
   <div class="top-content">
     {% if request.user.is_authenticated %}
@@ -94,7 +95,12 @@
           {% for event in events %}
             <div class="col">
               <div class="card event-card event-modal" data-event-id="{{ event.id }}" data-key="{{ event.user.id }}">
-                <img src="{{ event.image.url }}" alt="{{ profile.username }}" class="event-card-size">
+                {% if event.id|is_included:approved_events %}
+                  <img src="{{ event.image.url }}" alt="{{ profile.username }}" class="confirmed-event-card-size">
+                  <p class="overlay-text">確定済み</p>
+                {% else %}
+                  <img src="{{ event.image.url }}" alt="{{ profile.username }}" class="event-card-size">
+                {% endif %}
                 <div class="card-body card-b">
                   <p class="card-text black">{{ event.title }}</p>
                   <p class="card-text"><small class="text-muted">{{ event.place }}</small></p>
@@ -146,7 +152,6 @@
         </div>
       </div>
     </div>
-
     <div class="top-right col-md-3">
       {% if request.user.is_authenticated %}
         <div class="recommendation">
@@ -199,5 +204,6 @@
 
 <script>
   var csrfToken = '{{ csrf_token }}';
+  var approvedEvents = '{{ approved_events }}'
 </script>
 {% endblock %}

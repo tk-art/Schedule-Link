@@ -40,6 +40,15 @@ def human_readable_time_from_utc(timestamp, timezone='Asia/Tokyo'):
     else:
         return "たった今"
 
+def approved_events_function():
+    approved_events = []
+    user_response = UserResponse.objects.all()
+    for response in user_response:
+        if response.eventId and response.buttonType == '承認する':
+            approved_events.append(response.eventId_id)
+    return approved_events
+
+
 def top(request):
     category = request.GET.get('category', '')
     recommend_user = request.GET.get('recommend_user', '')
@@ -65,11 +74,14 @@ def top(request):
         event.delta = human_readable_time_from_utc(event.timestamp)
         event.current_user = (request.user == event.user)
 
+    approved_events = approved_events_function()
+
     context = {
         'events': events,
         'users': users,
         'user_first_match': user_first_match,
-        'matched_events': matched_events
+        'matched_events': matched_events,
+        'approved_events': approved_events
     }
 
     return render(request, 'top.html', context)
@@ -175,6 +187,8 @@ def profile(request, user_id):
 
     current_user = request.user == profile.user
 
+    approved_events = approved_events_function()
+
     context = {
         'profile': profile,
         'hobbies': hobbies,
@@ -183,7 +197,7 @@ def profile(request, user_id):
         'followers': followers,
         'current_user': current_user,
         'events': events,
-        'debug': settings.DEBUG,
+        'approved_events': approved_events,
     }
     return render(request, 'profile.html', context)
 

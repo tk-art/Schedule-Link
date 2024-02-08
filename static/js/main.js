@@ -826,15 +826,16 @@ $('.event-modal').click(function() {
       $('#eventmodal .card-modal-right .time').text(data.time);
       $('#eventmodal .card-modal-right .detail').text(data.detail);
 
-      $('#eventmodal .card-btn .intentional-btn').attr('data-key', userId);
-      $('#eventmodal .card-btn .intentional-btn').attr('data-event-id', eventId);
-
       $('#card_editing_modal .modal-body form').attr('action', '/card_editing/' + eventId + '/');
       $('#card_delete_modal .modal-body form').attr('action', '/delete_card/' + eventId + '/');
 
       if (!data.current_user && formattedToday <= data.date) {
-        $('#eventmodal .card-btn').show();
-        $('#eventmodal .card-btn').attr('id', 'cardBtn-' + eventId );
+        if (approvedEvents && !approvedEvents.includes(eventId)) {
+          $('#eventmodal .card-btn').show();
+          $('#eventmodal .card-btn').attr('id', 'cardBtn-' + eventId );
+          $('#eventmodal .card-btn .intentional-btn').attr('data-key', userId);
+          $('#eventmodal .card-btn .intentional-btn').attr('data-event-id', eventId);
+        }
       } else {
         $('#eventmodal .card-btn').hide();
       }

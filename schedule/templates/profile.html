@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}プロフィール{% endblock %}
 {% block content %}
+{% load custom_filters %}
 <div class="container col-md-9">
   <div class="profile-page-container">
     <div class="profile-info">
@@ -86,7 +87,12 @@
           {% for event in events %}
             <div class="col">
               <div class="card event-card event-modal" data-event-id="{{ event.id }}" data-key="{{ event.user.id }}">
-                <img src="{{ event.image.url }}" alt="イベント画像" class="event-card-size">
+                {% if event.id|is_included:approved_events %}
+                  <img src="{{ event.image.url }}" alt="{{ profile.username }}" class="confirmed-event-card-size">
+                  <p class="overlay-text">確定済み</p>
+                {% else %}
+                  <img src="{{ event.image.url }}" alt="イベント画像" class="event-card-size">
+                {% endif %}
                 <div class="card-body card-b">
                   <p class="card-text black">{{ event.title }}</p>
                   <p class="card-text"><small class="text-muted">{{ event.place }}</small></p>
@@ -360,14 +366,12 @@
         </div>
         <div class="modal-body">
           <p class="card-delete-modal">本当に削除しますか？</p>
-
           <form action="" method="post">
             {% csrf_token %}
             <div class="rejection-btn-event-container">
               <button type="submit" name="buttonType" class="rejection-btn" value="削除">削除</button>
             </div>
           </form>
-
           <form action="/delete_calendar/" method="post">
             {% csrf_token %}
             <input type="hidden" name="user_id" value="{{ profile.user.id }}">
@@ -376,7 +380,6 @@
               <button type="submit" class="rejection-btn" id="deleteEvent">削除</button>
             </div>
           </form>
-
         </div>
       </div>
     </div>
@@ -409,5 +412,6 @@
   var userId = '{{ profile.user.id }}';
   var csrfToken = '{{ csrf_token }}';
   var currentUser = '{{ current_user|yesno:"true,false"  }}';
+  var approvedEvents = '{{ approved_events }}';
 </script>
 {% endblock %}
