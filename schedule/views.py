@@ -449,7 +449,6 @@ def process_button(request, user_id):
         sender = request.user
         receiver = CustomUser.objects.get(id=user_id)
         userData = request.POST.get('userData')
-        print(userData)
         buttonType = request.POST.get('buttonType')
         if request.POST.get('eventId'):
             event_id = int(request.POST.get('eventId'))

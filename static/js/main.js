@@ -847,7 +847,6 @@ $('.event-modal').click(function() {
 /* 削除モーダル内でのボタンの分岐処理 */
 $(function() {
   $('.delete-trigger').click(function() {
-    console.log('click');
     var branch = $(this).data('delete-branch');
 
     $('.rejection-btn-calendar-container').hide();
