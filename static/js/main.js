@@ -384,6 +384,14 @@ $(document).ready(function() {
       }
     },
 
+    eventDidMount: function(info) {
+      var selectedDateStr = info.event.startStr;
+      if (approvedData && approvedData.includes(selectedDateStr)) {
+        info.el.style.backgroundColor = 'rgb(217, 103, 118)';
+        info.el.style.borderColor = 'rgb(217, 103, 118)';
+      }
+    },
+
     eventClick: function(info) {
       var localDate = new Date(info.event.start - info.event.start.getTimezoneOffset() * 60000);
       var selectedDateStr = localDate.toISOString().split('T')[0];
@@ -416,11 +424,7 @@ $(document).ready(function() {
           $('#otherUserData').text(info.event.title);
           $('#timeData').text(data.time);
           $('#messageData').text(data.message);
-
   　　　　　if (formattedToday <= selectedDateStr) {
-            console.log('selectedDateStr:', selectedDateStr);
-            console.log('approvedData:', approvedData);
-            console.log('Contains selectedDateStr:', !approvedData.includes(selectedDateStr));
             if (approvedData && !approvedData.includes(selectedDateStr)) {
   　　　　　    $('.calendar-intentional-btn').show();
             } else {
