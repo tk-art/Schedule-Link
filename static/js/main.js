@@ -418,9 +418,14 @@ $(document).ready(function() {
           $('#messageData').text(data.message);
 
   　　　　　if (formattedToday <= selectedDateStr) {
-  　　　　　  $('.calendar-intentional-btn').show();
-          } else {
-            $('.calendar-intentional-btn').hide();
+            console.log('selectedDateStr:', selectedDateStr);
+            console.log('approvedData:', approvedData);
+            console.log('Contains selectedDateStr:', !approvedData.includes(selectedDateStr));
+            if (approvedData && !approvedData.includes(selectedDateStr)) {
+  　　　　　    $('.calendar-intentional-btn').show();
+            } else {
+              $('.calendar-intentional-btn').hide();
+            }
           }
 
           $('#otherUserModal').modal('show');

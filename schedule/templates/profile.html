@@ -307,9 +307,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="eventModalLabel">暇な時間を入力してください</h5>
-
           <button type="submit" class="btn btn-danger delete-trigger" data-bs-toggle="modal" data-bs-target="#card_delete_modal" data-delete-branch="calendar" id="deleteEvent">削除</button>
-
         </div>
         <div class="modal-body">
           <form action="/calendar/" method="post">
@@ -413,5 +411,6 @@
   var csrfToken = '{{ csrf_token }}';
   var currentUser = '{{ current_user|yesno:"true,false"  }}';
   var approvedEvents = '{{ approved_events }}';
+  var approvedData = '{{ approved_data|to_json|safe }}';
 </script>
 {% endblock %}

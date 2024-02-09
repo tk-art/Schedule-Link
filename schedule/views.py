@@ -42,12 +42,17 @@ def human_readable_time_from_utc(timestamp, timezone='Asia/Tokyo'):
 
 def approved_events_function():
     approved_events = []
+    approved_data = []
     user_response = UserResponse.objects.all()
     for response in user_response:
         if response.eventId and response.buttonType == '承認する':
             approved_events.append(response.eventId_id)
-    return approved_events
+        if response.userData and response.buttonType == '承認する':
+            approved_data.append(response.userData)
 
+    approved_data_as_strings = [date_obj.strftime('%Y-%m-%d') for date_obj in approved_data]
+
+    return approved_events, approved_data_as_strings
 
 def top(request):
     category = request.GET.get('category', '')
@@ -74,7 +79,7 @@ def top(request):
         event.delta = human_readable_time_from_utc(event.timestamp)
         event.current_user = (request.user == event.user)
 
-    approved_events = approved_events_function()
+    approved_events, approved_data = approved_events_function()
 
     context = {
         'events': events,
@@ -187,7 +192,8 @@ def profile(request, user_id):
 
     current_user = request.user == profile.user
 
-    approved_events = approved_events_function()
+    approved_events, approved_data = approved_events_function()
+    print(approved_data)
 
     context = {
         'profile': profile,
@@ -198,6 +204,7 @@ def profile(request, user_id):
         'current_user': current_user,
         'events': events,
         'approved_events': approved_events,
+        'approved_data': approved_data,
     }
     return render(request, 'profile.html', context)
 
@@ -668,8 +675,10 @@ def search(request):
                     profiles = None
 
 
+            approved_events, approved_data = approved_events_function()
+
             if matching_profiles or matching_events:
-                return render(request, 'search_results.html', {'profiles' : matching_profiles, 'events': matching_events})
+                return render(request, 'search_results.html', {'profiles' : matching_profiles, 'events': matching_events, 'approved_events': approved_events})
             elif profiles:
                 return render(request, 'search_results.html', {'profiles' : profiles})
             else:
