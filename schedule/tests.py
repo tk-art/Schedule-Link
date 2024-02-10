@@ -10,7 +10,7 @@ from datetime import datetime, date, timedelta
 from django.core.files.uploadedfile import SimpleUploadedFile
 import json
 from .forms import EventForm
-from .views import recommendation_user_list, recommendation_event_list
+from .views import recommendation_user_list, recommendation_event_list, approved_events_function
 from unittest.mock import patch
 from allauth.socialaccount.models import SocialAccount
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
@@ -584,6 +584,46 @@ class GuestLoginTest(TestCase):
         self.assertEqual(CustomUser.objects.count(), 2)
         self.assertEqual(Profile.objects.count(), 2)
         self.assertEqual(Event.objects.count(), 2)
-        self.assertEqual(UserRequest.objects.count(), 1)
+        self.assertEqual(Calendar.objects.count(), 2)
+        self.assertEqual(UserRequest.objects.count(), 2)
         self.assertEqual(UserResponse.objects.count(), 1)
         self.assertEqual(ChatMessage.objects.count(), 1)
+
+class ApprovedEventsFunctionTest(TestCase):
+    def setUp(self):
+        self.user1 = CustomUser.objects.create_user('testuser1', password='password')
+        self.user2 = CustomUser.objects.create_user('testuser2', password='password')
+        image = SimpleUploadedFile(name='test_image.jpeg', content=b'', content_type='image/jpeg')
+        self.event1 = Event.objects.create(
+            user=self.user1,
+            title='イベント',
+            place='場所',
+            date=date.today(),
+            time='10:00~11:00',
+            category='その他',
+            image=image,
+            detail='詳細情報'
+        )
+        self.event2 = Event.objects.create(
+            user=self.user1,
+            title='イベント',
+            place='場所',
+            date=date.today(),
+            time='10:00~11:00',
+            category='その他',
+            image=image,
+            detail='詳細情報'
+        )
+        UserResponse.objects.create(sender=self.user1, receiver=self.user2, eventId=self.event1, buttonType='承認する', userData=None)
+        UserResponse.objects.create(sender=self.user1, receiver=self.user2, eventId=self.event2, buttonType='拒否する', userData=None)
+        UserResponse.objects.create(sender=self.user1, receiver=self.user2, eventId=None, buttonType='承認する', userData=date.today())
+        UserResponse.objects.create(sender=self.user1, receiver=self.user2, eventId=None, buttonType='拒否する', userData=date.today() + timedelta(days=1))
+
+    def test_approved_events_function(self):
+        approved_events, approved_data_as_strings = approved_events_function()
+        today = date.today().strftime('%Y-%m-%d')
+
+        self.assertIn(1, approved_events)
+        self.assertNotIn(2, approved_events)
+        self.assertIn(today, approved_data_as_strings)
+        self.assertTrue(all(isinstance(date_str, str) for date_str in approved_data_as_strings))

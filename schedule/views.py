@@ -134,6 +134,7 @@ def guest_login(request):
     large_number_of_events_user = CustomUser.objects.annotate(num_events=Count('event')).order_by('-num_events').first()
     sender_last_event = Event.objects.filter(user=large_number_of_events_user).last()
     room_name = f'{min(guest_user.id, large_number_of_events_user.id)}_{max(guest_user.id, large_number_of_events_user.id)}'
+    selectedDate = date.today() + timedelta(days=1)
 
     Profile.objects.create(user=guest_user, username=guest_user.username,
         content='これはデフォルトのプロフィールです。好みに応じて編集してください'
@@ -148,12 +149,22 @@ def guest_login(request):
     else:
         event = Event.objects.create(
             user=guest_user, title='テスト', place='テスト', category='その他',
-            date=date.today() + timedelta(days=1), time='10:00~10:30',
+            date=selectedDate, time='10:00~10:30',
             image='media/item_images/neko', detail='テスト'
         )
 
+    Calendar.objects.create(
+        user=guest_user, selectedDate=selectedDate, free="全日"
+    )
+    Calendar.objects.create(
+        user=guest_user, selectedDate=date.today() + timedelta(days=2), free="全日"
+    )
+
     UserRequest.objects.create(
         sender=large_number_of_events_user, receiver=guest_user, userData=None, eventId_id=event.id, situation=True
+    )
+    UserRequest.objects.create(
+      sender=large_number_of_events_user, receiver=guest_user, userData=selectedDate, eventId_id=None, situation=True
     )
 
     UserResponse.objects.create(
@@ -163,7 +174,6 @@ def guest_login(request):
     ChatMessage.objects.create(
         sender=guest_user, receiver=large_number_of_events_user, message='初めまして！', room_name=room_name, read=True
     )
-
 
     guest_user.backend = 'django.contrib.auth.backends.ModelBackend'
     login(request, guest_user)
