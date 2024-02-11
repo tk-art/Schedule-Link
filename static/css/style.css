@@ -892,6 +892,21 @@ header {
   opacity: 0.8;
 }
 
+.invitation-btn {
+  margin-right: 5px;
+  border-radius: 10px;
+  font-size: 12px;
+  color: #fff;
+  background-color: rgb(21, 102, 28);
+  padding: 6px 12px;
+  border: none;
+  letter-spacing: 1.2px;
+}
+
+.invitation-btn:hover {
+  opacity: 0.8;
+}
+
 .rejection-btn-calendar-container {
   text-align: right;
 }
@@ -1388,6 +1403,53 @@ header {
   border-bottom: 1px solid #b7b3b3;
 }
 
+/* カードモーダル内の招待部分 */
+
+.invitation-users {
+  height: 400px;
+}
+
+.invitation-user-info {
+  display: flex;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #b7b3b3;
+  cursor: pointer;
+}
+
+.invitation-user-info img {
+  margin-bottom: 15px;
+}
+
+.invitation-username {
+  margin: auto 0;
+  letter-spacing: 1.2px;
+}
+
+.confirm-invitation-btn-container {
+  text-align: right;
+}
+
+.confirm-invitation-btn {
+  margin-right: 5px;
+  border-radius: 10px;
+  font-size: 12px;
+  color: #fff;
+  background-color: rgb(21, 102, 28);
+  padding: 6px 12px;
+  border: none;
+  letter-spacing: 1.2px;
+}
+
+.confirm-invitation-btn:hover {
+  opacity: 0.8;
+}
+
+.invitation-selected {
+  color:rgb(21, 102, 28);
+}
+
 /* トップページ */
 
 .top-content {
@@ -1490,6 +1552,10 @@ header {
 }
 
 #card_editing_modal {
+  color: black;
+}
+
+#invitation_modal {
   color: black;
 }
 

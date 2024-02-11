@@ -139,6 +139,7 @@
             <span id="close_modal_btn" class="close-card-btn close-modal-btn">x</span>
             {% if request.user == profile.user %}
               <div class="card-edit-btn">
+                <button class="invitation-btn" data-bs-toggle="modal" data-bs-target="#invitation_modal">招待</button>
                 <button class="approval-btn" data-bs-toggle="modal" data-bs-target="#card_editing_modal">編集</button>
                 <button class="rejection-btn delete-trigger" data-bs-toggle="modal" data-bs-target="#card_delete_modal" data-delete-brancht="event">削除</button>
               </div>
@@ -147,6 +148,23 @@
                 <a id="intentionalBtn" class="intentional-btn event-intentional-btn">ヒマリク</a>
               </div>
             {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 招待モーダル　-->
+  <div class="modal fade" id="invitation_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <p class="modal-title">招待</p>
+        </div>
+        <div class="modal-body">
+          <div class="invitation-users"></div>
+          <div class="confirm-invitation-btn-container">
+            <button class="confirm-invitation-btn">確定</button>
           </div>
         </div>
       </div>

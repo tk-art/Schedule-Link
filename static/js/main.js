@@ -386,7 +386,6 @@ $(document).ready(function() {
 
     eventDidMount: function(info) {
       var selectedDateStr = info.event.startStr;
-      console.log(selectedDateStr);
       if (approvedData && approvedData.includes(selectedDateStr)) {
         info.el.style.backgroundColor = 'rgb(217, 103, 118)';
         info.el.style.borderColor = 'rgb(217, 103, 118)'
@@ -838,6 +837,7 @@ $('.event-modal').click(function() {
 
       $('#card_editing_modal .modal-body form').attr('action', '/card_editing/' + eventId + '/');
       $('#card_delete_modal .modal-body form').attr('action', '/delete_card/' + eventId + '/');
+      $('.invitation-btn').attr('data-event-id', eventId);
 
       if (!data.current_user && formattedToday <= data.date) {
         if (approvedEvents && !approvedEvents.includes(eventId)) {
@@ -870,6 +870,66 @@ $(function() {
     }
   });
 });
+
+/*　招待モーダルのユーザー情報取得 */
+/* 招待するユーザーが確定した場合の処理 */
+
+$(function() {
+  var selecetedUsers = []; // 選択されたユーザーIDを記憶する配列
+
+  $('.invitation-btn').click(function() {
+    var eventId = $(this).data('event-id');
+    $('.invitation-users').empty();
+    $.ajax({
+      url: '/invitation_user/' + eventId + '/',
+      method: 'GET',
+      success: function(data) {
+        $.each(data.invitation_users, function(index, user) {
+          var userElement = $(
+            '<div class="invitation-user-info" data-user-id="' + user.id +'">' +
+            '<img src="' + user.image_url + '" alt="プロフィール画像" class="follow-image-size">' +
+            '<p class="invitation-username">' + user.username + '</p>' +
+            '</div>'
+          );
+          $('.invitation-users').append(userElement);
+        });
+      },
+      error: function(error) {
+        console.log('ユーザー情報の取得に失敗', error);
+      }
+    });
+
+    $('.invitation-user-info').click(function() {
+      console.log('success');
+      var userId = $(this).data('user-id');
+      console.log(userId);
+      if (selectedUsers.indexOf(userId) === -1) {
+        selectedUsers.push(userId);
+        $(this).addClass('invitation-selected');
+      } else {
+        selectedUsers = selectedUsers.filter(function(id) {
+          return id !== userId;
+        });
+        $(this).removeClass('invitation-selected');
+      }
+    });
+
+    $('.confirm-invitation-btn').click(function() {
+      $.ajax({
+        url: '/invitation_request/' + eventId + '/',
+        method: 'POST',
+        data: JSON.stringify({ selecetedUsers: selectedUsers }),
+        success: function(response) {
+          console.log('招待成功', response);
+        },
+        error: function(error) {
+          console.error('招待失敗', error);
+        }
+      });
+    });
+  });
+});
+
 
 /* トップページカテゴリー検索 */
 function searchCategory(categoryType) {

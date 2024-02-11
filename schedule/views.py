@@ -482,6 +482,13 @@ def recommendation_event_list(request):
 
     return matched_events
 
+def invitation_request(request):
+    if request.method == 'POST':
+        selected_users = request.POST.get('selectedUsers')
+        print(selected_users)
+        for user in selected_users:
+            UserRequest.objects.create(sender=request.user, receiver=user, userData=None, eventId_id=eventId, situation=True)
+
 # レスポンス
 
 def process_button(request, user_id):
@@ -801,3 +808,19 @@ def delete_card(request, event_id):
             return redirect('profile', user_id=request.user.id)
     else:
         return render(request, 'profile.html')
+
+def invitation_user(request, event_id):
+    event = Event.objects.get(id=event_id)
+    user_free_times = Calendar.objects.filter(selectedDate=event.date).exclude(user=request.user)
+
+    invitation_users = []
+    for user_free_time in user_free_times:
+        user = user_free_time.user
+        user_info = {
+            'id': user.id,
+            'username': user.profile.username,
+            'image_url': user.profile.image.url
+        }
+        invitation_users.append(user_info)
+
+    return JsonResponse({'invitation_users': invitation_users})
