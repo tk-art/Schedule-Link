@@ -40,17 +40,27 @@ def human_readable_time_from_utc(timestamp, timezone='Asia/Tokyo'):
     else:
         return "たった今"
 
-def approved_events_function():
+def approved_events_function(user_id):
     approved_events = []
     approved_data = []
-    user_response = UserResponse.objects.all()
-    for response in user_response:
-        if response.eventId and response.buttonType == '承認する':
-            approved_events.append(response.eventId_id)
-        if response.userData and response.buttonType == '承認する':
-            approved_data.append(response.userData)
+    if user_id:
+        user_response = UserResponse.objects.filter(sender=user_id, buttonType="承認する")
+        for response in user_response:
+            if response.eventId:
+                approved_events.append(response.eventId_id)
+            if response.userData:
+                approved_data.append(response.userData)
 
-    approved_data_as_strings = [date_obj.strftime('%Y-%m-%d') for date_obj in approved_data]
+        approved_data_as_strings = [date_obj.strftime('%Y-%m-%d') for date_obj in approved_data]
+    else:
+        user_response = UserResponse.objects.filter(buttonType="承認する")
+        for response in user_response:
+            if response.eventId:
+                approved_events.append(response.eventId_id)
+            if response.userData:
+                approved_data.append(response.userData)
+
+        approved_data_as_strings = [date_obj.strftime('%Y-%m-%d') for date_obj in approved_data]
 
     return approved_events, approved_data_as_strings
 
@@ -79,7 +89,7 @@ def top(request):
         event.delta = human_readable_time_from_utc(event.timestamp)
         event.current_user = (request.user == event.user)
 
-    approved_events, approved_data = approved_events_function()
+    approved_events, approved_data = approved_events_function(None)
 
     context = {
         'events': events,
@@ -202,8 +212,7 @@ def profile(request, user_id):
 
     current_user = request.user == profile.user
 
-    approved_events, approved_data = approved_events_function()
-    print(approved_data)
+    approved_events, approved_data = approved_events_function(request.user)
 
     context = {
         'profile': profile,
@@ -684,11 +693,12 @@ def search(request):
                             matching_events.append(event)
                     profiles = None
 
+            matching_events_sorted = sorted(matching_events, key=lambda x: x.timestamp, reverse=True)
 
-            approved_events, approved_data = approved_events_function()
+            approved_events, approved_data = approved_events_function(None)
 
             if matching_profiles or matching_events:
-                return render(request, 'search_results.html', {'profiles' : matching_profiles, 'events': matching_events, 'approved_events': approved_events})
+                return render(request, 'search_results.html', {'profiles' : matching_profiles, 'events': matching_events_sorted, 'approved_events': approved_events})
             elif profiles:
                 return render(request, 'search_results.html', {'profiles' : profiles})
             else:

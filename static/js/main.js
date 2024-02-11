@@ -386,9 +386,10 @@ $(document).ready(function() {
 
     eventDidMount: function(info) {
       var selectedDateStr = info.event.startStr;
+      console.log(selectedDateStr);
       if (approvedData && approvedData.includes(selectedDateStr)) {
         info.el.style.backgroundColor = 'rgb(217, 103, 118)';
-        info.el.style.borderColor = 'rgb(217, 103, 118)';
+        info.el.style.borderColor = 'rgb(217, 103, 118)'
       }
     },
 
