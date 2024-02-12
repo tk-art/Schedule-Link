@@ -5,6 +5,7 @@ from .forms import SignupForm, ProfileForm, CalendarForm, SearchForm, EventForm,
 from .models import CustomUser, Profile, Calendar, UserRequest, UserResponse, ChatMessage, Notification, Event
 from django.shortcuts import redirect
 from django.http import JsonResponse
+import json
 from django.core.serializers import serialize
 from django.contrib import messages
 import pytz
@@ -482,12 +483,15 @@ def recommendation_event_list(request):
 
     return matched_events
 
-def invitation_request(request):
+def invitation_request(request, event_id):
     if request.method == 'POST':
         selected_users = request.POST.get('selectedUsers')
-        print(selected_users)
-        for user in selected_users:
-            UserRequest.objects.create(sender=request.user, receiver=user, userData=None, eventId_id=eventId, situation=True)
+        selected_users = json.loads(selected_users)
+        for selected_user in selected_users:
+            user = CustomUser.objects.get(id=selected_user)
+            UserRequest.objects.create(sender=request.user, receiver=user, userData=None, eventId_id=event_id, situation=True)
+
+    return JsonResponse({'success': 'success'})
 
 # レスポンス
 

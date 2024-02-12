@@ -872,10 +872,9 @@ $(function() {
 });
 
 /*　招待モーダルのユーザー情報取得 */
-/* 招待するユーザーが確定した場合の処理 */
 
 $(function() {
-  var selecetedUsers = []; // 選択されたユーザーIDを記憶する配列
+  var selectedUsers = [];
 
   $('.invitation-btn').click(function() {
     var eventId = $(this).data('event-id');
@@ -899,10 +898,8 @@ $(function() {
       }
     });
 
-    $('.invitation-user-info').click(function() {
-      console.log('success');
+    $('.invitation-users').on('click', '.invitation-user-info', function() {
       var userId = $(this).data('user-id');
-      console.log(userId);
       if (selectedUsers.indexOf(userId) === -1) {
         selectedUsers.push(userId);
         $(this).addClass('invitation-selected');
@@ -918,9 +915,13 @@ $(function() {
       $.ajax({
         url: '/invitation_request/' + eventId + '/',
         method: 'POST',
-        data: JSON.stringify({ selecetedUsers: selectedUsers }),
+        data: {
+          csrfmiddlewaretoken: csrfToken,
+          selectedUsers: JSON.stringify(selectedUsers),
+        },
         success: function(response) {
-          console.log('招待成功', response);
+          $('#invitation_modal').hide();
+          $('#eventmodal').hide();
         },
         error: function(error) {
           console.error('招待失敗', error);
