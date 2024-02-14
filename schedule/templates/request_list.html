@@ -35,7 +35,7 @@
               {% with event=user.eventId %}
                 <div class="request-event-detail">
                   {% if user.sender.id == event.user.id %}
-                    <p>「{{ user.sender.profile.username }}」から、「{{ event.title }}」に対して招待されています</p>
+                    <p>「{{ user.sender.profile.username }}」から、「{{ event.title }}」に招待されています</p>
                   {% else %}
                     <p>「{{ user.sender.profile.username }}」から、あなたが作成した「{{ event.title }}」に対してヒマリクが送られてきています</p>
                   {% endif %}
@@ -89,7 +89,7 @@
                     </p>
                   {% else %}
                     <p>
-                      「{{ user.sender.profile.username }}」から「{{ event.title }}」に対するリクエストに関して,
+                      「{{ user.sender.profile.username }}」から「{{ event.title }}」に対するリクエストに,
                       「{{ user.buttonType }}」とレスポンスがあります
                     </p>
                   {% endif %}

@@ -5,8 +5,9 @@
   <div class="event-page">
     <form action="/event/" class="edit-form" method="post" enctype="multipart/form-data">
       {% csrf_token %}
+      <p class="invitation-p">招待したいユーザーがいる場合は、プロフィールの自分のイベントから招待できます</p>
       <div class="form-group">
-        <label for="image">トップ画像（任意）</label>
+        <label for="image" class="event-label">トップ画像（任意）</label>
         <input type="file" class="form-control" id="image" name="image" accept="image/*">
       </div>
       <br>
@@ -60,7 +61,7 @@
         </select>
         <br>
         <div class="form-group">
-          <label for="detail">詳細情報（任意）</label>
+          <label for="detail" class="event-label">詳細情報（任意）</label>
           <textarea class="form-control" id="detail" name="detail"></textarea>
         </div>
         <br>

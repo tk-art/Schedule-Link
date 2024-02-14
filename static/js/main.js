@@ -817,6 +817,7 @@ $('.event-modal').click(function() {
   var userId = $(this).data('key');
   var today = new Date();
   var formattedToday = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+  var approved_events = approvedEvents || [];
 
   $.ajax({
     url: '/get_event_details/',
@@ -839,15 +840,31 @@ $('.event-modal').click(function() {
       $('#card_delete_modal .modal-body form').attr('action', '/delete_card/' + eventId + '/');
       $('.invitation-btn').attr('data-event-id', eventId);
 
+      /* プロフィールページ以外の暇リクボタンの表示状態 */
+
       if (!data.current_user && formattedToday <= data.date) {
-        if (approvedEvents && !approvedEvents.includes(eventId)) {
+        if (approved_events && !approved_events.includes(eventId)) {
           $('#eventmodal .card-btn').show();
           $('#eventmodal .card-btn').attr('id', 'cardBtn-' + eventId );
           $('#eventmodal .card-btn .intentional-btn').attr('data-key', userId);
           $('#eventmodal .card-btn .intentional-btn').attr('data-event-id', eventId);
+        }　else {
+          $('#eventmodal .card-btn').hide();
         }
       } else {
         $('#eventmodal .card-btn').hide();
+      }
+
+      /* 招待ボタンの表示状態 */
+
+      if (data.current_user && formattedToday <= data.date) {
+        if (approved_events && !approved_events.includes(eventId)) {
+          $('#eventmodal .invitation-btn').show();
+        } else {
+          $('#eventmodal .invitation-btn').hide();
+        }
+      } else {
+        $('#eventmodal .invitation-btn').hide();
       }
 
       $('#eventmodal').modal('show');
@@ -920,8 +937,8 @@ $(function() {
           selectedUsers: JSON.stringify(selectedUsers),
         },
         success: function(response) {
-          $('#invitation_modal').hide();
-          $('#eventmodal').hide();
+          $('#invitation_modal').modal('hide');
+          $('#eventmodal').modal('hide');
         },
         error: function(error) {
           console.error('招待失敗', error);

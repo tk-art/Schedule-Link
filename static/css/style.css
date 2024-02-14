@@ -1427,6 +1427,13 @@ header {
   letter-spacing: 1.2px;
 }
 
+.invitation-p {
+  color: #626367;
+  letter-spacing: 1.2px;
+  font-size: 16px;
+  text-align: center;
+}
+
 .confirm-invitation-btn-container {
   text-align: right;
 }
@@ -1448,6 +1455,7 @@ header {
 
 .invitation-selected {
   color:rgb(21, 102, 28);
+  font-size: 20px;
 }
 
 /* トップページ */

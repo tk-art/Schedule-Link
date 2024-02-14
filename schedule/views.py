@@ -491,7 +491,7 @@ def invitation_request(request, event_id):
             user = CustomUser.objects.get(id=selected_user)
             UserRequest.objects.create(sender=request.user, receiver=user, userData=None, eventId_id=event_id, situation=True)
 
-    return JsonResponse({'success': 'success'})
+    return JsonResponse({'status': 'success'})
 
 # レスポンス
 
@@ -816,15 +816,17 @@ def delete_card(request, event_id):
 def invitation_user(request, event_id):
     event = Event.objects.get(id=event_id)
     user_free_times = Calendar.objects.filter(selectedDate=event.date).exclude(user=request.user)
+    already_exists_requests = UserRequest.objects.filter(sender=request.user, eventId=event).values_list('receiver', flat=True)
 
     invitation_users = []
     for user_free_time in user_free_times:
         user = user_free_time.user
-        user_info = {
-            'id': user.id,
-            'username': user.profile.username,
-            'image_url': user.profile.image.url
-        }
-        invitation_users.append(user_info)
+        if not user.id in already_exists_requests:
+            user_info = {
+                'id': user.id,
+                'username': user.profile.username,
+                'image_url': user.profile.image.url
+            }
+            invitation_users.append(user_info)
 
     return JsonResponse({'invitation_users': invitation_users})
