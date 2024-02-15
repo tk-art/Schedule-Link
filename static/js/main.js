@@ -926,6 +926,7 @@ $(function() {
         });
         $(this).removeClass('invitation-selected');
       }
+      console.log(selectedUsers);
     });
 
     $('.confirm-invitation-btn').click(function() {
@@ -934,7 +935,7 @@ $(function() {
         method: 'POST',
         data: {
           csrfmiddlewaretoken: csrfToken,
-          selectedUsers: JSON.stringify(selectedUsers),
+          selectedUsers: JSON.stringify(selectedUsers)
         },
         success: function(response) {
           $('#invitation_modal').modal('hide');

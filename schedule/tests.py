@@ -627,3 +627,57 @@ class ApprovedEventsFunctionTest(TestCase):
         self.assertNotIn(2, approved_events)
         self.assertIn(today, approved_data_as_strings)
         self.assertTrue(all(isinstance(date_str, str) for date_str in approved_data_as_strings))
+
+class InvitationTest(TestCase):
+    def setUp(self):
+        self.user1 = CustomUser.objects.create_user('testuser1', password='password')
+        self.user2 = CustomUser.objects.create_user('testuser2', password='password')
+        image = SimpleUploadedFile(name='test_image.jpeg', content=b'', content_type='image/jpeg')
+
+        Profile.objects.create(
+            user=self.user2, username='user_a', age=20, gender="男性", residence="宮崎県", image=image
+        )
+
+        self.event1 = Event.objects.create(
+            user=self.user1,
+            title='イベント',
+            place='場所',
+            date=date.today(),
+            time='10:00~11:00',
+            category='その他',
+            image=image
+        )
+
+        Calendar.objects.create(user=self.user2, selectedDate=date.today(), free="全日")
+
+        self.client.login(username="testuser1", password="password")
+
+    def test_invitation_users(self):
+        response = self.client.get(reverse('invitation_user', kwargs={'event_id': self.event1.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('invitation_users' in response.json())
+        invitation_users = response.json()['invitation_users']
+        self.assertEqual(len(invitation_users), 1)
+        self.assertEqual(invitation_users[0]['username'], self.user2.profile.username)
+
+    def test_already_invited(self):
+        UserRequest.objects.create(sender=self.user1, receiver=self.user2, eventId=self.event1)
+        response = self.client.get(reverse('invitation_user', kwargs={'event_id': self.event1.id}))
+        self.assertEqual(response.status_code, 200)
+        invitation_users = response.json()['invitation_users']
+        self.assertEqual(len(invitation_users), 0)
+
+    def test_invitation_request(self):
+        selectedUsers = [self.user2.id]
+        response = self.client.post(
+            reverse('invitation_request', kwargs={'event_id':self.event1.id}),
+            data={
+                'selectedUsers': [selectedUsers]
+            }
+        )
+
+        self.assertEqual(response.status_code, 200)
+        user_request = UserRequest.objects.get(sender=self.user1, receiver=self.user2, eventId=self.event1)
+        self.assertEqual(user_request.sender, self.user1)
+        self.assertEqual(user_request.receiver, self.user2)
+        self.assertEqual(user_request.eventId, self.event1)
