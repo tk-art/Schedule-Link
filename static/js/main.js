@@ -817,7 +817,7 @@ $('.event-modal').click(function() {
   var userId = $(this).data('key');
   var today = new Date();
   var formattedToday = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
-  var approved_events = approvedEvents || [];
+  var approved_events = approvedEvents;
 
   $.ajax({
     url: '/get_event_details/',
@@ -840,7 +840,7 @@ $('.event-modal').click(function() {
       $('#card_delete_modal .modal-body form').attr('action', '/delete_card/' + eventId + '/');
       $('.invitation-btn').attr('data-event-id', eventId);
 
-      /* プロフィールページ以外の暇リクボタンの表示状態 */
+      /* 暇リクボタンの表示状態 */
 
       if (!data.current_user && formattedToday <= data.date) {
         if (approved_events && !approved_events.includes(eventId)) {
@@ -902,7 +902,7 @@ $(function() {
       success: function(data) {
         $.each(data.invitation_users, function(index, user) {
           var userElement = $(
-            '<div class="invitation-user-info" data-user-id="' + user.id +'">' +
+            '<div class="invitation-user-info" data-user-id="' + user.id +'" data-user-name="' + user.username +'">' +
             '<img src="' + user.image_url + '" alt="プロフィール画像" class="follow-image-size">' +
             '<p class="invitation-username">' + user.username + '</p>' +
             '</div>'
@@ -917,16 +917,33 @@ $(function() {
 
     $('.invitation-users').on('click', '.invitation-user-info', function() {
       var userId = $(this).data('user-id');
+      var userName = $(this).data('user-name');
       if (selectedUsers.indexOf(userId) === -1) {
         selectedUsers.push(userId);
-        $(this).addClass('invitation-selected');
+        var userElement = $(
+          '<div id="selected_user_'+ userId +'" class="selected-user" data-user-id="' + userId +'">' +
+          '<p class="selected-username">' + userName + '</p>' +
+          '</div>'
+        );
+        $('.invitation-user').append(userElement);
       } else {
         selectedUsers = selectedUsers.filter(function(id) {
           return id !== userId;
         });
-        $(this).removeClass('invitation-selected');
+        if ($('#selected_user_' + userId).length > 0) {
+          $('#selected_user_' + userId).remove();
+        }
       }
-      console.log(selectedUsers);
+    });
+
+    $('.invitation-user').on('click', '.selected-user', function() {
+      var userId = $(this).data('user-id');
+      selectedUsers = selectedUsers.filter(function(id) {
+        return id !== userId;
+      });
+      if ($('#selected_user_' + userId).length > 0) {
+        $('#selected_user_' + userId).remove();
+      }
     });
 
     $('.confirm-invitation-btn').click(function() {
@@ -938,6 +955,7 @@ $(function() {
           selectedUsers: JSON.stringify(selectedUsers)
         },
         success: function(response) {
+          alert("正常に招待が完了しました");
           $('#invitation_modal').modal('hide');
           $('#eventmodal').modal('hide');
         },

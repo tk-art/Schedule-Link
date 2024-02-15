@@ -1407,6 +1407,11 @@ header {
 
 .invitation-users {
   height: 400px;
+  overflow: scroll;
+}
+
+.invitation-users::-webkit-scrollbar {
+  display: none;
 }
 
 .invitation-user-info {
@@ -1432,6 +1437,27 @@ header {
   letter-spacing: 1.2px;
   font-size: 16px;
   text-align: center;
+}
+
+.invitation-user {
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 15px;
+  display: flex;
+}
+
+.selected-user {
+  height: 40px;
+  padding: 5px;
+  margin-right: 10px;
+  border: 1px solid #15661C;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+.selected-username {
+  letter-spacing: 1.2px;
+  color: #15661C;
 }
 
 .confirm-invitation-btn-container {
@@ -1552,6 +1578,7 @@ header {
 }
 
 /* カード編集 プロフィールページ */
+
 .card-edit-btn {
   display: flex;
   position: absolute;
@@ -1580,4 +1607,10 @@ header {
 .confirm-card-btn:hover {
   color: #fff;
   background: rgb(62, 105, 213);
+}
+
+/* モーダルタイトル */
+
+.modal-title {
+  letter-spacing: 1.2px;
 }
