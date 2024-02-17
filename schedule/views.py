@@ -531,9 +531,9 @@ def process_button(request, user_id):
         UserResponse.objects.create(sender=sender, receiver=receiver, userData=userData, eventId=eventId, buttonType=buttonType)
 
         if eventId:
-            user_request = UserRequest.objects.get(sender=receiver, receiver=sender, eventId=eventId)
+            user_request = UserRequest.objects.get(sender=receiver, receiver=sender, eventId=eventId, is_processed=False)
         else:
-            user_request = UserRequest.objects.get(sender=receiver, receiver=sender, userData=userData)
+            user_request = UserRequest.objects.get(sender=receiver, receiver=sender, userData=userData, is_processed=False)
         user_request.is_processed = True
         user_request.save()
 
@@ -699,6 +699,7 @@ def search(request):
 
             matching_profiles = []
             matching_events = []
+            approved_events, approved_data = approved_events_function(None)
             if date_search:
                 if '~' in date_search:
                     start_str, end_str = date_search.split('~')
@@ -711,8 +712,9 @@ def search(request):
 
                         events = Event.objects.filter(user_id=profile.user.id, date__range=(start_date, end_date))
                         for event in events:
-                            event.delta = human_readable_time_from_utc(event.timestamp)
-                            matching_events.append(event)
+                            if event.id not in approved_events:
+                                event.delta = human_readable_time_from_utc(event.timestamp)
+                                matching_events.append(event)
                     profiles = None
                 else:
                     for profile in profiles:
@@ -721,13 +723,12 @@ def search(request):
 
                         events = Event.objects.filter(user_id=profile.user.id, date=date_search)
                         for event in events:
-                            event.delta = human_readable_time_from_utc(event.timestamp)
-                            matching_events.append(event)
+                            if event.id not in approved_events:
+                                event.delta = human_readable_time_from_utc(event.timestamp)
+                                matching_events.append(event)
                     profiles = None
 
             matching_events_sorted = sorted(matching_events, key=lambda x: x.timestamp, reverse=True)
-
-            approved_events, approved_data = approved_events_function(None)
 
             if matching_profiles or matching_events:
                 return render(request, 'search_results.html', {'profiles' : matching_profiles, 'events': matching_events_sorted, 'approved_events': approved_events})
