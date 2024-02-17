@@ -6,6 +6,15 @@
   <div class="top-content">
     {% if request.user.is_authenticated %}
       <div class="phone-size-recommendation" style="display: none;">
+        <label for="situation" class="event-label">状態</label>
+        <select class="form-control top-pointer" id="phone-size-situation" name="situation" onchange="searchSituation('phone')">
+          <option value="" selected>選択してください</option>
+          <option value="確定済み">確定済み</option>
+          <option value="未確定">未確定</option>
+        </select>
+      </div>
+
+      <div class="phone-size-recommendation" style="display: none;">
         <label for="recommendation" class="event-label">おすすめ</label>
         <select class="form-control" id="phone-size-recommendation" name="recommendation" onchange="searchRecom('phone')">
           <option value="" selected>選択してください</option>
@@ -90,6 +99,30 @@
             </div>
           {% endfor %}
         </div>
+      {% elif situation_list %}
+        <div class="row row-cols-2 row-cols-md-3 g-4">
+          {% for event in situation_list %}
+            <div class="col">
+              <div class="card event-card event-modal" data-event-id="{{ event.id }}" data-key="{{ event.user.id }}">
+                {% if event.id|is_included:approved_events %}
+                  <img src="{{ event.image.url }}" alt="{{ profile.username }}" class="confirmed-event-card-size">
+                  <p class="overlay-text">確定済み</p>
+                {% else %}
+                  <img src="{{ event.image.url }}" alt="{{ profile.username }}" class="event-card-size">
+                {% endif %}
+                <div class="card-body card-b">
+                  <p class="card-text black">{{ event.title }}</p>
+                  <p class="card-text"><small class="text-muted">{{ event.place }}</small></p>
+                </div>
+                <div class="card-f">
+                  <img src="{{ event.user.profile.image.url }}" alt="{{ event.user.profile.username }}" class="event-image-size">
+                  <p class="card-name">{{ event.user.profile.username }}</p>
+                  <p class="chat-delta">{{ event.delta }}</p>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
       {% else %}
         <div class="row row-cols-2 row-cols-md-3 g-4">
           {% for event in events %}
@@ -155,8 +188,17 @@
     <div class="top-right col-md-3">
       {% if request.user.is_authenticated %}
         <div class="recommendation">
+          <label for="situation" class="event-label">状態</label>
+          <select class="form-control top-pointer" id="situation" name="situation" onchange="searchSituation()">
+            <option value="" selected>選択してください</option>
+            <option value="確定済み">確定済み</option>
+            <option value="未確定">未確定</option>
+          </select>
+        </div>
+
+        <div class="recommendation">
           <label for="recommendation" class="event-label">おすすめ</label>
-          <select class="form-control" id="recommendation" name="recommendation" onchange="searchRecom()">
+          <select class="form-control top-pointer" id="recommendation" name="recommendation" onchange="searchRecom()">
             <option value="" selected>選択してください</option>
             <option value="おすすめユーザー">おすすめユーザー</option>
             <option value="おすすめイベント">おすすめイベント</option>
@@ -166,7 +208,7 @@
 
       <div class="category-list">
         <label for="category" class="event-label">カテゴリー</label>
-        <select class="form-control" id="category" name="category" onchange="searchCategory()">
+        <select class="form-control top-pointer" id="category" name="category" onchange="searchCategory()">
           <option value="" selected>選択してください</option>
           <option value="アウトドア">アウトドア</option>
           <option value="カフェ巡り">カフェ巡り</option>

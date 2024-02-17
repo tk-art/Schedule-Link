@@ -969,6 +969,13 @@ $(function() {
 
 
 /* トップページカテゴリー検索 */
+
+function searchSituation(situationType) {
+  var selector = situationType === 'phone' ? '#phone-size-situation' : '#situation';
+  var selectedSituation = $(selector).val();
+  window.location.href = `?situation=${selectedSituation}`;
+}
+
 function searchCategory(categoryType) {
   var selector = categoryType === 'phone' ? '#phone-size-category' : '#category';
   var selectedCategory = $(selector).val();

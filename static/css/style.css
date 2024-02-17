@@ -1533,6 +1533,10 @@ header {
   margin-right: 10px;
 }
 
+.top-pointer {
+  cursor: pointer;
+}
+
 @media (max-width: 768px) {
   .phone-size-category {
     display: block !important;

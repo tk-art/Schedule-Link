@@ -69,6 +69,7 @@ def top(request):
     category = request.GET.get('category', '')
     recommend_user = request.GET.get('recommend_user', '')
     recommend_event = request.GET.get('recommend_event', '')
+    situation = request.GET.get('situation', '')
 
     if recommend_user:
         users, user_first_match = recommendation_user_list(request)
@@ -86,18 +87,38 @@ def top(request):
     else:
         events = Event.objects.all().order_by('-timestamp')
 
-    for event in events:
-        event.delta = human_readable_time_from_utc(event.timestamp)
-        event.current_user = (request.user == event.user)
-
     approved_events, approved_data = approved_events_function(None)
+
+    situation_list = []
+    if situation == '確定済み':
+        for approved_event in approved_events:
+            event = Event.objects.get(id=approved_event)
+            situation_list.append(event)
+    elif situation == '未確定':
+        events = Event.objects.all()
+        for event in events:
+            if event.id not in approved_events:
+                situation_list.append(event)
+    else:
+        sorted_situation_list = None
+
+    if situation_list:
+        sorted_situation_list = sorted(situation_list, key=lambda x: x.timestamp, reverse=True)
+
+    if sorted_situation_list:
+        for event in sorted_situation_list:
+            event.delta = human_readable_time_from_utc(event.timestamp)
+    else:
+        for event in events:
+            event.delta = human_readable_time_from_utc(event.timestamp)
 
     context = {
         'events': events,
         'users': users,
         'user_first_match': user_first_match,
         'matched_events': matched_events,
-        'approved_events': approved_events
+        'approved_events': approved_events,
+        'situation_list': sorted_situation_list
     }
 
     return render(request, 'top.html', context)
