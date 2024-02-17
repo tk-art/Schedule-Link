@@ -234,7 +234,7 @@ def profile(request, user_id):
 
     current_user = request.user == profile.user
 
-    approved_events, approved_data = approved_events_function(request.user)
+    approved_events, approved_data = approved_events_function(profile.user)
 
     context = {
         'profile': profile,
@@ -457,6 +457,7 @@ def recommendation_user_list(request):
 
     #　mathing_users = 同じ県でフォローしているユーザ　＋　同じ県で趣味、興味に共通点があるユーザ
     matching_users = get_matching_profiles(current_user)
+    print(matching_users)
 
     #　暇な時間が被っているユーザを取得
     user_first_match = {}
