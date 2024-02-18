@@ -457,7 +457,6 @@ def recommendation_user_list(request):
 
     #　mathing_users = 同じ県でフォローしているユーザ　＋　同じ県で趣味、興味に共通点があるユーザ
     matching_users = get_matching_profiles(current_user)
-    print(matching_users)
 
     #　暇な時間が被っているユーザを取得
     user_first_match = {}
@@ -667,6 +666,10 @@ def mark_chat_as_read(request, user_id):
 
 # 検索
 
+def daterange(start_date, end_date):
+    for n in range((end_date - start_date).days):
+        yield start_date + timedelta(n)
+
 @login_required
 def search(request):
     ages = list(range(18, 51))
@@ -706,12 +709,16 @@ def search(request):
                     start_str, end_str = date_search.split('~')
                     start_date = datetime.strptime(start_str, "%Y-%m-%d").date()
                     end_date = datetime.strptime(end_str, "%Y-%m-%d").date()
-                    end_date += timedelta(days=1)
+                    end_date += timedelta(1)
                     for profile in profiles:
-                        if Calendar.objects.filter(user_id=profile.user.id, selectedDate__range=(start_date, end_date)).exists():
-                            matching_profiles.append(profile)
+                        if Calendar.objects.filter(user_id=profile.user.id, selectedDate__gte=start_date, selectedDate__lt=end_date).exists():
+                            for single_date in daterange(start_date, end_date):
+                                if not UserResponse.objects.filter(
+                                    sender=profile.user.id, userData=single_date
+                                ).exists() and not profile in matching_profiles:
+                                    matching_profiles.append(profile)
 
-                        events = Event.objects.filter(user_id=profile.user.id, date__range=(start_date, end_date))
+                        events = Event.objects.filter(user_id=profile.user.id, date__gte=start_date, date__lt=end_date)
                         for event in events:
                             if event.id not in approved_events:
                                 event.delta = human_readable_time_from_utc(event.timestamp)
@@ -720,7 +727,8 @@ def search(request):
                 else:
                     for profile in profiles:
                         if Calendar.objects.filter(user_id=profile.user.id, selectedDate=date_search).exists():
-                            matching_profiles.append(profile)
+                            if not UserResponse.objects.filter(sender=profile.user.id, userData=date_search).exists():
+                                matching_profiles.append(profile)
 
                         events = Event.objects.filter(user_id=profile.user.id, date=date_search)
                         for event in events:
