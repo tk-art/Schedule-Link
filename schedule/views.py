@@ -63,6 +63,9 @@ def approved_events_function(user_id):
 
         approved_data_as_strings = [date_obj.strftime('%Y-%m-%d') for date_obj in approved_data]
 
+    approved_events = list(set(approved_events))
+    approved_data_as_strings = list(set(approved_data_as_strings))
+
     return approved_events, approved_data_as_strings
 
 def top(request):

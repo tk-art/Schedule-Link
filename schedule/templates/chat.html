@@ -6,23 +6,23 @@
     <div class="chat-full-container">
       {% if chat_messages %}
         {% for chat in chat_messages %}
-        <div class="chat-content">
-          {% if chat.sender == request.user %}
-            <div id="message-{{ chat.id }}" class="sender-last-message">
-              {% if sender_last_message.id == chat.id %}
-                <span class="chat-current-delta read-mark"{% if not chat.read %} style="display:none;"{% endif %}>既読</span>
-              {% endif %}
-              <p class="chat-current-delta">{{ chat.delta }}</p>
-            </div>
-            <p class="sender-chat">{{ chat.message }}</p>
-          {% else %}
-            <a href="/profile/{{ chat.sender.id }}">
-              <img src="{{ chat.sender.profile.image.url }}" alt="{{ chat.sender.profile.username }}" class="chat-room-image">
-            </a>
-            <p class="receiver-chat">{{ chat.message }}</p>
-            <p class="chat-other-delta">{{ chat.delta }}</p>
-          {% endif %}
-        </div>
+          <div class="chat-content">
+            {% if chat.sender == request.user %}
+              <div id="message-{{ chat.id }}" class="sender-last-message">
+                {% if sender_last_message.id == chat.id %}
+                  <span class="chat-current-delta read-mark"{% if not chat.read %} style="display:none;"{% endif %}>既読</span>
+                {% endif %}
+                <p class="chat-current-delta">{{ chat.delta }}</p>
+              </div>
+              <p class="sender-chat">{{ chat.message }}</p>
+            {% else %}
+              <a href="/profile/{{ chat.sender.id }}">
+                <img src="{{ chat.sender.profile.image.url }}" alt="{{ chat.sender.profile.username }}" class="chat-room-image">
+              </a>
+              <p class="receiver-chat">{{ chat.message }}</p>
+              <p class="chat-other-delta">{{ chat.delta }}</p>
+            {% endif %}
+          </div>
         {% endfor %}
       {% else %}
         <div class="centered-container">

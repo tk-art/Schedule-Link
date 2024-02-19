@@ -121,8 +121,9 @@ if os.environ.get('USE_HEROKU_DB') == 'true':
     }
     db_production = dj_database_url.config(default=os.environ.get('JAWSDB_URL'))
     db_production['POOL_OPTIONS'] = {
-        'POOL_SIZE': 10,
+        'POOL_SIZE': 15,
         'MAX_OVERFLOW': 0,
+        'RECYCLE': 60,
     }
     DATABASES['default'].update(db_production)
 else:

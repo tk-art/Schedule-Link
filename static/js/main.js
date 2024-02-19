@@ -799,6 +799,7 @@ $(function() {
       }));
 
       displayChatMessage(sender_id, message, temporaryId, null, null);
+      $('.centered-container').remove();
       $('.read-mark').hide();
       $('#chat-message-input').val('');
       $('.chat-none').hide();
