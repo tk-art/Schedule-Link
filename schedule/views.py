@@ -20,6 +20,7 @@ from django.contrib.auth.decorators import login_required
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.db.models import Count
+from collections import Counter
 
 def human_readable_time_from_utc(timestamp, timezone='Asia/Tokyo'):
     local_tz = pytz.timezone(timezone)
@@ -169,37 +170,50 @@ def guest_login(request):
     large_number_of_events_user = CustomUser.objects.annotate(num_events=Count('event')).order_by('-num_events').first()
     sender_last_event = Event.objects.filter(user=large_number_of_events_user).last()
     room_name = f'{min(guest_user.id, large_number_of_events_user.id)}_{max(guest_user.id, large_number_of_events_user.id)}'
-    selectedDate = date.today() + timedelta(days=1)
 
-    Profile.objects.create(user=guest_user, username=guest_user.username,
+    full_calendar_list = []
+    full_calendar = Calendar.objects.all()
+    for calendar in full_calendar:
+        if date.today() <= calendar.selectedDate:
+            full_calendar_list.append(calendar)
+
+    full_calendar_counts = Counter(full_calendar_list)
+    most_common_date, count = full_calendar_counts.most_common(1)[0]
+
+    profile = Profile.objects.create(user=guest_user, username=guest_user.username, residence=most_common_date.user.profile.residence,
         content='これはデフォルトのプロフィールです。好みに応じて編集してください'
     )
+
+    hobbies = most_common_date.user.profile.hobby.all()
+    if hobbies:
+        profile.hobby.set(hobbies)
+    profile.save()
 
     if settings.DEBUG:
         event = Event.objects.create(
             user=guest_user, title='テスト', place='テスト', category='その他',
-            date=date.today() + timedelta(days=1), time='10:00~10:30',
+            date=most_common_date.selectedDate, time='10:00~10:30',
             image='item_images/フリー女.jpeg', detail='テスト'
         )
     else:
         event = Event.objects.create(
             user=guest_user, title='テスト', place='テスト', category='その他',
-            date=selectedDate, time='10:00~10:30',
+            date=most_common_date.selectedDate, time='10:00~10:30',
             image='media/item_images/neko', detail='テスト'
         )
 
     Calendar.objects.create(
-        user=guest_user, selectedDate=selectedDate, free="全日"
+        user=guest_user, selectedDate=most_common_date.selectedDate, free="全日"
     )
     Calendar.objects.create(
-        user=guest_user, selectedDate=date.today() + timedelta(days=2), free="全日"
+        user=guest_user, selectedDate=most_common_date.selectedDate + timedelta(1), free="全日"
     )
 
     UserRequest.objects.create(
         sender=large_number_of_events_user, receiver=guest_user, userData=None, eventId_id=event.id, situation=True
     )
     UserRequest.objects.create(
-      sender=large_number_of_events_user, receiver=guest_user, userData=selectedDate, eventId_id=None, situation=True
+      sender=large_number_of_events_user, receiver=guest_user, userData=most_common_date.selectedDate, eventId_id=None, situation=True
     )
 
     UserResponse.objects.create(
