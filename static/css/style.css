@@ -258,6 +258,12 @@ header {
   font-family: serif;
 }
 
+@media (max-width: 500px) {
+  .header-left {
+    margin-left: 20px;
+  }
+}
+
 .header-right {
   padding: 10px;
   margin-right: 10px;
