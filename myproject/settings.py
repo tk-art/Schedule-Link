@@ -136,7 +136,7 @@ else:
             'HOST': 'db',
             'PORT': '3306',
             'POOL_OPTIONS': {
-                'POOL_SIZE': 10,
+                'POOL_SIZE': 15,
                 'RECYCLE': 60,
             }
         }
