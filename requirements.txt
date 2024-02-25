@@ -12,3 +12,4 @@ uvicorn[standard]
 django-db-connection-pool
 cloudinary
 django-cloudinary-storage
+mysql-connector-python

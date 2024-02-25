@@ -22,6 +22,30 @@ from asgiref.sync import async_to_sync
 from django.db.models import Count
 from collections import Counter
 
+import mysql.connector
+from mysql.connector import Error
+
+def kill_long_running_mysql_processes(host, user, password, database):
+    try:
+        connection = mysql.connector.connect(host=host, user=user, password=password, database=database)
+        cursor = connection.cursor()
+        cursor.execute("show full processlist")
+        processes = cursor.fetchall()
+        for process in processes:
+            process_id = process[0]
+            time = process[5]
+            command = process[4]
+            if time >= 50 and command == "Sleep":
+                print(f"プロセス削除 id:{process_id}, time:{time}")
+                cursor.execute(f"kill {process_id}")
+        connection.commit()
+    except Error as e:
+        print(f"エラー: {e}")
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
 def human_readable_time_from_utc(timestamp, timezone='Asia/Tokyo'):
     local_tz = pytz.timezone(timezone)
     local_now = datetime.now(local_tz)
@@ -233,6 +257,14 @@ def logout_view(request):
     if user.is_guest:
         user.delete()
     logout(request)
+    if settings.DEBUG:
+        kill_long_running_mysql_processes('db', 'django', 'password', 'django_db')
+    else:
+        host = settings.DATABASES['default']['HOST']
+        user = settings.DATABASES['default']['USER']
+        password = settings.DATABASES['default']['PASSWORD']
+        database = settings.DATABASES['default']['DATABASE']
+        kill_long_running_mysql_processes(host, user, password, database)
     return redirect('top')
 
 @login_required
