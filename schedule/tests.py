@@ -10,8 +10,9 @@ from datetime import datetime, date, timedelta
 from django.core.files.uploadedfile import SimpleUploadedFile
 import json
 from .forms import EventForm
-from .views import recommendation_user_list, recommendation_event_list, approved_events_function
-from unittest.mock import patch
+from .views import recommendation_user_list, recommendation_event_list, approved_events_function, kill_long_running_mysql_processes
+import mysql.connector
+from unittest.mock import patch, MagicMock
 from allauth.socialaccount.models import SocialAccount
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
@@ -147,6 +148,23 @@ class LogoutTest(TestCase):
         response = self.client.get(reverse('logout_view'))
         self.assertRedirects(response, reverse('top'))
         self.assertFalse(response.wsgi_request.user.is_authenticated)
+
+class KillLongRunningProcesses(TestCase):
+    @patch('mysql.connector.connect')
+    def test_kill_long_running_processes(self, mock_connect):
+        mock_cursor = MagicMock()
+        mock_connect.return_value.cursor.return_value = mock_cursor
+        mock_cursor.fetchall.return_value = [
+            (1, 'user', 'localhost', 'db', 'Sleep', 301),
+            (2, 'user', 'localhost', 'db', 'Sleep', 299)
+        ]
+
+        kill_long_running_mysql_processes('host', 'user', 'password', 'database')
+
+        mock_connect.assert_called_once_with(host='host', user='user', password='password', database='database')
+        mock_cursor.execute.assert_any_call("show full processlist")
+        mock_cursor.execute.assert_called_with("kill 1")
+        self.assertEqual(mock_cursor.execute.call_count, 2)
 
 class CalendarTest(TestCase):
     def setUp(self):

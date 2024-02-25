@@ -21,7 +21,6 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.db.models import Count
 from collections import Counter
-
 import mysql.connector
 from mysql.connector import Error
 
@@ -35,7 +34,7 @@ def kill_long_running_mysql_processes(host, user, password, database):
             process_id = process[0]
             time = process[5]
             command = process[4]
-            if time >= 50 and command == "Sleep":
+            if time >= 300 and command == "Sleep":
                 print(f"プロセス削除 id:{process_id}, time:{time}")
                 cursor.execute(f"kill {process_id}")
         connection.commit()
