@@ -620,7 +620,7 @@ class ApprovedEventsFunctionTest(TestCase):
         UserResponse.objects.create(sender=self.user1, receiver=self.user2, eventId=None, buttonType='拒否する', userData=date.today() + timedelta(days=1))
 
     def test_approved_events_function(self):
-        approved_events, approved_data_as_strings = approved_events_function()
+        approved_events, approved_data_as_strings = approved_events_function(None)
         today = date.today().strftime('%Y-%m-%d')
 
         self.assertIn(1, approved_events)

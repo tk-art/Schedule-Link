@@ -201,43 +201,51 @@ def guest_login(request):
         if date.today() <= calendar.selectedDate:
             full_calendar_list.append(calendar)
 
-    full_calendar_counts = Counter(full_calendar_list)
-    most_common_date, count = full_calendar_counts.most_common(1)[0]
+    if full_calendar_list:
+        full_calendar_counts = Counter(full_calendar_list)
+        most_common_date, count = full_calendar_counts.most_common(1)[0]
+        selectedDate = most_common_date.selectedDate
 
-    profile = Profile.objects.create(user=guest_user, username=guest_user.username, residence=most_common_date.user.profile.residence,
-        content='これはデフォルトのプロフィールです。好みに応じて編集してください'
-    )
+        profile = Profile.objects.create(user=guest_user, username=guest_user.username, residence=most_common_date.user.profile.residence,
+            content='これはデフォルトのプロフィールです。好みに応じて編集してください'
+        )
 
-    hobbies = most_common_date.user.profile.hobby.all()
-    if hobbies:
-        profile.hobby.set(hobbies)
-    profile.save()
+        hobbies = most_common_date.user.profile.hobby.all()
+        if hobbies:
+            profile.hobby.set(hobbies)
+        profile.save()
+    else:
+        selectedDate = date.today() + timedelta(1)
+
+        Profile.objects.create(user=guest_user, username=guest_user.username,
+            content='これはデフォルトのプロフィールです。好みに応じて編集してください'
+        )
 
     if settings.DEBUG:
         event = Event.objects.create(
             user=guest_user, title='テスト', place='テスト', category='その他',
-            date=most_common_date.selectedDate, time='10:00~10:30',
+            date=selectedDate, time='10:00~10:30',
             image='item_images/フリー女.jpeg', detail='テスト'
         )
     else:
         event = Event.objects.create(
             user=guest_user, title='テスト', place='テスト', category='その他',
-            date=most_common_date.selectedDate, time='10:00~10:30',
+            date=selectedDate, time='10:00~10:30',
             image='media/item_images/neko', detail='テスト'
         )
 
     Calendar.objects.create(
-        user=guest_user, selectedDate=most_common_date.selectedDate, free="全日"
+        user=guest_user, selectedDate=selectedDate, free="全日"
     )
     Calendar.objects.create(
-        user=guest_user, selectedDate=most_common_date.selectedDate + timedelta(1), free="全日"
+        user=guest_user, selectedDate=selectedDate + timedelta(1), free="全日"
     )
 
     UserRequest.objects.create(
         sender=large_number_of_events_user, receiver=guest_user, userData=None, eventId_id=event.id, situation=True
     )
     UserRequest.objects.create(
-      sender=large_number_of_events_user, receiver=guest_user, userData=most_common_date.selectedDate, eventId_id=None, situation=True
+      sender=large_number_of_events_user, receiver=guest_user, userData=selectedDate, eventId_id=None, situation=True
     )
 
     UserResponse.objects.create(
@@ -263,7 +271,7 @@ def logout_view(request):
         host = settings.DATABASES['default']['HOST']
         user = settings.DATABASES['default']['USER']
         password = settings.DATABASES['default']['PASSWORD']
-        database = settings.DATABASES['default']['DATABASE']
+        database = settings.DATABASES['default']['NAME']
         kill_long_running_mysql_processes(host, user, password, database)
     return redirect('top')
 
