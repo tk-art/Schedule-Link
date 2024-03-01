@@ -1,6 +1,5 @@
 Django>=3.2
 mysqlclient==2.1
-channels
 django-allauth
 pytz
 whitenoise
@@ -10,6 +9,4 @@ channels
 channels-redis
 uvicorn[standard]
 django-db-connection-pool
-cloudinary
-django-cloudinary-storage
 mysql-connector-python

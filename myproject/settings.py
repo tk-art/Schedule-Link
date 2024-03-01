@@ -17,20 +17,15 @@ SECRET_KEY = 'django-insecure-frm2#x_bnb!#93yw4=0_imf%c7kbkkrink09w33#)ieht#u-x$
 DJANGO_ENV = os.getenv('DJANGO_ENV', 'development')
 
 if DJANGO_ENV == 'production':
-    ALLOWED_HOSTS = ['schedule1213-7d61e308285e.herokuapp.com']
+    ALLOWED_HOSTS = ['35.73.23.77']
     SITE_ID = 4
-    cloudinary.config()
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
     DEBUG = False
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = True
 else:
     ALLOWED_HOSTS = ['*']
     SITE_ID = 3
-    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
     DEBUG = True
-
 
 INSTALLED_APPS = [
     'schedule',
@@ -45,9 +40,6 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'cloudinary_storage',
-    'django.contrib.staticfiles',
-    'cloudinary',
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -90,7 +82,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'myproject.wsgi.application'
 
 if DJANGO_ENV == 'production':
-    redis_host = os.environ.get('REDIS_URL')
+    redis_host = ("schedule-link-redis-1", 6379)
 else:
     redis_host = ("schedule_redis_1", 6379)
 
@@ -113,34 +105,21 @@ CACHES = {
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if os.environ.get('USE_HEROKU_DB') == 'true':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'dj_db_conn_pool.backends.mysql',
+DATABASES = {
+    'default': {
+        'ENGINE': 'dj_db_conn_pool.backends.mysql',
+        'NAME': 'django_db',
+        'USER': 'django',
+        'PASSWORD': 'password',
+        'HOST': 'db',
+        'PORT': '3306',
+        'POOL_OPTIONS': {
+            'POOL_SIZE': 15,
+            'MAX_OVERFLOW': 0,
+            'RECYCLE': 60,
         }
     }
-    db_production = dj_database_url.config(default=os.environ.get('JAWSDB_URL'))
-    db_production['POOL_OPTIONS'] = {
-        'POOL_SIZE': 15,
-        'MAX_OVERFLOW': 0,
-        'RECYCLE': 60,
-    }
-    DATABASES['default'].update(db_production)
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'dj_db_conn_pool.backends.mysql',
-            'NAME': 'django_db',
-            'USER': 'django',
-            'PASSWORD': 'password',
-            'HOST': 'db',
-            'PORT': '3306',
-            'POOL_OPTIONS': {
-                'POOL_SIZE': 15,
-                'RECYCLE': 60,
-            }
-        }
-    }
+}
 
 AUTH_USER_MODEL = 'schedule.CustomUser'
 
@@ -195,3 +174,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
+
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
