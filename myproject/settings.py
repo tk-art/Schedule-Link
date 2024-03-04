@@ -1,8 +1,6 @@
 from pathlib import Path
 import os
-import dj_database_url
 import dj_db_conn_pool
-import cloudinary
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -17,7 +15,7 @@ SECRET_KEY = 'django-insecure-frm2#x_bnb!#93yw4=0_imf%c7kbkkrink09w33#)ieht#u-x$
 DJANGO_ENV = os.getenv('DJANGO_ENV', 'development')
 
 if DJANGO_ENV == 'production':
-    ALLOWED_HOSTS = ['35.73.23.77']
+    ALLOWED_HOSTS = ['tk-art-service.com']
     SITE_ID = 4
     DEBUG = False
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
