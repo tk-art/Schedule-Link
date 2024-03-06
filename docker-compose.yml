@@ -26,6 +26,7 @@ services:
     command: uvicorn myproject.asgi:application --host 0.0.0.0 --port 8000 --reload
     volumes:
       - .:/code
+      - static_volume:/code/staticfiles
     ports:
       - "8000:8000"
     depends_on:
