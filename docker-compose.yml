@@ -3,10 +3,10 @@ services:
   db:
     image: mysql:5.7
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: django
-      MYSQL_PASSWORD: password
-      MYSQL_DATABASE: django_db
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
       - "3306:3306"
 
@@ -23,10 +23,11 @@ services:
     environment:
       - DJANGO_ENV=${DJANGO_ENV}
     build: .
+    env_file:
+      - .env
     command: uvicorn myproject.asgi:application --host 0.0.0.0 --port 8000 --reload
     volumes:
       - .:/code
-      - /Schedule-Link/staticfiles:/code/staticfiles
     ports:
       - "8000:8000"
     depends_on:

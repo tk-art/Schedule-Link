@@ -10,9 +10,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-frm2#x_bnb!#93yw4=0_imf%c7kbkkrink09w33#)ieht#u-x$'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
-DJANGO_ENV = os.getenv('DJANGO_ENV', 'development')
+DJANGO_ENV = os.getenv('DJANGO_ENV')
 
 if DJANGO_ENV == 'production':
     ALLOWED_HOSTS = ['tk-art-service.com']
@@ -20,10 +20,20 @@ if DJANGO_ENV == 'production':
     DEBUG = False
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = True
+    AWS_STORAGE_BUCKET_NAME = 'schedule-link'
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
+    AWS_LOCATION = 'static'
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
 else:
     ALLOWED_HOSTS = ['*']
     SITE_ID = 3
     DEBUG = True
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 INSTALLED_APPS = [
     'schedule',
@@ -107,10 +117,10 @@ CACHES = {
 DATABASES = {
     'default': {
         'ENGINE': 'dj_db_conn_pool.backends.mysql',
-        'NAME': 'django_db',
-        'USER': 'django',
-        'PASSWORD': 'password',
-        'HOST': 'db',
+        'NAME': os.getenv('MYSQL_DATABASE'),
+        'USER': os.getenv('MYSQL_USER'),
+        'PASSWORD': os.getenv('MYSQL_PASSWORD'),
+        'HOST': os.getenv('HOST'),
         'PORT': '3306',
         'POOL_OPTIONS': {
             'POOL_SIZE': 15,
@@ -173,5 +183,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
-
-DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
