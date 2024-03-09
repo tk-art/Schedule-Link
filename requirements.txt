@@ -10,3 +10,5 @@ channels-redis
 uvicorn[standard]
 django-db-connection-pool
 mysql-connector-python
+boto3
+django-storages
