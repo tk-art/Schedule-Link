@@ -22,8 +22,8 @@ class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     username = models.CharField(max_length=100)
     image = models.ImageField(
-        upload_to='item_images/',
-        default=os.getenv('CLOUDINARY_DEFAULT_IMAGE','item_images/フリー女.jpeg'),
+        upload_to='/media/item_images/',
+        default=os.getenv('S3_DEFAULT_IMAGE','item_images/フリー女.jpeg'),
         null=True,
         blank=True
     )
