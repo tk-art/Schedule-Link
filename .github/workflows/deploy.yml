@@ -29,5 +29,7 @@ jobs:
           echo 'MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}' >> .env
           echo 'HOST=${{ secrets.HOST }}' >> .env
           echo 'SECRET_KEY=${{ secrets.SECRET_KEY }}' >> .env
+          echo 'S3_UPLOAD_TO=${{ secrets.S3_UPLOAD_TO }}' >> .env
+          echo 'S3_DEFAULT_IMAGE=${{ secrets.S3_DEFAULT_IMAGE }}' >> .env
           docker-compose up -d
         EOF
