@@ -19,7 +19,6 @@ if DJANGO_ENV == 'production':
     SITE_ID = 4
     DEBUG = False
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SECURE_SSL_REDIRECT = False
     AWS_STORAGE_BUCKET_NAME = 'schedule-link'
     AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
     AWS_S3_OBJECT_PARAMETERS = {

@@ -17,6 +17,7 @@ from allauth.socialaccount.models import SocialAccount
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.account.signals import user_signed_up, user_logged_in
+from django.conf import settings
 
 class SignUpTest(TestCase):
     def test_valid_registration(self):
@@ -452,7 +453,7 @@ class FollowerCountTest(TestCase):
         self.assertJSONEqual(str(response_count.content, encoding='utf8'), {'new_follower': False})
         self.assertEqual(self.client.session['last_follow_count'], 0)
 
-class EventTestCase(TestCase):
+class EventTest(TestCase):
     def setUp(self):
         self.user = CustomUser.objects.create_user('testuser', password='password')
         self.client.login(username='testuser', password='password')
@@ -475,8 +476,8 @@ class EventTestCase(TestCase):
         )
 
     def test_event_creation(self):
-        with open('media/item_images/ルフィ.png', 'rb') as img:
-            image = SimpleUploadedFile('ルフィ.png', img.read(), content_type='image/png')
+        dummy_content = b'\x00\x01\x02\x03\x04\x05'
+        image = SimpleUploadedFile('image.png', dummy_content, content_type='image/png')
 
         form_data = {
             'title': 'イベント',
