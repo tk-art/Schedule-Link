@@ -823,7 +823,7 @@ def event(request):
                 if settings.DEBUG:
                     image = 'item_images/フリー女.jpeg'
                 else:
-                    image = 'media/item_images/neko'
+                    image = 'media/ねこ.webp'
             detail = form.cleaned_data.get('detail')
             place = form.cleaned_data.get('place')
             datetime = form.cleaned_data.get('datetime')
