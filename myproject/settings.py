@@ -17,7 +17,7 @@ DJANGO_ENV = os.getenv('DJANGO_ENV')
 if DJANGO_ENV == 'production':
     ALLOWED_HOSTS = ['tk-art-service.com']
     SITE_ID = 4
-    DEBUG = True
+    DEBUG = False
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = True
     AWS_STORAGE_BUCKET_NAME = 'schedule-link'

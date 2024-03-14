@@ -230,7 +230,7 @@ def guest_login(request):
         event = Event.objects.create(
             user=guest_user, title='テスト', place='テスト', category='その他',
             date=selectedDate, time='10:00~10:30',
-            image='media/item_images/neko', detail='テスト'
+            image='media/ねこ.webp', detail='テスト'
         )
 
     Calendar.objects.create(
