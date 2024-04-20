@@ -10,7 +10,7 @@ from datetime import datetime, date, timedelta
 from django.core.files.uploadedfile import SimpleUploadedFile
 import json
 from .forms import EventForm
-from .views import recommendation_user_list, recommendation_event_list, approved_events_function, kill_long_running_mysql_processes
+from .views import recommendation_user_list, recommendation_event_list, approved_events_function, kill_long_running_mysql_processes, delete_guest_user
 import mysql.connector
 from unittest.mock import patch, MagicMock
 from allauth.socialaccount.models import SocialAccount
@@ -18,6 +18,7 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.account.signals import user_signed_up, user_logged_in
 from django.conf import settings
+from dateutil.relativedelta import relativedelta
 
 class SignUpTest(TestCase):
     def test_valid_registration(self):
@@ -607,6 +608,21 @@ class GuestLoginTest(TestCase):
         self.assertEqual(UserRequest.objects.count(), 2)
         self.assertEqual(UserResponse.objects.count(), 1)
         self.assertEqual(ChatMessage.objects.count(), 1)
+
+    def test_delete_guests_over_time(self):
+        self.client.post(reverse('guest_login'))
+        self.client.post(reverse('guest_login'))
+        self.assertEqual(CustomUser.objects.count(), 3)
+
+        guest_user = CustomUser.objects.filter(is_guest=True)
+        for user in guest_user:
+            guest_login = user.last_login.date() + relativedelta(days=-1)
+            user.last_login = guest_login
+            user.save()
+            break
+        delete_guest_user()
+        self.assertEqual(CustomUser.objects.count(), 2)
+
 
 class ApprovedEventsFunctionTest(TestCase):
     def setUp(self):
