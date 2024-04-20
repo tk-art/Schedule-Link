@@ -7,3 +7,5 @@ class ScheduleConfig(AppConfig):
 
     def ready(self):
         import schedule.signals
+        from .views import start
+        start()

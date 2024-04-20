@@ -23,6 +23,7 @@ from django.db.models import Count
 from collections import Counter
 import mysql.connector
 from mysql.connector import Error
+from apscheduler.schedulers.background import BackgroundScheduler
 
 def kill_long_running_mysql_processes(host, user, password, database):
     try:
@@ -259,19 +260,28 @@ def guest_login(request):
     login(request, guest_user)
     return redirect('profile', user_id=guest_user.id)
 
+def delete_guest_user():
+    guest_user = CustomUser.objects.filter(is_guest=True)
+    today = datetime.today()
+    for user in guest_user:
+        if user.last_login.date() < today.date():
+            user.delete()
+
+def start():
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(delete_guest_user, 'interval', hours=5)
+    scheduler.start()
+
 def logout_view(request):
     user = request.user
     if user.is_guest:
         user.delete()
     logout(request)
-    if settings.DEBUG:
-        kill_long_running_mysql_processes('db', 'django', 'password', 'django_db')
-    else:
-        host = settings.DATABASES['default']['HOST']
-        user = settings.DATABASES['default']['USER']
-        password = settings.DATABASES['default']['PASSWORD']
-        database = settings.DATABASES['default']['NAME']
-        kill_long_running_mysql_processes(host, user, password, database)
+    host = settings.DATABASES['default']['HOST']
+    user = settings.DATABASES['default']['USER']
+    password = settings.DATABASES['default']['PASSWORD']
+    database = settings.DATABASES['default']['NAME']
+    kill_long_running_mysql_processes(host, user, password, database)
     return redirect('top')
 
 @login_required
