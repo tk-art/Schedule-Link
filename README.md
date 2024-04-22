@@ -10,13 +10,21 @@
 
 <h1>使用技術</h1>
 <li>python3.7</li>
-<li>Django</li>
+<li>Django3.2</li>
 <li>jQuery</li>
-<li>MySQL</li>
+<li>MySQL5.7</li>
+<li>Redis6.2.11</li>
 <li>GitHub Actions</li>
 <li>Docker/Docker-Compose</li>
-<li>WebSocket</li>
+<li>WebSocket11.0.3</li>
 <li>Nginx</li>
 <li>Uvicorn</li>
-<li>AWS</li>
+<li>AWS
+  <ul>
+    <li>VPC</li>
+    <li>EC2</li>
+    <li>S3</li>
+    <li>Route53</li>
+  </ul>
+</li>
 
